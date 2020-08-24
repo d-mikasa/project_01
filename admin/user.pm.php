@@ -1,5 +1,4 @@
 <?php
-require_once ('model.php');
 class AdminUser extends Model
 {
     public function checkUser($id, $pass)
@@ -10,26 +9,21 @@ class AdminUser extends Model
         $stmt->execute([$id]);
         $result = $stmt->fetch();
 
-
-
         if (empty($result)) {
-            $result = 'IDが間違っています';
-            return $result;
+            return 'IDが間違っています';
         }
 
         if($result['delete_flg'] == TRUE){
-            $result = 'IDが見つかりませんでした。';
-            return $result;
+            return 'IDが見つかりませんでした。';
         }
 
         if ($result['login_pass'] === $pass) {
             $_SESSION['admin_name'] = $result['name'];
-            $_SESSION['admin_login'] = 1;
+            $_SESSION['auth'] = 1;
             header('Location: top.php');
             exit;
         }
 
-        $result = 'パスワードが間違っています';
-        return $result;
+        return 'パスワードが間違っています';
     }
 }
