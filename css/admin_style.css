@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+header {
+    margin-bottom: 60px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+}
+
+h2 {
+    text-align: center;
+}
+
+.backLogin {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+
+.id {
+    margin-bottom: -2px;
+}
+
+.loginName {
+    float: left;
+}
+
+.logout {
+    text-align: right;
+}
+
+.topContent {
+    margin: 0 100px 0 100px;
+}
+
+.topNav {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+
+
+.topNav>a {
+    display: grid;
+    place-items: center;
+    background-color: black;
+    width: 100%;
+    height: 50px;
+    border: 3px solid white;
+    color: white;
+    text-decoration: none;
+}
+
+
+a {
+    display: block;
+}
+
+
+
+.corpInc {
+    text-align: right;
+}
+
+
+/*-------------------------
+room_list.php
+-------------------------*/
+
+.table_name{
+    height: 40px;
+}
+
+.roomlist_table {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+
+.roomlist_table tr,
+.roomlist_table td,
+.roomlist_table th {
+    border: solid 1px #000000;
+    border-collapse: collapse;
+
+}
+
+.list_id {
+    width: 3rem;
+}
+
+.list_img {
+    width: 540px;
+}
+
+.list_created_at {
+    width: 20rem;
+}
+
+.list_updated_at {
+    width: 20rem;
+}
