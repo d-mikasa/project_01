@@ -17,3 +17,8 @@ class Model
 
 //////////////////////UserParmissionの処理をInclude//////////////////////
 include('user.pm.php');
+include('room.db.php');
+include('delete.list.php');
+
+//////////////////////セッションをスタート//////////////////////
+session_start();

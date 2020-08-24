@@ -1,8 +1,8 @@
 <?php
 require_once ('library.php');
-session_start();
+
 $error = '';
-$_SESSION['auth'] = false;
+$_SESSION['auth'] = 0;
 
 if(!empty($_POST['id_form'])){
     //バリデーション処理

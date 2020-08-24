@@ -99,7 +99,7 @@ room_list.php
 }
 
 .list_id {
-    width: 3rem;
+    width: 6rem;
 }
 
 .list_img {
@@ -107,9 +107,9 @@ room_list.php
 }
 
 .list_created_at {
-    width: 20rem;
+    width: 17rem;
 }
 
 .list_updated_at {
-    width: 20rem;
+    width: 17rem;
 }
