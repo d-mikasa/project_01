@@ -1,7 +1,4 @@
 <?php
-require_once ('const.php');
-require_once ('user.pm.php');
-
 class Model
 {
     protected $dbh;
@@ -18,3 +15,5 @@ class Model
     }
 }
 
+//////////////////////UserParmissionの処理をInclude//////////////////////
+include('user.pm.php');

@@ -3,7 +3,7 @@ require_once('room.db.php');
 require_once('delete.list.php');
 session_start();
 
-if ($_SESSION['admin_login'] == false) {
+if ($_SESSION['auth'] == false) {
     header('Location: login.php');
 }
 $a = new roomList();

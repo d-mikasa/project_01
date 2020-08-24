@@ -1,8 +1,8 @@
 <?php
-require_once ('user.pm.php');
+require_once ('library.php');
 session_start();
 $error = '';
-$_SESSION['admin_login'] = false;
+$_SESSION['auth'] = false;
 
 if(!empty($_POST['id_form'])){
     //バリデーション処理

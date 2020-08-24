@@ -1,4 +1,4 @@
 <?php
 session_start();
-$_SESSION['admin_login'] = false;
+$_SESSION['auth'] = false;
 header('Location: login.php');

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if ($_SESSION['admin_login'] == false) {
+if ($_SESSION['auth'] == false) {
     header('Location: login.php');
 }
 
