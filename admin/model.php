@@ -19,6 +19,7 @@ class Model
 include('user.pm.php');
 include('room.db.php');
 include('delete.list.php');
+include('edit.list.php');
 
 //////////////////////セッションをスタート//////////////////////
 session_start();

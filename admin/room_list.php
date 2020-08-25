@@ -9,6 +9,7 @@ $a = new roomList();
 $room_list = $a->room_get();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     print_r($_POST);
     if (!empty($_POST['delete'])) {
         // 削除処理
@@ -23,26 +24,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //POSTで帰ってきて、尚且つソートが選択されていた場合
     //昇順（▲）が押された場合
     if (!empty($_POST['up_sort'])) {
+        $sort_main = array();
+        $sort_main = array();
         foreach ($room_list as $key => $value) {
-            $sort_keys[$key] = $value[$_POST['up_sort']];
+            if ($value['img'] == NULL or $value['name'] == NULL) {
+                $value[$_POST['up_sort']]  = 'ー';
+            }
+            $sort_main[$key] = $value[$_POST['up_sort']];
+            $sort_sub[$key] = $value['id'];
         }
-        array_multisort($sort_keys, SORT_ASC, $room_list);
-    }
-
-        //降順（▲）が押された場合
-    if (!empty($_POST['down_sort'])) {
-        foreach ($room_list as $key => $value) {
-            $sort_keys[$key] = $value[$_POST['down_sort']];
-        }
-        array_multisort($sort_keys, SORT_DESC, $room_list);
+        array_multisort($sort_main, SORT_ASC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
     }
 }
 
-
-
-
+//降順（▲）が押された場合
+if (!empty($_POST['down_sort'])) {
+    $sort_main = array();
+    $sort_main = array();
+    foreach ($room_list as $key => $value) {
+        if ($value['img'] == NULL or $value['name'] == NULL) {
+            $value[$_POST['down_sort']]  = '0';
+        }
+        $sort_main[$key] = $value[$_POST['down_sort']];
+        $sort_sub[$key] = $value['id'];
+    }
+    array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
+}
 
 ?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -69,10 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </p>
                     </th>
                     <th class="list_img">画像　
-                        <p>
-                            <button type="submit" value="img" name="up_sort">▲</button>
-                            <button type="submit" value="img" name="down_sort">▼</button>
-                        </p>
                     </th>
                     <th class="list_name">部屋名
                         <p>
@@ -95,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </p>
                     </th>
                     <th class="list_create">
-                        <button type="button" value="新規作成" name="create" onclick="return btn_check(this.name)">新規作成</button>
+                        <button type="submit" value="新規作成" name="create" onclick="return btn_check(this.name)">新規作成</button>
                     </th>
                 </tr>
                 <?php foreach ($room_list as $list) : ?>
@@ -106,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?= $list['created_at'] ?></td>
                         <td><?= $list['updated_at'] ?></td>
                         <td>
-                            <p><button type="submit" name="edit" onclick="return btn_check(this.name)">編集</button></p>
+                            <p><button type="submit" name="edit" value="<?= $list['id'] ?>" onclick="return btn_check(this.name,this.value)">編集</button></p>
                             <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check(this.name)">削除</button></p>
                         </td>
                     </tr>
@@ -121,20 +127,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <script>
-        function btn_check(btn) {
+        function btn_check(btn, value = null) {
             switch (btn) {
-
                 case 'edit':
-                    console.log('edit');
-
-                    // location.href = 'room_edit.php';
+                    alert('編集画面へ飛びます');
+                    var link = 'room_edit.php?id=' + value;
+                    location.href = link;
                     return false;
                     break;
 
                 case 'create':
 
-                    console.log('create');
-                    return false;
                     break;
 
                 case 'delete':
@@ -151,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     break;
 
                 default:
-                    console.log('そのほかの動作');
+                    console.log('なんか知らんけど違う値受け取ってるぞ');
 
             }
         }
