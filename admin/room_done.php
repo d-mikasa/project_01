@@ -1,8 +1,27 @@
 <?php
+require_once('class/Library.php');
+const IMGS_PATH = '../img/';
 
-print_r('<pre>');
-var_dump($_POST[ 'plan']);
-print_r('</pre>');
+if ( rename( $_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'] ) ) {
+    echo "ファイルの移動に成功しました";
+} else {
+    echo "ファイルの移動に失敗しました";
+}
+
+
+
+if (!empty($_POST['set_data'])) {
+    for ($i = 0; $i < count($_POST['set_data']); $i++) {
+        $set_data[$i] = $_POST['set_data'][$i];
+
+    }
+}
+
+
+
+
+unset($_SESSION['tmp_path']);
+unset($_SESSION['img_name'] );
 ?>
 
 <!DOCTYPE html>
@@ -11,11 +30,14 @@ print_r('</pre>');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../css/admin_style.css">
+    <title>ROOM_LIST</title>
 </head>
 
 <body>
-hoge
+    <!-- ヘッダー部分読み込み -->
+    <?php include('parts/nav.parts.php'); ?>
+    更新しました
 </body>
 
 </html>

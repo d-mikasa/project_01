@@ -2,9 +2,9 @@
 require_once('class/Library.php');
 
 $error = '';
-$_SESSION['auth'] = 0;
+unset($_SESSION['auth']);
 
-if(!empty($_POST['id_form'])){
+if (!empty($_POST['id_form'])) {
     //バリデーション処理
     if (empty($_POST['id']) or empty($_POST['pass'])) {
         $error = 'IDかパスワードが入力されていません';
@@ -14,7 +14,7 @@ if(!empty($_POST['id_form'])){
         $admin_user = new AdminUser();
 
         // PDOクラスのメソッドを使う
-        $error = $admin_user->checkUser($_POST['id'], $_POST['pass']);
+        $error = $admin_user->userLogin($_POST['id'], $_POST['pass']);
     }
 }
 
@@ -36,12 +36,12 @@ if(!empty($_POST['id_form'])){
     </header>
     <main>
         <form action="" method="post">
-            <div class = "error">
-                <?php echo $error; ?>
+            <div class="error">
+                <?=$error; ?>
             </div>
             <p class="id">ログインID<input type="text" name="id" size="30" value="<?php if (!empty($_POST['id'])) echo $_POST['id']  ?>"></p>
             <p class="pas">パスワード<input type="password" name="pass" size="30"></p>
-            <p><input type="submit" value="認証" name = "id_form"></p>
+            <p><input type="submit" value="認証" name="id_form"></p>
         </form>
     </main>
 </body>

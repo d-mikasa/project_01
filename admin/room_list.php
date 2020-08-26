@@ -10,15 +10,30 @@ $room_list = $a->room_get();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    print_r($_POST);
-    if (!empty($_POST['delete'])) {
-        // 削除処理
+    switch (key($_POST)) {
+        case 'create':
 
-        $a = new Delete_list();
-        $a->Delete_detail($_POST['delete']);
+            break;
 
-        //重複削除が起きないようにリダイレクト
-        header('Location: room_list.php');
+        case 'delete':
+            // 削除処理
+            $a = new Deletelist();
+            $a->Delete_detail($_POST['delete']);
+
+            //重複削除が起きないようにリダイレクト
+            header('Location: room_list.php');
+            exit;
+            break;
+
+        case 'edit':
+            $_SESSION['data_id'] = $_POST['edit'];
+            header('Location: room_edit.php');
+            exit;
+            break;
+
+        default:
+            # code...
+            break;
     }
 
     //POSTで帰ってきて、尚且つソートが選択されていた場合
@@ -35,20 +50,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         array_multisort($sort_main, SORT_ASC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
     }
-}
 
-//降順（▲）が押された場合
-if (!empty($_POST['down_sort'])) {
-    $sort_main = array();
-    $sort_main = array();
-    foreach ($room_list as $key => $value) {
-        if ($value['img'] == NULL or $value['name'] == NULL) {
-            $value[$_POST['down_sort']]  = '0';
+    //降順（▲）が押された場合
+    if (!empty($_POST['down_sort'])) {
+        $sort_main = array();
+        $sort_main = array();
+        foreach ($room_list as $key => $value) {
+            if ($value['img'] == NULL or $value['name'] == NULL) {
+                $value[$_POST['down_sort']]  = '0';
+            }
+            $sort_main[$key] = $value[$_POST['down_sort']];
+            $sort_sub[$key] = $value['id'];
         }
-        $sort_main[$key] = $value[$_POST['down_sort']];
-        $sort_sub[$key] = $value['id'];
+        array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
     }
-    array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
 }
 
 ?>
@@ -101,7 +116,7 @@ if (!empty($_POST['down_sort'])) {
                         </p>
                     </th>
                     <th class="list_create">
-                        <button type="submit" value="新規作成" name="create" onclick="return btn_check(this.name)">新規作成</button>
+                        <button type="submit" value="新規作成" name="create">新規作成</button>
                     </th>
                 </tr>
                 <?php foreach ($room_list as $list) : ?>
@@ -112,7 +127,7 @@ if (!empty($_POST['down_sort'])) {
                         <td><?= $list['created_at'] ?></td>
                         <td><?= $list['updated_at'] ?></td>
                         <td>
-                            <p><button type="submit" name="edit" value="<?= $list['id'] ?>" onclick="return btn_check(this.name,this.value)">編集</button></p>
+                            <p><button type="submit" name="edit" value="<?= $list['id'] ?>">編集</button></p>
                             <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check(this.name)">削除</button></p>
                         </td>
                     </tr>
@@ -128,34 +143,15 @@ if (!empty($_POST['down_sort'])) {
 
     <script>
         function btn_check(btn, value = null) {
-            switch (btn) {
-                case 'edit':
-                    alert('編集画面へ飛びます');
-                    var link = 'room_edit.php?id=' + value;
-                    location.href = link;
+            if (btn == 'delete') {
+                var res = confirm("削除してもよろしいですか？");
+                if (res == false) {
+                    // 「いいえ」ならフォーム送信をやめる
+                    console.log('delete_none');
                     return false;
-                    break;
-
-                case 'create':
-
-                    break;
-
-                case 'delete':
-                    if (btn == 'delete') {
-                        var res = confirm("削除してもよろしいですか？");
-                        if (res == false) {
-                            // 「いいえ」ならフォーム送信をやめる
-                            console.log('delete_none');
-                            return false;
-                        } else {
-                            console.log('delete_ok');
-                        }
-                    }
-                    break;
-
-                default:
-                    console.log('なんか知らんけど違う値受け取ってるぞ');
-
+                } else {
+                    console.log('delete_ok');
+                }
             }
         }
     </script>

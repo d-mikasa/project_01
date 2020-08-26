@@ -1,6 +1,6 @@
 <?php
 //////////////////////サーバの接続設定//////////////////////
-include ('Const.php');
+require_once('Const.php');
 
 //////////////////////各種サーバ周りの処理//////////////////////
-include ('Model.php');
+require_once('Model.php');

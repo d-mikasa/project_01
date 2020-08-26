@@ -1,4 +1,5 @@
 <?php
 session_start();
-$_SESSION['auth'] = false;
+unset($_SESSION['auth']);
 header('Location: login.php');
+exit;
