@@ -1,6 +1,6 @@
 <?php
 //データベースの中にIDの一致するものを検索する
-class edit_List extends Model
+class EditList extends Model
 {
     public function Edit_detail($id)
     {

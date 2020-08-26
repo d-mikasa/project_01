@@ -1,5 +1,5 @@
 <?php
-require_once ('library.php');
+require_once('class/Library.php');
 
 $error = '';
 $_SESSION['auth'] = 0;

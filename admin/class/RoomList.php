@@ -1,7 +1,7 @@
 <?php
 
  //データベースの中にIDの一致するものを検索する
-class roomList extends Model
+class RoomList extends Model
 {
     public function room_get()
     {

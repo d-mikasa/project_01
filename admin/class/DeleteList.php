@@ -1,6 +1,6 @@
 <?php
 //データベースの中にIDの一致するものを検索する
-class Delete_list extends Model
+class DeleteList extends Model
 {
    public function Delete_detail($id)
    {

@@ -1,5 +1,5 @@
 <?php
-require_once('library.php');
+require_once('class/Library.php');
 
 //GETの値がなかった場合、リストにリダイレクト
 
@@ -29,7 +29,7 @@ if (!empty($_POST['add'])) {
     $id = $_GET['id'];
 }
 
-$a = new edit_List();
+$a = new EditList();
 $edit_detail = $a->Edit_detail($id);
 
 //表示できるコンテンツのIDを配列に保存
