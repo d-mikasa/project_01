@@ -1,27 +1,34 @@
 <?php
 require_once('class/Library.php');
 const IMGS_PATH = '../img/';
-
+if(isset($_SESSION['tmp_path'])){
 if ( rename( $_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'] ) ) {
     echo "ファイルの移動に成功しました";
 } else {
     echo "ファイルの移動に失敗しました";
 }
-
-
+}
 
 if (!empty($_POST['set_data'])) {
     for ($i = 0; $i < count($_POST['set_data']); $i++) {
         $set_data[$i] = $_POST['set_data'][$i];
-
     }
 }
+$id =$_SESSION['data_id'];
 
+$update = new UpdateDetail;
+$update -> update($id,$set_data);
 
-
+// print_r('<pre>');
+// print_r($set_data);
+// print_r('</pre>');
+// echo $set_data[1]['price'];
+// echo '<br>';
+// echo count($set_data);
 
 unset($_SESSION['tmp_path']);
-unset($_SESSION['img_name'] );
+unset($_SESSION['img_name']);
+unset($_SESSION['mode']);
 ?>
 
 <!DOCTYPE html>

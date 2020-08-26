@@ -20,6 +20,7 @@ require_once('AdminUser.php');
 require_once('RoomList.php');
 require_once('DeleteList.php');
 require_once('EditList.php');
+require_once('UpdateDetail.php');
 
 //////////////////////セッションをスタート//////////////////////
 session_start();

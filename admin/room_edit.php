@@ -6,16 +6,17 @@ $view = 1;
 //最大表示領域
 $max = 3;
 
-
+if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
     $a = new EditList();
     $edit_detail = $a->Edit_detail($_SESSION['data_id']);
+
 
     //配列の個数を表示領域に設定
     if ($view < count($edit_detail)) {
         $view = count($edit_detail);
     }
-
+}
 
 //POSTで受け取った際にはidの値と$viewの値を上書き
 if (!empty($_POST)) {
@@ -62,10 +63,19 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
 
         <form action="room_conf.php" method="post" enctype="multipart/form-data">
 
+            <?php if ($_SESSION['mode'] == 'create') : ?>
+                <table>
+                    <tr>
+                        <th>新規部屋名</th>
+                        <td><input type="text" name="plan[0][room_name]"></td>
+                    </tr>
+                </table>
+            <?php endif; ?>
+
             <table class="roomedit_table">
                 <?php for ($i = 0; $i < $view; $i++) : ?>
                     <tr>
-                        <th rowspan="3">プラン[<?= $i + 1 ?>]</th>
+                        <th rowspan="3">プラン[<?= $i +1 ?>]</th>
                         <th>人数</th>
                         <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i]['capacity'])) echo $edit_detail[$i]['capacity'] ?>"></td>
                         <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
@@ -86,14 +96,15 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
                 <?php endif; ?>
             </table>
 
-            <p>画像の編集</p>
-            <table>
-                <tr>
-                    <th>画像</th>
-                    <td><input type="file" name="userfile"></td>
-                </tr>
-            </table>
-
+            <?php if ($_SESSION['mode'] === 'edit') : ?>
+                <p>画像の編集</p>
+                <table>
+                    <tr>
+                        <th>画像</th>
+                        <td><input type="file" name="userfile"></td>
+                    </tr>
+                </table>
+            <?php endif; ?>
 
             <p><input type="submit" value="更新する"></p>
         </form>

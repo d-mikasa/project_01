@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch (key($_POST)) {
         case 'create':
-
+            $_SESSION['mode'] = 'create';
+            header('Location: room_edit.php');
             break;
 
         case 'delete':
@@ -26,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'edit':
+            $_SESSION['mode'] = 'edit';
             $_SESSION['data_id'] = $_POST['edit'];
             header('Location: room_edit.php');
             exit;
