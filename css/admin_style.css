@@ -99,7 +99,7 @@ room_list.php
 }
 
 .list_id {
-    width: 3rem;
+    width: 6rem;
 }
 
 .list_img {
@@ -107,9 +107,28 @@ room_list.php
 }
 
 .list_created_at {
-    width: 20rem;
+    width: 17rem;
 }
 
 .list_updated_at {
-    width: 20rem;
+    width: 17rem;
+}
+
+
+
+
+.roomedit_table {
+    width: 100%;
+    height: 100%;
+    table-layout: fixed;
+    border: solid 1px #000000;
+    border-collapse: collapse;
+}
+
+.roomedit_table tr,
+.roomedit_table td,
+.roomedit_table th {
+    border: solid 1px #000000;
+    border-collapse: collapse;
+
 }

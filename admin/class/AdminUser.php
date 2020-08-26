@@ -1,20 +1,16 @@
 <?php
 class AdminUser extends Model
 {
-    public function checkUser($id, $pass)
+    public function userLogin($id, $pass)
     {
         parent::connect();
-        $sql = 'SELECT * FROM admin_user WHERE login_id = ?';
+        $sql = 'SELECT * FROM admin_user WHERE login_id = ? AND delete_flg = FALSE';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
         $result = $stmt->fetch();
 
         if (empty($result)) {
             return 'IDが間違っています';
-        }
-
-        if($result['delete_flg'] == TRUE){
-            return 'IDが見つかりませんでした。';
         }
 
         if ($result['login_pass'] === $pass) {

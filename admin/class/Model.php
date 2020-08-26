@@ -16,4 +16,10 @@ class Model
 }
 
 //////////////////////UserParmissionの処理をInclude//////////////////////
-include('user.pm.php');
+require_once('AdminUser.php');
+require_once('RoomList.php');
+require_once('DeleteList.php');
+require_once('EditList.php');
+
+//////////////////////セッションをスタート//////////////////////
+session_start();
