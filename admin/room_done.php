@@ -19,20 +19,6 @@ if (!empty($_POST['set_data'])) {
 $update = new UpdateDetail;
 $update -> update($_SESSION['data_id'],$set_data,$_SESSION['room_name']);
 
-print_r('<pre>');
-print_r($set_data);
-print_r('</pre>');
-
-print_r('<pre>');
-print_r($_SESSION['room_name']);
-print_r('</pre>');
-
-// print_r('<pre>');
-// print_r($set_data);
-// print_r('</pre>');
-// echo $set_data[1]['price'];
-// echo '<br>';
-// echo count($set_data);
 
 unset($_SESSION['tmp_path']);
 unset($_SESSION['img_name']);

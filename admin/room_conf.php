@@ -4,10 +4,12 @@ const IMGS_PATH = '../img/temp/';
 
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
+if(!empty($_POST['plan'][0])){
 $temp= $_POST['plan'][0];
 $_SESSION['room_name'] = $temp['room_name'];
+}
 
-for ($i = 1; $i < count($_POST['plan']); $i++) {
+for ($i = 1; $i <= count($_POST['plan']); $i++) {
     $set_data[$i - 1] = $_POST['plan'][$i];
 }
 // アクセスを許可する
@@ -69,7 +71,7 @@ if (!empty($_FILES)) {
 
             <table class="roomedit_table">
                 <tr>
-                    <th rowspan="3">プラン[<?= $i ?>]</th>
+                    <th rowspan="3">プラン[<?= $i+1 ?>]</th>
                     <th>人数</th>
                     <td><?= $set_data[$i]['capacity'] ?></td>
                 </tr>
