@@ -1,12 +1,12 @@
 <?php
 require_once('class/Library.php');
 const IMGS_PATH = '../img/';
-if(isset($_SESSION['tmp_path'])){
-if ( rename( $_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'] ) ) {
-    echo "ファイルの移動に成功しました";
-} else {
-    echo "ファイルの移動に失敗しました";
-}
+if (isset($_SESSION['tmp_path'])) {
+    if (rename($_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'])) {
+        echo "ファイルの移動に成功しました";
+    } else {
+        echo "ファイルの移動に失敗しました";
+    }
 }
 
 if (!empty($_POST['set_data'])) {
@@ -14,10 +14,18 @@ if (!empty($_POST['set_data'])) {
         $set_data[$i] = $_POST['set_data'][$i];
     }
 }
-$id =$_SESSION['data_id'];
+
 
 $update = new UpdateDetail;
-$update -> update($id,$set_data);
+$update -> update($_SESSION['data_id'],$set_data,$_SESSION['room_name']);
+
+print_r('<pre>');
+print_r($set_data);
+print_r('</pre>');
+
+print_r('<pre>');
+print_r($_SESSION['room_name']);
+print_r('</pre>');
 
 // print_r('<pre>');
 // print_r($set_data);
@@ -29,6 +37,7 @@ $update -> update($id,$set_data);
 unset($_SESSION['tmp_path']);
 unset($_SESSION['img_name']);
 unset($_SESSION['mode']);
+unset($_SESSION['room_name']);
 ?>
 
 <!DOCTYPE html>

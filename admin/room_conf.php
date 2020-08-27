@@ -2,8 +2,13 @@
 require_once('class/Library.php');
 const IMGS_PATH = '../img/temp/';
 
-for ($i = 0; $i < count($_POST['plan']); $i++) {
-    $set_data[$i] = $_POST['plan'][$i];
+
+//配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
+$temp= $_POST['plan'][0];
+$_SESSION['room_name'] = $temp['room_name'];
+
+for ($i = 1; $i < count($_POST['plan']); $i++) {
+    $set_data[$i - 1] = $_POST['plan'][$i];
 }
 // アクセスを許可する
 exec('sudo chmod 0777 ' . IMGS_PATH);
@@ -29,12 +34,6 @@ if (!empty($_FILES)) {
     }
 }
 
-// 元の状態に戻す
-echo $message;
-
-print_r($_FILES);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -50,6 +49,17 @@ print_r($_FILES);
 <body>
     <!-- ヘッダー部分読み込み -->
     <?php include('parts/nav.parts.php'); ?>
+
+    <!--新規作成モードなら新規部屋名を表示 -->
+    <?php if ($_SESSION['mode'] == 'create') : ?>
+        <table>
+            <tr>
+                <th>新規部屋名</th>
+                <td><?= $_SESSION['room_name'] ?></td>
+            </tr>
+        </table>
+    <?php endif; ?>
+
 
     <form action="room_done.php" method="post">
         <?php for ($i = 0; $i < count($set_data); $i++) : ?>

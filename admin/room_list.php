@@ -118,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </p>
                     </th>
                     <th class="list_create">
-                        <button type="submit" value="新規作成" name="create">新規作成</button>
+                        <button type="submit"name="create" value="新規作成" >新規作成</button>
                     </th>
                 </tr>
                 <?php foreach ($room_list as $list) : ?>
