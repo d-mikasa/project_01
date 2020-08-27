@@ -7,9 +7,10 @@ $temp= $_POST['plan'][0];
 $_SESSION['room_name'] = $temp['room_name'];
 }
 
-for ($i = 1; $i <= count($_POST['plan']); $i++) {
+for ($i = 1; $i < count($_POST['plan']); $i++) {
     $set_data[$i - 1] = $_POST['plan'][$i];
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +64,8 @@ for ($i = 1; $i <= count($_POST['plan']); $i++) {
         <p><input type="submit" value="確認"></p>
         <p><input type="submit" value="キャンセル" formaction="room_edit.php"></p>
     </form>
-
+    <!-- フッター部分読み込み -->
+    <?php include('parts/footer.parts.php'); ?>
 </body>
 
 </html>

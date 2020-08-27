@@ -1,6 +1,6 @@
 <?php
 require_once('../class/Library.php');
-const IMGS_PATH = '../img';
+const IMGS_PATH = '../img/';
 
 $view = 1;
 
@@ -33,8 +33,10 @@ if (!empty($_POST['del'])) {
 
 
 if (!empty($_FILES)) {
-    // アクセスを許可する
-    chmod(IMGS_PATH, 0777);
+
+    // 権限変更
+    exec('sudo chmod 0777 ' . IMGS_PATH);
+
     if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
         $name = $_FILES['userfile']['name'];
         $name = mb_convert_encoding($name, 'cp932', 'utf8');
@@ -43,7 +45,7 @@ if (!empty($_FILES)) {
         if ($result == true) {
             $message = 'ファイルをアップロードしました';
             $pdo = new ImageUpdata;
-            $pdo->image_updata($name, $_SESSION['data_id']);
+            $pdo->image_update($name, $_SESSION['data_id']);
         } else {
             $message = 'ファイルの移動に失敗しました';
         }
@@ -52,7 +54,8 @@ if (!empty($_FILES)) {
     } else {
         $message = 'ファイルのアップロードに失敗しました';
     }
-    chmod(IMGS_PATH, 0755);
+    // 元の状態に戻す
+    exec('sudo chmod 0755 ' . IMGS_PATH);
 }
 
 
@@ -129,14 +132,14 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
 
         <?php if ($_SESSION['mode'] === 'edit') : ?>
             <p>画像の編集</p>
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="room_edit.php" method="post" enctype="multipart/form-data">
                 <table>
                     <tr>
                         <th>画像</th>
                         <td><input type="file" name="userfile"></td>
                     </tr>
                 </table>
-                <p><input type="submit" value="画像を更新" formaction="room_edit.php"></p>
+                <p><input type="submit" value="画像を更新"onclick="return btn_check()"></p>
             </form>
         <?php endif; ?>
 
@@ -145,6 +148,16 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
     <!-- フッター部分読み込み -->
     <?php include('parts/footer.parts.php'); ?>
     <script>
+        function btn_check(btn, value = null) {
+                var res = confirm("画像をアップロードしますか？");
+                if (res == false) {
+                    // 「いいえ」ならフォーム送信をやめる
+                    console.log('delete_none');
+                    return false;
+                } else {
+                    console.log('delete_ok');
+                }
+            }
     </script>
 </body>
 

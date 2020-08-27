@@ -246,8 +246,8 @@ $(function() {
                         <p>
                             <?php $detail = $showlist->show_detail($room_value['id']) ?>
                             <?php for ($i = 0; $i < count($detail); $i++) : ?>
-                                <?= $detail[$i]['capacity'] . '名様：' ?>
-                                <?= '¥' .  number_format($detail[$i]['price']) ?>
+                                <?php if(!empty($detail[$i]['capacity'])) echo $detail[$i]['capacity'] . '名様：' ?>
+                                <?php if(!empty($detail[$i]['price'])) echo '¥' .  number_format($detail[$i]['price']) ?>
                                 <?php if(!empty($detail[$i]['remarks'])) echo '(' . $detail[$i]['remarks'] . ')' ?>
 
                                 <br>
