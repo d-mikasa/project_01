@@ -1,5 +1,5 @@
 <?php
-require_once('class/Library.php');
+require_once('../class/Library.php');
 const IMGS_PATH = '../img/temp/';
 
 

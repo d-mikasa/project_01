@@ -1,5 +1,5 @@
 <?php
-require_once('class/Library.php');
+require_once('../class/Library.php');
 
 $view = 1;
 

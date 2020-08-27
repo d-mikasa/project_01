@@ -1,5 +1,5 @@
 <?php
-require_once('class/Library.php');
+require_once('../class/Library.php');
 const IMGS_PATH = '../img/';
 if (isset($_SESSION['tmp_path'])) {
     if (rename($_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'])) {

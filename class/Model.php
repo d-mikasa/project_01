@@ -22,6 +22,4 @@ require_once('DeleteList.php');
 require_once('EditList.php');
 require_once('UpdateDetail.php');
 require_once('GetPage.php');
-
-//////////////////////セッションをスタート//////////////////////
-session_start();
+require_once('Hsc.php');

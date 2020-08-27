@@ -1,8 +1,7 @@
 <?php
-require_once('class/Library.php');
+require_once('../class/Library.php');
 
-
-if ($_SESSION['auth'] == false) {
+if ($_SESSION['auth'] == 0) {
     header('Location: login.php');
 }
 
