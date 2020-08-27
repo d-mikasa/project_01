@@ -1,5 +1,6 @@
 <?php
 require_once('../class/Library.php');
+const IMGS_PATH = '../img';
 
 $view = 1;
 
@@ -19,16 +20,42 @@ if ($_SESSION['mode'] == 'edit') {
 }
 
 //POSTで受け取った際にはidの値と$viewの値を上書き
-if (!empty($_POST)) {
-    if (!empty($_POST['add'])) {
-        $view = $_COOKIE['count'] + 1;
-    }
 
-    if (!empty($_POST['del'])) {
-        $id = $_POST['del'];
-        $view = $_COOKIE['count'] - 1;
-    }
+if (!empty($_POST['add'])) {
+    $view = $_COOKIE['count'] + 1;
 }
+
+if (!empty($_POST['del'])) {
+    $id = $_POST['del'];
+    $view = $_COOKIE['count'] - 1;
+}
+
+
+
+if (!empty($_FILES)) {
+    // アクセスを許可する
+    chmod(IMGS_PATH, 0777);
+    if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
+        $name = $_FILES['userfile']['name'];
+        $name = mb_convert_encoding($name, 'cp932', 'utf8');
+        $temp = $_FILES['userfile']['tmp_name'];
+        $result = move_uploaded_file($temp, IMGS_PATH . $name);
+        if ($result == true) {
+            $message = 'ファイルをアップロードしました';
+            $pdo = new ImageUpdata;
+            $pdo->image_updata($name, $_SESSION['data_id']);
+        } else {
+            $message = 'ファイルの移動に失敗しました';
+        }
+    } elseif ($_FILES['userfile']['error'] == UPLOAD_ERR_NO_FILE) {
+        $message = 'ファイルがアップロードされませんでした';
+    } else {
+        $message = 'ファイルのアップロードに失敗しました';
+    }
+    chmod(IMGS_PATH, 0755);
+}
+
+
 
 //最大表示領域を超えていた場合、表示領域を上書き
 if ($view > $max) {
@@ -61,7 +88,7 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
     <?php include('parts/nav.parts.php'); ?>
     <main>
 
-        <form action="room_conf.php" method="post" enctype="multipart/form-data">
+        <form action="room_conf.php" method="post">
 
             <!--新規作成モードなら新規部屋名を表示 -->
             <?php if ($_SESSION['mode'] == 'create') : ?>
@@ -78,16 +105,16 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
                     <tr>
                         <th rowspan="3">プラン[<?= $i  ?>]</th>
                         <th>人数</th>
-                        <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i -1]['capacity'])) echo $edit_detail[$i-1]['capacity'] ?>"></td>
+                        <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>"></td>
                         <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
                     </tr>
                     <tr>
                         <th>料金</th>
-                        <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i-1]['capacity'])) echo $edit_detail[$i-1]['price'] ?>"></td>
+                        <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>"></td>
                     </tr>
                     <tr>
                         <th>コメント</th>
-                        <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i-1]['remarks'])) echo $edit_detail[$i-1]['remarks'] ?> </textarea></td>
+                        <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea></td>
                     </tr>
                 <?php endfor; ?>
                 <?php if ($max > $view) : ?>
@@ -97,18 +124,21 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
                 <?php endif; ?>
             </table>
 
-            <?php if ($_SESSION['mode'] === 'edit') : ?>
-                <p>画像の編集</p>
+            <p><input type="submit" value="更新する"></p>
+        </form>
+
+        <?php if ($_SESSION['mode'] === 'edit') : ?>
+            <p>画像の編集</p>
+            <form action="" method="post" enctype="multipart/form-data">
                 <table>
                     <tr>
                         <th>画像</th>
                         <td><input type="file" name="userfile"></td>
                     </tr>
                 </table>
-            <?php endif; ?>
-
-            <p><input type="submit" value="更新する"></p>
-        </form>
+                <p><input type="submit" value="画像を更新" formaction="room_edit.php"></p>
+            </form>
+        <?php endif; ?>
 
 
     </main>

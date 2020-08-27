@@ -1,13 +1,5 @@
 <?php
 require_once('../class/Library.php');
-const IMGS_PATH = '../img/';
-if (isset($_SESSION['tmp_path'])) {
-    if (rename($_SESSION['tmp_path'], IMGS_PATH . $_SESSION['img_name'])) {
-        echo "ファイルの移動に成功しました";
-    } else {
-        echo "ファイルの移動に失敗しました";
-    }
-}
 
 if (!empty($_POST['set_data'])) {
     for ($i = 0; $i < count($_POST['set_data']); $i++) {
