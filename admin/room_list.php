@@ -1,5 +1,5 @@
 <?php
-require_once('class/Library.php');
+require_once('../class/Library.php');
 
 if ($_SESSION['auth'] == false) {
     header('Location: login.php');
@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch (key($_POST)) {
         case 'create':
-
+            $_SESSION['mode'] = 'create';
+            header('Location: room_edit.php');
             break;
 
         case 'delete':
@@ -26,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'edit':
+            $_SESSION['mode'] = 'edit';
             $_SESSION['data_id'] = $_POST['edit'];
             header('Location: room_edit.php');
             exit;
@@ -116,19 +118,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </p>
                     </th>
                     <th class="list_create">
-                        <button type="submit" value="新規作成" name="create">新規作成</button>
+                        <button type="submit"name="create" value="新規作成" >新規作成</button>
                     </th>
                 </tr>
                 <?php foreach ($room_list as $list) : ?>
                     <tr>
-                        <td><?= $list['id'] ?></td>
-                        <td><img src="../img/<?= $list['img'] ?>" alt=""></td>
-                        <td><?= $list['name'] ?></td>
-                        <td><?= $list['created_at'] ?></td>
-                        <td><?= $list['updated_at'] ?></td>
-                        <td>
+                        <td class = "id_data"><?= $list['id'] ?></td>
+                        <td class = "img_data"><img src="../img/<?= $list['img'] ?>" alt="" class = "listimage"></td>
+                        <td class = "name_data"><?= $list['name'] ?></td>
+                        <td class = "created_data"><?= $list['created_at'] ?></td>
+                        <td class = "updated_data"><?= $list['updated_at'] ?></td>
+                        <td class = "edit_group">
                             <p><button type="submit" name="edit" value="<?= $list['id'] ?>">編集</button></p>
-                            <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check(this.name)">削除</button></p>
+                            <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()">削除</button></p>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -142,8 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <script>
-        function btn_check(btn, value = null) {
-            if (btn == 'delete') {
+        function btn_check() {
                 var res = confirm("削除してもよろしいですか？");
                 if (res == false) {
                     // 「いいえ」ならフォーム送信をやめる
@@ -153,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     console.log('delete_ok');
                 }
             }
-        }
+
     </script>
 
 </body>

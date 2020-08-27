@@ -20,6 +20,8 @@ require_once('AdminUser.php');
 require_once('RoomList.php');
 require_once('DeleteList.php');
 require_once('EditList.php');
-
-//////////////////////セッションをスタート//////////////////////
-session_start();
+require_once('UpdateDetail.php');
+require_once('GetPage.php');
+require_once('Hsc.php');
+require_once('ShowList.php');
+require_once('ImageUpdata.php');

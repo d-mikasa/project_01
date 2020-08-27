@@ -7,3 +7,5 @@
         <a href="top.php">TOP</a>
         <a href="room_list.php">客室一覧</a>
     </nav>
+
+    <?php getPage(); ?>

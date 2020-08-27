@@ -44,8 +44,7 @@ p {
 
 .topNav {
     display: flex;
-    justify-content: space-between;
-
+    /* justify-content: space-between; */
 }
 
 
@@ -54,7 +53,7 @@ p {
     display: grid;
     place-items: center;
     background-color: black;
-    width: 100%;
+    width: 25rem;
     height: 50px;
     border: 3px solid white;
     color: white;
@@ -131,4 +130,23 @@ room_list.php
     border: solid 1px #000000;
     border-collapse: collapse;
 
+}
+
+.img_data{
+    width: 600px;
+    height: 300px;
+     margin:auto;
+     display:table-cell;
+     text-align:center;
+
+
+}
+
+img.listimage{
+    vertical-align:middle;
+
+    max-width:600px;
+    max-height:300px;
+    width: auto;
+    height: auto;
 }
