@@ -20,14 +20,18 @@ if (!empty($_POST['set_data'])) {
     }
 }
 
-
+//変なセッション値が残っていたときのため、一応分岐処理
 if ($_SESSION['mode'] == 'edit') {
     $update = new UpdateDetail;
     $update->update($_SESSION['data_id'], $set_data);
 } else {
     $update = new UpdateDetail;
-    $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
+    $hoge = $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
 }
+echo 'oakdjf;aifafoa';
+print_r('<pre>');
+print_r($hoge);
+print_r('</pre>');
 
 //セッションを初期化
 unset($_SESSION['tmp_path']);

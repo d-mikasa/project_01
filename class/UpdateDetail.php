@@ -15,6 +15,16 @@ class UpdateDetail extends Model
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$room]);
 
+
+
+
+            $sql ="SELECT  AUTO_INCREMENT
+            FROM  INFORMATION_SCHEMA.TABLES
+            WHERE TABLE_SCHEMA = 'd_mikasa'
+            AND   TABLE_NAME   = 'room'";
+            $stmt = $pdo -> query($sql) -> fetchAll();
+            $id = $stmt;
+
             $sql = 'SELECT * FROM room ORDER BY created_at DESC LIMIT 1';
             $stmt = $pdo -> query($sql) -> fetch();
             $id = $stmt['id'];
@@ -25,8 +35,6 @@ class UpdateDetail extends Model
                 $stmt->execute([$id, $list[$i]['capacity'], $list[$i]['remarks'], $list[$i]['price']]);
             }
         }
-
-
 
         if ($_SESSION['mode'] == 'edit') {
             $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';

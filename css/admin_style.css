@@ -133,7 +133,7 @@ room_list.php
 }
 
 .img_data{
-    width: 600px;
+    width: 500px;
     height: 300px;
      margin:auto;
      display:table-cell;
@@ -144,9 +144,34 @@ room_list.php
 
 img.listimage{
     vertical-align:middle;
-
-    max-width:600px;
-    max-height:300px;
+    max-width:450px;
+    max-height:250px;
     width: auto;
     height: auto;
+}
+
+.title_btn{
+    height: 60px;
+    width: 260px;
+    background-color: white;
+    color: black;
+    margin: 10px 0px 15px 0px;
+    font-size: 20px;
+}
+
+.edit_group>p>button{
+    height: 60px;
+    width: 120px;
+}
+
+.list_create>button{
+    height: 60px;
+    width: 120px;
+}
+
+.list_id>p>button, .list_name>p>button, .list_created_at>p>button, .list_updated_at>p>button{
+display: flex;
+border: none;  /* 枠線を消す */
+outline: none; /* クリックしたときに表示される枠線を消す */
+background: transparent; /* 背景の灰色を消す */
 }
