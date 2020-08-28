@@ -28,7 +28,7 @@ if ($_SESSION['mode'] == 'edit') {
     $update = new UpdateDetail;
     $hoge = $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
 }
-echo 'oakdjf;aifafoa';
+
 print_r('<pre>');
 print_r($hoge);
 print_r('</pre>');
