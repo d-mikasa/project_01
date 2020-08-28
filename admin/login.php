@@ -8,9 +8,7 @@ if (!empty($_POST['attestation'])) {
     //バリデーション処理
     if (empty($_POST['id']) or empty($_POST['pass'])) {
         $error = 'IDかパスワードが入力されていません';
-    }
-
-    if (empty($error)) {
+    } else {
         $admin_user = new AdminUser();
 
         // PDOクラスのメソッドを使う
@@ -37,9 +35,9 @@ if (!empty($_POST['attestation'])) {
     <main>
         <form action="" method="post">
             <div class="error">
-                <?=$error; ?>
+                <?= $error; ?>
             </div>
-            <p class="id">ログインID<input type="text" name="id" size="30" value="<?php echo empty($_POST['id']) ? '' : h($_POST['id']);  ?>"></p>
+            <p class="id">ログインID<input type="text" name="id" size="30" value="<?= (empty($_POST['id']) ? '' : h($_POST['id']));?>"></p>
             <p class="pas">パスワード<input type="password" name="pass" size="30"></p>
             <p><input type="submit" value="認証" name="attestation"></p>
         </form>
