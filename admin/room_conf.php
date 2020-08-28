@@ -16,11 +16,6 @@ for ($i = 1; $i < count($_POST['plan']); $i++) {
 }
 }
 
-
-// print_r('<pre>');
-// print_r($set_data[0]['remarks']);
-// print_r('</pre>');
-
 ?>
 
 <!DOCTYPE html>
