@@ -11,7 +11,7 @@ for ($i = 1; $i < count($_POST['plan']); $i++) {
 }else{
     for ($i = 1; $i < count($_POST['plan']); $i++) {
         $set_data[$i - 1] = $_POST['plan'][$i];
-    }
+}
 }
 
 ?>
