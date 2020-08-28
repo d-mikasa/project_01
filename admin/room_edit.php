@@ -104,27 +104,6 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
             <?php endif; ?>
 
             <table class="roomedit_table">
-                <?php for ($i = 1; $i <= $view; $i++) : ?>
-                    <tr>
-                        <th rowspan="3">プラン[<?= $i  ?>]</th>
-                        <th>人数</th>
-                        <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>"></td>
-                        <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
-                    </tr>
-                    <tr>
-                        <th>料金</th>
-                        <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>"></td>
-                    </tr>
-                    <tr>
-                        <th>コメント</th>
-                        <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea></td>
-                    </tr>
-                <?php endfor; ?>
-                <?php if ($max > $view) : ?>
-                    <tr>
-                        <th colspan="4"><button type="submit" name="add" value="<?= $id ?>" formaction="room_edit.php">プランを追加する</button></th>
-                    </tr>
-                <?php endif; ?>
             </table>
 
             <p><input type="submit" value="更新する"></p>
