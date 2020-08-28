@@ -2,7 +2,7 @@
 require_once('../class/Library.php');
 
 //test edit comment
-
+//hogehoge
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
 if(!empty($_POST['plan'][0])){
