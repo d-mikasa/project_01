@@ -2,14 +2,14 @@
 require_once('../class/Library.php');
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
-if (!empty($_POST['plan'][0])) {
+if ($_SESSION['mode'] == 'create') {
     $temp = $_POST['plan'][0];
     $_SESSION['room_name'] = $temp['room_name'];
     for ($i = 1; $i < count($_POST['plan']); $i++) {
         $set_data[$i - 1] = $_POST['plan'][$i];
     }
 } else {
-    for ($i = 1; $i < count($_POST['plan']); $i++) {
+    for ($i = 1; $i <= count($_POST['plan']); $i++) {
         $set_data[$i - 1] = $_POST['plan'][$i];
     }
 }

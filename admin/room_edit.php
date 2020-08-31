@@ -1,33 +1,31 @@
 <?php
 require_once('../class/Library.php');
+
+//画像保存先
 const IMGS_PATH = '../img/';
 
-$view = 1;
-
 //最大表示領域
-$max = 3;
+const MAX_VIEW = 3;
 
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
     $a = new EditList();
     $edit_detail = $a->Edit_detail($_SESSION['data_id']);
 
-
     //配列の個数を表示領域に設定
-    if ($view < count($edit_detail)) {
-        $view = count($edit_detail);
-    }
+    $view = count($edit_detail);
+} else {
+    $view = 1;
 }
 
-//POSTで受け取った際にはidの値と$viewの値を上書き
-
-if (!empty($_POST['add'])) {
-    $view = $_COOKIE['count'] + 1;
+//最大表示領域を超えていた場合、表示領域を上書き
+if ($view > MAX_VIEW) {
+    $view = MAX_VIEW;
 }
 
-if (!empty($_POST['del'])) {
-    $id = $_POST['del'];
-    $view = $_COOKIE['count'] - 1;
+//表示領域がなかった場合、１を代入
+if ($view == 0) {
+    $view = 1;
 }
 
 if (!empty($_FILES)) {
@@ -56,19 +54,6 @@ if (!empty($_FILES)) {
     exec('sudo chmod 0755 ' . IMGS_PATH);
 }
 
-//最大表示領域を超えていた場合、表示領域を上書き
-if ($view > $max) {
-    $view = $max;
-}
-
-//表示領域がなかった場合、１を代入
-if ($view == 0) {
-    $view = 1;
-}
-
-//現在の表示領域をCookieに保存する
-setcookie('count', $view, time() + 60 * 60 * 24 * 7);
-
 ?>
 
 <!-- ヘッダー部分読み込み -->
@@ -87,34 +72,34 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
             </table>
         <?php endif; ?>
 
-        <table class="roomedit_table">
+        <table class="roomedit_table" id='table'>
             <?php for ($i = 1; $i <= $view; $i++) : ?>
                 <tr>
-                    <th rowspan="3">プラン[<?= $i  ?>]</th>
-                    <th>人数</th>
-                    <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>"></td>
-                    <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
-                </tr>
-                <tr>
-                    <th>料金</th>
-                    <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>"></td>
-                </tr>
-                <tr>
-                    <th>コメント</th>
-                    <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea></td>
+                    <td>部屋[<?= $i ?>]</td>
+                    <td>人数
+                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>">
+                    </td>
+
+                    <td>料金
+                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>">
+                    </td>
+
+                    <td>コメント
+                        <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
+                    </td>
+                    <td>
+                        <input type="button" value="行削除" onclick="deleteRow(this)" />
+                    </td>
                 </tr>
             <?php endfor; ?>
-            <?php if ($max > $view) : ?>
-                <tr>
-                    <th colspan="4"><button type="submit" name="add" value="<?= $id ?>" formaction="room_edit.php">プランを追加する</button></th>
-                </tr>
-            <?php endif; ?>
         </table>
-
         <p><input type="submit" value="更新する"></p>
     </form>
 
+    <button type="button" name="add" onclick="add_plan('table')">プランを追加する</button></th>
+
     <?php if ($_SESSION['mode'] === 'edit') : ?>
+
         <p>画像の編集</p>
         <form action="room_edit.php" method="post" enctype="multipart/form-data">
             <table>
@@ -140,6 +125,56 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
         } else {
             console.log('delete_ok');
         }
+    }
+</script>
+
+<script>
+    /**
+     * 列追加
+     */
+    function add_plan(id) {
+        // テーブル取得
+        var table = document.getElementById(id);
+        // 行を行末に追加
+        var row = table.insertRow(-1);
+        // セルの挿入
+        var cell1 = row.insertCell(-1);
+        var cell2 = row.insertCell(-1);
+        var cell3 = row.insertCell(-1);
+        var cell4 = row.insertCell(-1);
+        var cell5 = row.insertCell(-1);
+
+        // 行数取得
+        var row_len = table.rows.length;
+        var no = Math.max(row_len)
+        console.log(row_len)
+        // パーツのHTML
+        var button = '<th>部屋[' + row_len + ']</th>';
+        var hoge1 = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['capacity'] ?>' + '"></td>';
+        var hoge2 = ' <td>料金<input type="text" name="plan[' + row_len + '][price]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['price'] ?>' + '"></td>';
+        var hoge3 = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"> ' + '<?php if (!empty($edit_detail[' + row_len + ']['remarks'])) echo $edit_detail[' + row_len + ']['remarks'] ?>' + '</textarea></td>';
+        var hoge4 = '<input type="button" value="行削除" onclick="deleteRow(this)" />';
+
+
+        // セルの内容入力
+        cell1.innerHTML = button;
+        cell2.innerHTML = hoge1;
+        cell3.innerHTML = hoge2;
+        cell4.innerHTML = hoge3;
+        cell5.innerHTML = hoge4;
+
+    }
+
+
+
+    /**
+     * 行削除
+     */
+    function deleteRow(obj) {
+        // 削除ボタンを押下された行を取得
+        tr = obj.parentNode.parentNode;
+        // trのインデックスを取得して行を削除する
+        tr.parentNode.deleteRow(tr.sectionRowIndex);
     }
 </script>
 
