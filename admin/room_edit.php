@@ -87,16 +87,17 @@ if (!empty($_FILES)) {
                     <td>コメント
                         <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
-                    <td>
-                        <input type="button" value="行削除" onclick="deleteRow(this)" />
-                    </td>
                 </tr>
+                <div id = "hogehoge">
+                </div>
             <?php endfor; ?>
         </table>
+        <button type="button" onclick="add_plan('table')">プランを追加する</button>
+        <button type="button" onclick="deleteRow('table')">プランを削除する</button>
+
         <p><input type="submit" value="更新する"></p>
     </form>
 
-    <button type="button" name="add" onclick="add_plan('table')">プランを追加する</button></th>
 
     <?php if ($_SESSION['mode'] === 'edit') : ?>
 
@@ -137,45 +138,60 @@ if (!empty($_FILES)) {
         var table = document.getElementById(id);
         // 行を行末に追加
         var row = table.insertRow(-1);
+
         // セルの挿入
         var cell1 = row.insertCell(-1);
         var cell2 = row.insertCell(-1);
         var cell3 = row.insertCell(-1);
         var cell4 = row.insertCell(-1);
-        var cell5 = row.insertCell(-1);
+
 
         // 行数取得
         var row_len = table.rows.length;
-        var no = Math.max(row_len)
-        console.log(row_len)
-        // パーツのHTML
-        var button = '<th>部屋[' + row_len + ']</th>';
-        var hoge1 = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['capacity'] ?>' + '"></td>';
-        var hoge2 = ' <td>料金<input type="text" name="plan[' + row_len + '][price]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['price'] ?>' + '"></td>';
-        var hoge3 = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"> ' + '<?php if (!empty($edit_detail[' + row_len + ']['remarks'])) echo $edit_detail[' + row_len + ']['remarks'] ?>' + '</textarea></td>';
-        var hoge4 = '<input type="button" value="行削除" onclick="deleteRow(this)" />';
 
+        // パーツのHTML
+        var room = '<th>部屋[' + row_len + ']</th>';
+        var capacity = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]"></td>';
+        var price = ' <td>料金<input type="text" name="plan[' + row_len + '][price]"></td>';
+        var remarks = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
-        cell1.innerHTML = button;
-        cell2.innerHTML = hoge1;
-        cell3.innerHTML = hoge2;
-        cell4.innerHTML = hoge3;
-        cell5.innerHTML = hoge4;
+        cell1.innerHTML = room;
+        cell2.innerHTML = capacity;
+        cell3.innerHTML = price;
+        cell4.innerHTML = remarks;
+        // cell5.innerHTML = button;
+
+        if(row_len < 3 ){
+        var row = table.insertRow(-1);
+        var add = row.insertCell(-1);
+        var addPlan = '<td><button type="button" onclick="add_plan("table")">プランを追加する</button></td>';
+        add.innerHTML = addPlan;
+
+    }
+    if(row_len != 1){
+    var row = table.insertRow(-1);
+        var del = row.insertCell(-1);
+        var delPlan = '<td><input type="button" value="行削除" onclick="deleteRow("table")"></td>';
+        add.innerHTML = delPlan;
 
     }
 
+    }
 
 
     /**
      * 行削除
      */
     function deleteRow(obj) {
-        // 削除ボタンを押下された行を取得
-        tr = obj.parentNode.parentNode;
-        // trのインデックスを取得して行を削除する
-        tr.parentNode.deleteRow(tr.sectionRowIndex);
+        var table = document.getElementById("table");
+        // 0で先頭を削除。インデックスを指定する。
+        var rows = table.deleteRow(-1);
     }
+
+
+
+
 </script>
 
 </html>
