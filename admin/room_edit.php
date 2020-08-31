@@ -30,8 +30,6 @@ if (!empty($_POST['del'])) {
     $view = $_COOKIE['count'] - 1;
 }
 
-
-
 if (!empty($_FILES)) {
 
     // 権限変更
@@ -58,8 +56,6 @@ if (!empty($_FILES)) {
     exec('sudo chmod 0755 ' . IMGS_PATH);
 }
 
-
-
 //最大表示領域を超えていた場合、表示領域を上書き
 if ($view > $max) {
     $view = $max;
@@ -75,90 +71,76 @@ setcookie('count', $view, time() + 60 * 60 * 24 * 7);
 
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
+<!-- ヘッダー部分読み込み -->
+<?php include('parts/top.parts.php'); ?>
+<main>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/admin_style.css">
-    <title>内容編集</title>
-</head>
+    <form action="room_conf.php" method="post">
 
-
-<body>
-    <!-- ヘッダー部分読み込み -->
-    <?php include('parts/nav.parts.php'); ?>
-    <main>
-
-        <form action="room_conf.php" method="post">
-
-            <!--新規作成モードなら新規部屋名を表示 -->
-            <?php if ($_SESSION['mode'] == 'create') : ?>
-                <table>
-                    <tr>
-                        <th>新規部屋名</th>
-                        <td><input type="text" name="plan[0][room_name]"></td>
-                    </tr>
-                </table>
-            <?php endif; ?>
-
-            <table class="roomedit_table">
-                <?php for ($i = 1; $i <= $view; $i++) : ?>
-                    <tr>
-                        <th rowspan="3">プラン[<?= $i  ?>]</th>
-                        <th>人数</th>
-                        <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>"></td>
-                        <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
-                    </tr>
-                    <tr>
-                        <th>料金</th>
-                        <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>"></td>
-                    </tr>
-                    <tr>
-                        <th>コメント</th>
-                        <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea></td>
-                    </tr>
-                <?php endfor; ?>
-                <?php if ($max > $view) : ?>
-                    <tr>
-                        <th colspan="4"><button type="submit" name="add" value="<?= $id ?>" formaction="room_edit.php">プランを追加する</button></th>
-                    </tr>
-                <?php endif; ?>
+        <!--新規作成モードなら新規部屋名を表示 -->
+        <?php if ($_SESSION['mode'] == 'create') : ?>
+            <table>
+                <tr>
+                    <th>新規部屋名</th>
+                    <td><input type="text" name="plan[0][room_name]"></td>
+                </tr>
             </table>
-
-            <p><input type="submit" value="更新する"></p>
-        </form>
-
-        <?php if ($_SESSION['mode'] === 'edit') : ?>
-            <p>画像の編集</p>
-            <form action="room_edit.php" method="post" enctype="multipart/form-data">
-                <table>
-                    <tr>
-                        <th>画像</th>
-                        <td><input type="file" name="userfile"></td>
-                    </tr>
-                </table>
-                <p><input type="submit" value="画像を更新"onclick="return btn_check()"></p>
-            </form>
         <?php endif; ?>
 
+        <table class="roomedit_table">
+            <?php for ($i = 1; $i <= $view; $i++) : ?>
+                <tr>
+                    <th rowspan="3">プラン[<?= $i  ?>]</th>
+                    <th>人数</th>
+                    <td><input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>"></td>
+                    <td rowspan="3"><?php if ($view != 1) : ?> <button type="submit" name="del" value="<?= $id ?>" formaction="room_edit.php">削除</button><?php endif; ?></td>
+                </tr>
+                <tr>
+                    <th>料金</th>
+                    <td><input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>"></td>
+                </tr>
+                <tr>
+                    <th>コメント</th>
+                    <td colspan=""><textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea></td>
+                </tr>
+            <?php endfor; ?>
+            <?php if ($max > $view) : ?>
+                <tr>
+                    <th colspan="4"><button type="submit" name="add" value="<?= $id ?>" formaction="room_edit.php">プランを追加する</button></th>
+                </tr>
+            <?php endif; ?>
+        </table>
 
-    </main>
-    <!-- フッター部分読み込み -->
-    <?php include('parts/footer.parts.php'); ?>
-    <script>
-        function btn_check(btn, value = null) {
-                var res = confirm("画像をアップロードしますか？");
-                if (res == false) {
-                    // 「いいえ」ならフォーム送信をやめる
-                    console.log('delete_none');
-                    return false;
-                } else {
-                    console.log('delete_ok');
-                }
-            }
-    </script>
-</body>
+        <p><input type="submit" value="更新する"></p>
+    </form>
+
+    <?php if ($_SESSION['mode'] === 'edit') : ?>
+        <p>画像の編集</p>
+        <form action="room_edit.php" method="post" enctype="multipart/form-data">
+            <table>
+                <tr>
+                    <th>画像</th>
+                    <td><input type="file" name="userfile"></td>
+                </tr>
+            </table>
+            <p><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
+        </form>
+    <?php endif; ?>
+
+</main>
+<!-- フッター部分読み込み -->
+<?php include('parts/footer.parts.php'); ?>
+<script>
+    function btn_check(btn, value = null) {
+        var res = confirm("画像をアップロードしますか？");
+        if (res == false) {
+            // 「いいえ」ならフォーム送信をやめる
+            console.log('delete_none');
+            return false;
+        } else {
+            console.log('delete_ok');
+        }
+    }
+</script>
 
 </html>

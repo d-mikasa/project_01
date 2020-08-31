@@ -40,22 +40,10 @@ unset($_SESSION['mode']);
 unset($_SESSION['room_name']);
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/admin_style.css">
-    <title>ROOM_LIST</title>
-</head>
-
-<body>
     <!-- ヘッダー部分読み込み -->
-    <?php include('parts/nav.parts.php'); ?>
+    <?php include('parts/top.parts.php'); ?>
     更新しました
         <!-- フッター部分読み込み -->
         <?php include('parts/footer.parts.php'); ?>
-</body>
 
 </html>
