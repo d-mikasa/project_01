@@ -58,7 +58,6 @@ p {
     text-decoration: none;
 }
 
-
 a {
     display: block;
 }
@@ -82,7 +81,6 @@ room_list.php
     border: solid 1px #000000;
     border-collapse: collapse;
 }
-
 
 .roomlist_table tr,
 .roomlist_table td,
