@@ -46,5 +46,4 @@ unset($_SESSION['room_name']);
         <!-- フッター部分読み込み -->
         <?php include('parts/footer.parts.php'); ?>
 
-
 </html>
