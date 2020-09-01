@@ -88,12 +88,18 @@ if (!empty($_FILES)) {
                         <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
-                <div id = "hogehoge">
+                <div id="hogehoge">
                 </div>
             <?php endfor; ?>
         </table>
-        <button type="button" onclick="add_plan('table')">プランを追加する</button>
-        <button type="button" onclick="deleteRow('table')">プランを削除する</button>
+
+        <div id="add_plan">
+            <button type="button" onclick="add_plan('table')">プランを追加する</button>
+        </div>
+
+        <div id="del_plan">
+            <button type="button" onclick="del_plan('table')">プランを削除する</button>
+        </div>
 
         <p><input type="submit" value="更新する"></p>
     </form>
@@ -160,22 +166,22 @@ if (!empty($_FILES)) {
         cell2.innerHTML = capacity;
         cell3.innerHTML = price;
         cell4.innerHTML = remarks;
-        // cell5.innerHTML = button;
 
-        if(row_len < 3 ){
-        var row = table.insertRow(-1);
-        var add = row.insertCell(-1);
-        var addPlan = '<td><button type="button" onclick="add_plan("table")">プランを追加する</button></td>';
-        add.innerHTML = addPlan;
 
-    }
-    if(row_len != 1){
-    var row = table.insertRow(-1);
-        var del = row.insertCell(-1);
-        var delPlan = '<td><input type="button" value="行削除" onclick="deleteRow("table")"></td>';
-        add.innerHTML = delPlan;
+        //ボタンの表示非表示を切り替える処理
+        if (row_len >= 3) {
+            document.getElementById('add_plan').style.display = 'none';
+        } else {
+            document.getElementById('add_plan').style.display = '';
+        }
 
-    }
+        if (row_len == 1) {
+            document.getElementById('del_plan').style.display = 'none';
+        } else {
+            document.getElementById('del_plan').style.display = '';
+        }
+
+        console.log(row_len);
 
     }
 
@@ -183,15 +189,28 @@ if (!empty($_FILES)) {
     /**
      * 行削除
      */
-    function deleteRow(obj) {
+    function del_plan(obj) {
         var table = document.getElementById("table");
         // 0で先頭を削除。インデックスを指定する。
         var rows = table.deleteRow(-1);
+        var row_len = table.rows.length;
+
+        //ボタンの表示非表示を切り替える処理
+        if (row_len >= 3) {
+            document.getElementById('add_plan').style.display = 'none';
+        } else {
+            document.getElementById('add_plan').style.display = '';
+        }
+
+        if (row_len == 1) {
+            document.getElementById('del_plan').style.display = 'none';
+        } else {
+            document.getElementById('del_plan').style.display = '';
+        }
+
+        console.log(row_len);
+
     }
-
-
-
-
 </script>
 
 </html>
