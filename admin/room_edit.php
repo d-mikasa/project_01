@@ -199,13 +199,13 @@ if (!empty($_FILES)) {
         if (row_len >= 3) {
             document.getElementById('add_plan').style.display = 'none';
         } else {
-            document.getElementById('add_plan').style.display = '';
+            document.getElementById('add_plan').style.display = 'block';
         }
 
         if (row_len == 1) {
             document.getElementById('del_plan').style.display = 'none';
         } else {
-            document.getElementById('del_plan').style.display = '';
+            document.getElementById('del_plan').style.display = 'block';
         }
 
         console.log(row_len);
