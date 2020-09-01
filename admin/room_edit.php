@@ -207,8 +207,24 @@ if (!empty($_FILES)) {
         } else {
             document.getElementById('del_plan').style.display = 'block';
         }
-
         console.log(row_len);
+    }
 
+    window.onload = function() {
+        var table = document.getElementById("table");
+        var row_len = table.rows.length;
+
+        //ボタンの表示非表示を切り替える処理
+        if (row_len >= 3) {
+            document.getElementById('add_plan').style.display = 'none';
+        } else {
+            document.getElementById('add_plan').style.display = 'block';
+        }
+
+        if (row_len == 1) {
+            document.getElementById('del_plan').style.display = 'none';
+        } else {
+            document.getElementById('del_plan').style.display = 'block';
+        }
     }
 </script>
