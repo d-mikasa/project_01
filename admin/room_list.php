@@ -68,52 +68,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <main>
     <form action="" name='btn_form' method="post">
-        <button type="submit" name="hoge" value="新規作成">新規作成</button>
         <table class="roomlist_table">
             <tr class="table_name">
-                <th class="list_id">
+                <td class="list_id">
                     ID
-                    <p>
-                        <button type="submit" value="id" name="up_sort">▲</button>
-                        <button type="submit" value="id" name="down_sort">▼</button>
-                    </p>
-                </th>
-                <th class="list_img">画像　
-                </th>
-                <th class="list_name">部屋名
-                    <p>
-                        <button type="submit" value="name" name="up_sort">▲</button><br>
-                        <button type="submit" value="name" name="down_sort">▼</button>
-                    </p>
-                </th>
+                    <button type="submit" value="id" name="up_sort" id = "up">▲</button>
+                    <button type="submit" value="id" name="down_sort" id = "down">▼</button>
+                </td>
 
-                </th>
-                <th class="list_created_at">登録日時　
-                    <p>
-                        <button type="submit" value="created_at" name="up_sort">▲</button><br>
-                        <button type="submit" value="created_at" name="down_sort">▼</button>
-                    </p>
-                </th>
-                <th class="list_updated_at">更新　
-                    <p>
-                        <button type="submit" value="updated_at" name="up_sort">▲</button><br>
-                        <button type="submit" value="updated_at" name="down_sort">▼</button>
-                    </p>
-                </th>
-                <th class="list_create">
-                    <button type="submit" name="create" value="新規作成">新規作成</button>
-                </th>
+                <td class="list_img">
+                    画像
+                </td>
+                <td class="list_name">
+                    部屋名
+                    <button type="submit" value="name" name="up_sort" id = "up">▲</button>
+                    <button type="submit" value="name" name="down_sort" id = "down">▼</button>
+                </td>
+
+                <td class="list_created_at">
+                    登録日時
+                    <button type="submit" value="created_at" name="up_sort" id = "up">▲</button>
+                    <button type="submit" value="created_at" name="down_sort" id = "down">▼</button>
+                </td>
+
+                <td class="list_updated_at">
+                    更新
+                        <button type="submit" value="updated_at" name="up_sort" id = "up">▲</button>
+                        <button type="submit" value="updated_at" name="down_sort" id = "down">▼</button>
+                </td>
+                <td class="list_create">
+                    <button type="submit" name="create" value="新規作成">
+                        <p>新規作成</p>
+                    </button>
+                </td>
             </tr>
             <?php foreach ($room_list as $list) : ?>
-                <tr>
+                <tr class = "dataerea">
                     <td class="id_data"><?= $list['id'] ?></td>
                     <td class="img_data"><img src="../img/<?= $list['img'] ?>" alt="" class="listimage"></td>
                     <td class="name_data"><?= $list['name'] ?></td>
                     <td class="created_data"><?= $list['created_at'] ?></td>
                     <td class="updated_data"><?= $list['updated_at'] ?></td>
                     <td class="edit_group">
-                        <p><button type="submit" name="edit" value="<?= $list['id'] ?>">編集</button></p>
-                        <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()">削除</button></p>
+                        <p><button type="submit" name="edit" value="<?= $list['id'] ?>" class = "editButten">編集</button></p>
+                        <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()" class = "deleteButten">削除</button></p>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+/*-------------------------
+    共通部分のCSS
+-------------------------*/
 header {
     margin-bottom: 60px;
 }
@@ -18,125 +21,132 @@ h2 {
     text-align: center;
 }
 
-.backLogin {
-    text-align: center;
-}
-
-p {
-    text-align: center;
-}
-
-.id {
-    margin-bottom: -2px;
+/*-------------------------
+    header
+-------------------------*/
+.topContent {
+    margin: 0 100px 0 100px;
 }
 
 .loginName {
     float: left;
 }
 
-.logout {
+.logoutLink {
     text-align: right;
-}
-
-.topContent {
-    margin: 0 100px 0 100px;
 }
 
 .topNav {
     display: flex;
-    /* justify-content: space-between; */
 }
 
 .topNav>a {
-    display: grid;
-    place-items: center;
-    background-color: black;
     width: 25rem;
     height: 50px;
     border: 3px solid white;
+    background-color: black;
     color: white;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center
 }
 
-a {
-    display: block;
-}
 
+
+/*-------------------------
+    footer
+-------------------------*/
 .corpInc {
     text-align: right;
 }
 
 /*-------------------------
-room_list.php
+    ログインページ
 -------------------------*/
-
-.table_name{
-    height: 40px;
+.loginIdForm,
+.loginPassForm,
+.loginSubmitButton {
+    text-align: center;
 }
 
+/*-------------------------
+room_list.php
+-------------------------*/
+/*----------テーブルの内容------------*/
 .roomlist_table {
     width: 100%;
     height: 100%;
-    table-layout: fixed;
-    border: solid 1px #000000;
     border-collapse: collapse;
+    padding-top: -200px;
 }
 
-.roomlist_table tr,
-.roomlist_table td,
-.roomlist_table th {
-    border: solid 1px #000000;
-    border-collapse: collapse;
+.table_name {
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, .5);
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    height: 70px;
+    background-color: #8BC34A;
+
 }
 
-.list_id {
-    width: 6rem;
+table.roomlist_table .dataerea td {
+    border-right: 1px solid gray;
+    border-left: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+
+
+/*----------カラムの指定------------*/
+/* .list_id {
+    background-color: #f44336;
+
 }
 
 .list_img {
-    width: 540px;
+    background-color: #9C27B0 ;
+
+}
+
+.list_name{
+    background-color:#3F51B5;
+
 }
 
 .list_created_at {
-    width: 17rem;
+    background-color: #03A9F4;
+
 }
 
 .list_updated_at {
-    width: 17rem;
+    background-color: #009688;
+
 }
 
-.roomedit_table {
-    width: 100%;
-    height: 100%;
-    table-layout: fixed;
-    border: solid 1px #000000;
-    border-collapse: collapse;
+.list_create{
+    background-color: #8BC34A;
+} */
+
+/*----------画像のサイズ指定------------*/
+.img_data {
+    width: 200px;
+    height: 100px;
+    display: table-cell;
+    text-align: center;
 }
 
-.roomedit_table tr,
-.roomedit_table td,
-.roomedit_table th {
-    border: solid 1px #000000;
-    border-collapse: collapse;
-}
-
-.img_data{
-    width: 500px;
-    height: 300px;
-     margin:auto;
-     display:table-cell;
-     text-align:center;
-}
-
-img.listimage{
-    vertical-align:middle;
-    max-width:450px;
-    max-height:250px;
+img.listimage {
+    vertical-align: middle;
+    max-width: 200px;
+    max-height: 100px;
     width: auto;
     height: auto;
 }
 
-.title_btn{
+/*----------ページ表示ボタンの設定------------*/
+.title_btn {
     height: 60px;
     width: 260px;
     background-color: white;
@@ -145,19 +155,180 @@ img.listimage{
     font-size: 20px;
 }
 
-.edit_group>p>button{
-    height: 60px;
-    width: 120px;
+/*--------------編集、削除ボタン----------------*/
+.edit_group {
+    margin: auto;
+    width: 10%;
+    text-align: center;
 }
 
-.list_create>button{
-    height: 60px;
-    width: 120px;
+.edit_group>p>button {
+    display: inline-block;
+    height: 40px;
+    width: 70px;
+    outline: none;
+    border: none;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    color: white;
 }
 
-.list_id>p>button, .list_name>p>button, .list_created_at>p>button, .list_updated_at>p>button{
-display: flex;
-border: none;  /* 枠線を消す */
-outline: none; /* クリックしたときに表示される枠線を消す */
-background: transparent; /* 背景の灰色を消す */
+.deleteButten {
+    background-color: #f44336;
+
+}
+
+.editButten {
+    background-color: #607D8B;
+}
+
+/*--------------新規作成ボタン----------------*/
+.list_create>button {
+    height: 50px;
+    width: 100px;
+    text-align: center;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .12), 0 2px 2px 0 rgba(0, 0, 0, .24);
+    /*影*/
+}
+
+#up {
+    margin-right: -10px;
+}
+
+#down {
+    margin-right: 20px;
+}
+
+.list_id>button,
+.list_name>button,
+.list_created_at>button,
+.list_updated_at>button {
+
+    border: none;
+    /* 枠線を消す */
+    outline: none;
+    /* クリックしたときに表示される枠線を消す */
+    background: transparent;
+    /* 背景の灰色を消す */
+}
+
+
+
+/*-------------------------
+    編集画面CSS
+-------------------------*/
+.newcreate {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.newcreate tr,
+td {
+    border: solid 1px black;
+}
+
+.newcreate th {
+    width: 30%;
+    height: 40px;
+    background-color: #8BC34A;
+    color: white;
+}
+
+.newcreate td {
+    width: 70%;
+    text-align: center;
+    height: 30px;
+}
+
+
+
+.roomedit_table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.roomedit_title {
+    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, .5);
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    height: 70px;
+    background-color: #8BC34A;
+
+}
+
+.roomedit_table td {
+    border: solid 1px black;
+    text-align: center;
+}
+
+.changebutton_group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#add_plan>button {
+    background-color: #607D8B;
+    color: white;
+    height: 60px;
+    width: 400px;
+    outline: none;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    border: none;
+    text-align: center;
+    border-radius: 10px;
+}
+
+#del_plan>button {
+    background-color: white;
+    color: #607D8B;
+    height: 60px;
+    width: 400px;
+    outline: none;
+    border: 6px solid #607D8B;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    text-align: center;
+    border-radius: 10px;
+}
+
+.doneButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+.doneButton>input {
+    background-color: #f44336;
+    color: white;
+    height: 60px;
+    width: 400px;
+    outline: none;
+    border: none;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    text-align: center;
+    border-radius: 10px;
+}
+
+
+
+.borderLine {
+    border-bottom: 1px solid gray;
+}
+
+.img_up {
+    text-align: center;
+}
+
+#doneImage>input {
+    background-color: #689F38;
+    color: white;
+    height: 60px;
+    width: 400px;
+    outline: none;
+    border: none;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    text-align: center;
+    border-radius: 10px;
 }

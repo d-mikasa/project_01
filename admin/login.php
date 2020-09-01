@@ -32,14 +32,14 @@ if (!empty($_POST['attestation'])) {
     <header>
         <h1>CICACU 管理画面ログイン</h1>
     </header>
-    <main>
+    <main class = "loginForm">
         <form action="" method="post">
             <div class="error">
                 <?= $error; ?>
             </div>
-            <p class="id">ログインID<input type="text" name="id" size="30" value="<?=(!empty($_POST['id']) ? h($_POST['id']) : '');?>"></p>
-            <p class="pas">パスワード<input type="password" name="pass" size="30"></p>
-            <p><input type="submit" value="認証" name="attestation"></p>
+            <p class="loginIdForm">ログインID<input type="text" name="id" size="30" value="<?=(!empty($_POST['id']) ? h($_POST['id']) : '');?>"></p>
+            <p class="loginPassForm">パスワード<input type="password" name="pass" size="30"></p>
+            <p class = "loginSubmitButton"><input type="submit" value="認証" name="attestation"></p>
         </form>
     </main>
 </body>

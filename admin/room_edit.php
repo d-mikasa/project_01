@@ -65,9 +65,11 @@ if (!empty($_FILES)) {
 
         <!--新規作成モードなら新規部屋名を表示 -->
         <?php if ($_SESSION['mode'] == 'create') : ?>
-            <table>
+            <table class = "newcreate">
+            <tr>
+            <th>新規部屋名</th>
+            </tr>
                 <tr>
-                    <th>新規部屋名</th>
                     <td><input type="text" name="plan[0][room_name]"></td>
                 </tr>
             </table>
@@ -75,54 +77,71 @@ if (!empty($_FILES)) {
 
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
+            <tr class="roomedit_title">
+                <td>
+                    部屋[番号]
+                </td>
+                <td>
+                    人数
+                </td>
+                <td>
+                    料金
+                </td>
+                <td>
+                    コメント
+                </td>
+            </tr>
             <?php for ($i = 1; $i <= $view; $i++) : ?>
                 <tr>
                     <td>部屋[<?= $i ?>]</td>
-                    <td>人数
-                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>">
+                    <td>
+                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>">名様
                     </td>
 
-                    <td>料金
-                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>">
+                    <td>
+                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>">円
                     </td>
 
-                    <td>コメント
+                    <td>
                         <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
             <?php endfor; ?>
         </table>
+        <div class="changebutton_group">
+            <div id="add_plan">
+                <button type="button" onclick="add_plan('table')">プランを追加する</button>
+            </div>
 
-        <div id="add_plan">
-            <button type="button" onclick="add_plan('table')">プランを追加する</button>
+            <div id="del_plan">
+                <button type="button" onclick="del_plan('table')">プランを削除する</button>
+            </div>
         </div>
-
-        <div id="del_plan">
-            <button type="button" onclick="del_plan('table')">プランを削除する</button>
-        </div>
-
-        <p><input type="submit" value="更新する"></p>
+        <p class="doneButton"><input type="submit" value="更新する"></p>
     </form>
 
+    <div class="borderLine"></div>
 
-        <!--編集を押した時のみ画像編集を表示する-->
+    <!--編集を押した時のみ画像編集を表示する-->
     <?php if ($_SESSION['mode'] === 'edit') : ?>
-        <p>画像の編集</p>
+
         <form action="room_edit.php" method="post" enctype="multipart/form-data">
-            <table>
-                <tr>
-                    <th>画像</th>
-                    <td><input type="file" name="userfile"></td>
+            <div class="img_up">
+                <h2>画像の編集</h2>
+                <input type="file" name="userfile" id="sample1">
                 </tr>
-            </table>
-            <p><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
+                </table>
+                <p id = "doneImage">
+                    <input type="submit" value="画像を更新" onclick="return btn_check()">
+                </p>
+            </div>
         </form>
     <?php endif; ?>
 
 </main>
 
 <script>
-////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
+    ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
     function btn_check(btn, value = null) {
         var res = confirm("画像をアップロードしますか？");
         if (res == false) {
@@ -133,7 +152,9 @@ if (!empty($_FILES)) {
 </script>
 
 <script>
-   ////////////////////////////////*行を追加する処理*//////////////////////////////////
+    ////////////////////////////////*行を追加する処理*//////////////////////////////////
+    const VIEW = "<?= MAX_VIEW ?>";
+
     function add_plan(id) {
         // テーブル取得
         var table = document.getElementById(id);
@@ -147,13 +168,13 @@ if (!empty($_FILES)) {
         var cell4 = row.insertCell(-1);
 
         // 行数取得
-        var row_len = table.rows.length;
+        var row_len = table.rows.length - 1;
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]"></td>';
-        var price = ' <td>料金<input type="text" name="plan[' + row_len + '][price]"></td>';
-        var remarks = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="plan[' + row_len + '][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="plan[' + row_len + '][price]">円</td>';
+        var remarks = '<td><textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;
@@ -162,16 +183,16 @@ if (!empty($_FILES)) {
         cell4.innerHTML = remarks;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= 3) {
-            document.getElementById('add_plan').style.display = 'none';
+        if (row_len >= VIEW) {
+            document.getElementById('add_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('add_plan').style.display = '';
+            document.getElementById('add_plan').style.visibility = "visible";
         }
 
         if (row_len == 1) {
-            document.getElementById('del_plan').style.display = 'none';
+            document.getElementById('del_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('del_plan').style.display = '';
+            document.getElementById('del_plan').style.visibility = "visible";
         }
     }
 
@@ -181,37 +202,37 @@ if (!empty($_FILES)) {
         var table = document.getElementById("table");
         // 0で先頭を削除。インデックスを指定する。
         var rows = table.deleteRow(-1);
-        var row_len = table.rows.length;
+        var row_len = table.rows.length - 1;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= 3) {
-            document.getElementById('add_plan').style.display = 'none';
+        if (row_len >= VIEW) {
+            document.getElementById('add_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('add_plan').style.display = 'block';
+            document.getElementById('add_plan').style.visibility = "visible";
         }
 
         if (row_len == 1) {
-            document.getElementById('del_plan').style.display = 'none';
+            document.getElementById('del_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('del_plan').style.display = 'block';
+            document.getElementById('del_plan').style.visibility = "visible";
         }
     }
 
     window.onload = function() {
         var table = document.getElementById("table");
-        var row_len = table.rows.length;
+        var row_len = table.rows.length - 1;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= 3) {
-            document.getElementById('add_plan').style.display = 'none';
+        if (row_len >= VIEW) {
+            document.getElementById('add_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('add_plan').style.display = 'block';
+            document.getElementById('add_plan').style.visibility = "visible";
         }
 
         if (row_len == 1) {
-            document.getElementById('del_plan').style.display = 'none';
+            document.getElementById('del_plan').style.visibility = "hidden";
         } else {
-            document.getElementById('del_plan').style.display = 'block';
+            document.getElementById('del_plan').style.visibility = "visible";
         }
     }
 </script>
