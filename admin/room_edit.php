@@ -87,16 +87,23 @@ if (!empty($_FILES)) {
                     <td>コメント
                         <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
-                    <td>
-                        <input type="button" value="行削除" onclick="deleteRow(this)" />
-                    </td>
                 </tr>
+                <div id="hogehoge">
+                </div>
             <?php endfor; ?>
         </table>
+
+        <div id="add_plan">
+            <button type="button" onclick="add_plan('table')">プランを追加する</button>
+        </div>
+
+        <div id="del_plan">
+            <button type="button" onclick="del_plan('table')">プランを削除する</button>
+        </div>
+
         <p><input type="submit" value="更新する"></p>
     </form>
 
-    <button type="button" name="add" onclick="add_plan('table')">プランを追加する</button></th>
 
     <?php if ($_SESSION['mode'] === 'edit') : ?>
 
@@ -137,43 +144,71 @@ if (!empty($_FILES)) {
         var table = document.getElementById(id);
         // 行を行末に追加
         var row = table.insertRow(-1);
+
         // セルの挿入
         var cell1 = row.insertCell(-1);
         var cell2 = row.insertCell(-1);
         var cell3 = row.insertCell(-1);
         var cell4 = row.insertCell(-1);
-        var cell5 = row.insertCell(-1);
+
 
         // 行数取得
         var row_len = table.rows.length;
-        var no = Math.max(row_len)
-        console.log(row_len)
-        // パーツのHTML
-        var button = '<th>部屋[' + row_len + ']</th>';
-        var hoge1 = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['capacity'] ?>' + '"></td>';
-        var hoge2 = ' <td>料金<input type="text" name="plan[' + row_len + '][price]" value="' + '<?php if (!empty($edit_detail[' + row_len + ']['capacity'])) echo $edit_detail[' + row_len + ']['price'] ?>' + '"></td>';
-        var hoge3 = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"> ' + '<?php if (!empty($edit_detail[' + row_len + ']['remarks'])) echo $edit_detail[' + row_len + ']['remarks'] ?>' + '</textarea></td>';
-        var hoge4 = '<input type="button" value="行削除" onclick="deleteRow(this)" />';
 
+        // パーツのHTML
+        var room = '<th>部屋[' + row_len + ']</th>';
+        var capacity = '<td>人数<input type="text" name="plan[' + row_len + '][capacity]"></td>';
+        var price = ' <td>料金<input type="text" name="plan[' + row_len + '][price]"></td>';
+        var remarks = '<td>コメント<textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
-        cell1.innerHTML = button;
-        cell2.innerHTML = hoge1;
-        cell3.innerHTML = hoge2;
-        cell4.innerHTML = hoge3;
-        cell5.innerHTML = hoge4;
+        cell1.innerHTML = room;
+        cell2.innerHTML = capacity;
+        cell3.innerHTML = price;
+        cell4.innerHTML = remarks;
+
+
+        //ボタンの表示非表示を切り替える処理
+        if (row_len >= 3) {
+            document.getElementById('add_plan').style.display = 'none';
+        } else {
+            document.getElementById('add_plan').style.display = '';
+        }
+
+        if (row_len == 1) {
+            document.getElementById('del_plan').style.display = 'none';
+        } else {
+            document.getElementById('del_plan').style.display = '';
+        }
+
+        console.log(row_len);
 
     }
-
 
 
     /**
      * 行削除
      */
-    function deleteRow(obj) {
-        // 削除ボタンを押下された行を取得
-        tr = obj.parentNode.parentNode;
-        // trのインデックスを取得して行を削除する
-        tr.parentNode.deleteRow(tr.sectionRowIndex);
+    function del_plan(obj) {
+        var table = document.getElementById("table");
+        // 0で先頭を削除。インデックスを指定する。
+        var rows = table.deleteRow(-1);
+        var row_len = table.rows.length;
+
+        //ボタンの表示非表示を切り替える処理
+        if (row_len >= 3) {
+            document.getElementById('add_plan').style.display = 'none';
+        } else {
+            document.getElementById('add_plan').style.display = 'block';
+        }
+
+        if (row_len == 1) {
+            document.getElementById('del_plan').style.display = 'none';
+        } else {
+            document.getElementById('del_plan').style.display = 'block';
+        }
+
+        console.log(row_len);
+
     }
 </script>

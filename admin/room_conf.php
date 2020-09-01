@@ -31,9 +31,9 @@ if ($_SESSION['mode'] == 'create') {
 
 <form action="room_done.php" method="post">
     <?php for ($i = 0; $i < count($set_data); $i++) : ?>
-        <input type="hidden" name="set_data[<?= $i ?>][capacity]" value=<?= $set_data[$i]['capacity'] ?>>
-        <input type="hidden" name="set_data[<?= $i ?>][price]" value=<?= $set_data[$i]['price'] ?>>
-        <input type="hidden" name="set_data[<?= $i ?>][remarks]" value=<?= $set_data[$i]['remarks'] ?>>
+        <input type="hidden" name="set_data[<?= $i ?>][capacity]" value="<?= $set_data[$i]['capacity'] ?>">
+        <input type="hidden" name="set_data[<?= $i ?>][price]" value="<?= $set_data[$i]['price'] ?>">
+        <input type="hidden" name="set_data[<?= $i ?>][remarks]" value="<?= $set_data[$i]['remarks'] ?>">
 
         <table class="roomedit_table">
             <tr>

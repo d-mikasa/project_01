@@ -1,6 +1,7 @@
 <?php
 require_once('../class/Library.php');
 
+
 //空値、空白などが入っている場合、エラーを吐くのでここでNULLを上書き
 if (!empty($_POST['set_data'])) {
     for ($i = 0; $i < count($_POST['set_data']); $i++) {
@@ -26,12 +27,10 @@ if ($_SESSION['mode'] == 'edit') {
     $update->update($_SESSION['data_id'], $set_data);
 } else {
     $update = new UpdateDetail;
-    $hoge = $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
+    $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
 }
 
-print_r('<pre>');
-print_r($hoge);
-print_r('</pre>');
+
 
 //セッションを初期化
 unset($_SESSION['tmp_path']);
