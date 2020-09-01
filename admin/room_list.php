@@ -9,62 +9,55 @@ $a = new roomList();
 $room_list = $a->room_get();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     switch (key($_POST)) {
-        case 'create':
+        case 'create': //新規作成が押された場合
             $_SESSION['mode'] = 'create';
             header('Location: room_edit.php');
             break;
 
-        case 'delete':
-            // 削除処理
+        case 'delete': //削除が押された場合
             $a = new Deletelist();
             $a->Delete_detail($_POST['delete']);
-
             //重複削除が起きないようにリダイレクト
             header('Location: room_list.php');
             exit;
             break;
 
-        case 'edit':
+        case 'edit': //編集ボタンが押された場合
             $_SESSION['mode'] = 'edit';
             $_SESSION['data_id'] = $_POST['edit'];
             header('Location: room_edit.php');
             exit;
             break;
 
-        default:
-            # code...
+        case 'up_sort': //▲ボタンが押された場合
+            $sort_main = array();
+            foreach ($room_list as $key => $value) {
+                if ($value[$_POST['up_sort']] == NULL) {
+                    $value[$_POST['up_sort']]  = 'ー';
+                }
+                $sort_main[$key] = $value[$_POST['up_sort']];
+                $sort_sub[$key] = $value['id'];
+            }
+            array_multisort($sort_main, SORT_ASC, $sort_sub, SORT_ASC, $room_list);
             break;
-    }
 
-    //POSTで帰ってきて、尚且つソートが選択されていた場合
-    //昇順（▲）が押された場合
-    if (!empty($_POST['up_sort'])) {
-        $sort_main = array();
-        $sort_main = array();
-        foreach ($room_list as $key => $value) {
-            if ($value['img'] == NULL or $value['name'] == NULL) {
-                $value[$_POST['up_sort']]  = 'ー';
+        case 'down_sort': //▼ボタンが押された場合
+            $sort_main = array();
+            foreach ($room_list as $key => $value) {
+                if ($value[$_POST['down_sort']] == NULL) {
+                    $value[$_POST['down_sort']]  = '0';
+                }
+                $sort_main[$key] = $value[$_POST['down_sort']];
+                $sort_sub[$key] = $value['id'];
             }
-            $sort_main[$key] = $value[$_POST['up_sort']];
-            $sort_sub[$key] = $value['id'];
-        }
-        array_multisort($sort_main, SORT_ASC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
-    }
+            array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_ASC, $room_list);
+            break;
 
-    //降順（▲）が押された場合
-    if (!empty($_POST['down_sort'])) {
-        $sort_main = array();
-        $sort_main = array();
-        foreach ($room_list as $key => $value) {
-            if ($value['img'] == NULL or $value['name'] == NULL) {
-                $value[$_POST['down_sort']]  = '0';
-            }
-            $sort_main[$key] = $value[$_POST['down_sort']];
-            $sort_sub[$key] = $value['id'];
-        }
-        array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_DESC, SORT_STRING, $room_list);
+        default:
+            //変な値が帰ってきたらとりあえずリダイレクト
+            header('Location: room_list.php');
+            break;
     }
 }
 
@@ -75,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <main>
     <form action="" name='btn_form' method="post">
-
+        <button type="submit" name="hoge" value="新規作成">新規作成</button>
         <table class="roomlist_table">
             <tr class="table_name">
                 <th class="list_id">

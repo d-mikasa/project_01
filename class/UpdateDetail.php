@@ -10,14 +10,12 @@ class UpdateDetail extends Model
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
 
+             //登録モードにより処理を帰る
+             //モード：新規作成の処理
         if ($_SESSION['mode'] == 'create') {
             $sql = 'INSERT INTO room(name) VALUES (?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$room]);
-
-
-
-
             $sql ="SELECT  AUTO_INCREMENT
             FROM  INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = 'd_mikasa'
@@ -36,6 +34,7 @@ class UpdateDetail extends Model
             }
         }
 
+        //モード：編集の処理
         if ($_SESSION['mode'] == 'edit') {
             $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
             $stmt = $pdo->prepare($sql);

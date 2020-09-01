@@ -28,8 +28,8 @@ if ($view == 0) {
     $view = 1;
 }
 
+///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
-
     // 権限変更
     exec('sudo chmod 0777 ' . IMGS_PATH);
 
@@ -50,6 +50,7 @@ if (!empty($_FILES)) {
     } else {
         $message = 'ファイルのアップロードに失敗しました';
     }
+
     // 元の状態に戻す
     exec('sudo chmod 0755 ' . IMGS_PATH);
 }
@@ -72,6 +73,7 @@ if (!empty($_FILES)) {
             </table>
         <?php endif; ?>
 
+        <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
             <?php for ($i = 1; $i <= $view; $i++) : ?>
                 <tr>
@@ -88,8 +90,6 @@ if (!empty($_FILES)) {
                         <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
-                <div id="hogehoge">
-                </div>
             <?php endfor; ?>
         </table>
 
@@ -105,8 +105,8 @@ if (!empty($_FILES)) {
     </form>
 
 
+        <!--編集を押した時のみ画像編集を表示する-->
     <?php if ($_SESSION['mode'] === 'edit') : ?>
-
         <p>画像の編集</p>
         <form action="room_edit.php" method="post" enctype="multipart/form-data">
             <table>
@@ -120,25 +120,20 @@ if (!empty($_FILES)) {
     <?php endif; ?>
 
 </main>
-<!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+
 <script>
+////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
     function btn_check(btn, value = null) {
         var res = confirm("画像をアップロードしますか？");
         if (res == false) {
             // 「いいえ」ならフォーム送信をやめる
-            console.log('delete_none');
             return false;
-        } else {
-            console.log('delete_ok');
         }
     }
 </script>
 
 <script>
-    /**
-     * 列追加
-     */
+   ////////////////////////////////*行を追加する処理*//////////////////////////////////
     function add_plan(id) {
         // テーブル取得
         var table = document.getElementById(id);
@@ -150,7 +145,6 @@ if (!empty($_FILES)) {
         var cell2 = row.insertCell(-1);
         var cell3 = row.insertCell(-1);
         var cell4 = row.insertCell(-1);
-
 
         // 行数取得
         var row_len = table.rows.length;
@@ -167,7 +161,6 @@ if (!empty($_FILES)) {
         cell3.innerHTML = price;
         cell4.innerHTML = remarks;
 
-
         //ボタンの表示非表示を切り替える処理
         if (row_len >= 3) {
             document.getElementById('add_plan').style.display = 'none';
@@ -180,15 +173,10 @@ if (!empty($_FILES)) {
         } else {
             document.getElementById('del_plan').style.display = '';
         }
-
-        console.log(row_len);
-
     }
 
 
-    /**
-     * 行削除
-     */
+    ////////////////////////////////*行を削除する処理*//////////////////////////////////
     function del_plan(obj) {
         var table = document.getElementById("table");
         // 0で先頭を削除。インデックスを指定する。
@@ -207,7 +195,6 @@ if (!empty($_FILES)) {
         } else {
             document.getElementById('del_plan').style.display = 'block';
         }
-        console.log(row_len);
     }
 
     window.onload = function() {
@@ -228,3 +215,6 @@ if (!empty($_FILES)) {
         }
     }
 </script>
+
+<!-- フッター部分読み込み -->
+<?php require_once('parts/footer.parts.php'); ?>

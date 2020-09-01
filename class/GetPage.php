@@ -21,7 +21,7 @@ function getPage()
             break;
 
         default:
-            # code...
+        echo '<button class = "title_btn"  disabled>CICACU管理者ページ</button>';
             break;
     }
 }

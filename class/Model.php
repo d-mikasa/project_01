@@ -15,7 +15,7 @@ class Model
     }
 }
 
-//////////////////////UserParmissionの処理をInclude//////////////////////
+//////////////////////処理を読み込んでいる/////////////////////
 require_once('AdminUser.php');
 require_once('RoomList.php');
 require_once('DeleteList.php');
