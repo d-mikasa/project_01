@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php include('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php'); ?>
 
 <main>
     <form action="" name='btn_form' method="post">
@@ -142,10 +142,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 
 <!-- フッター部分読み込み -->
-<?php include('parts/footer.parts.php'); ?>
-
-
-
-
-
-</html>
+<?php require_once('parts/footer.parts.php'); ?>

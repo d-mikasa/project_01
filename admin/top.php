@@ -7,11 +7,9 @@ if ($_SESSION['auth'] == 0) {
 
 ?>
  <!-- ヘッダー部分読み込み -->
-    <?php include('parts/top.parts.php'); ?>
+    <?php require_once('parts/top.parts.php'); ?>
     <main>
 
     </main>
     <!-- フッター部分読み込み -->
-    <?php include('parts/footer.parts.php'); ?>
-
-</html>
+    <?php require_once('parts/footer.parts.php'); ?>
