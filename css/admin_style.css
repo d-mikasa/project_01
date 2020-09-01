@@ -52,8 +52,6 @@ h2 {
     justify-content: center
 }
 
-
-
 /*-------------------------
     footer
 -------------------------*/
@@ -88,7 +86,6 @@ room_list.php
     text-align: center;
     height: 70px;
     background-color: #8BC34A;
-
 }
 
 table.roomlist_table .dataerea td {
@@ -96,38 +93,6 @@ table.roomlist_table .dataerea td {
     border-left: 1px solid gray;
     border-bottom: 1px solid gray;
 }
-
-
-
-/*----------カラムの指定------------*/
-/* .list_id {
-    background-color: #f44336;
-
-}
-
-.list_img {
-    background-color: #9C27B0 ;
-
-}
-
-.list_name{
-    background-color:#3F51B5;
-
-}
-
-.list_created_at {
-    background-color: #03A9F4;
-
-}
-
-.list_updated_at {
-    background-color: #009688;
-
-}
-
-.list_create{
-    background-color: #8BC34A;
-} */
 
 /*----------画像のサイズ指定------------*/
 .img_data {
@@ -174,7 +139,6 @@ img.listimage {
 
 .deleteButten {
     background-color: #f44336;
-
 }
 
 .editButten {
@@ -187,7 +151,6 @@ img.listimage {
     width: 100px;
     text-align: center;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .12), 0 2px 2px 0 rgba(0, 0, 0, .24);
-    /*影*/
 }
 
 #up {
@@ -202,7 +165,6 @@ img.listimage {
 .list_name>button,
 .list_created_at>button,
 .list_updated_at>button {
-
     border: none;
     /* 枠線を消す */
     outline: none;
@@ -210,8 +172,6 @@ img.listimage {
     background: transparent;
     /* 背景の灰色を消す */
 }
-
-
 
 /*-------------------------
     編集画面CSS
@@ -239,8 +199,6 @@ td {
     text-align: center;
     height: 30px;
 }
-
-
 
 .roomedit_table {
     border-collapse: collapse;
@@ -311,8 +269,6 @@ td {
     border-radius: 10px;
 }
 
-
-
 .borderLine {
     border-bottom: 1px solid gray;
 }
@@ -331,4 +287,59 @@ td {
     box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
     text-align: center;
     border-radius: 10px;
+}
+
+#confForm>.roomedit_table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#confForm>.roomedit_table>td,
+th {
+    border: solid 1px black;
+    text-align: center;
+}
+
+#confForm>.roomedit_table>.confcapa_detail,
+.confPrice_detail,
+.confCome_detail {
+    width: 40%;
+}
+
+.conf_newroom {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.conf_newroom td {
+    width: 68%;
+}
+
+.confDone {
+    margin-top: -20px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.confDone>p>input {
+    display: inline-block;
+    height: 40px;
+    width: 200px;
+    outline: none;
+    border: none;
+    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
+    color: white;
+    text-align: center;
+}
+
+.Donenot {
+    background-color: #f44336;
+}
+
+.DoneAdd {
+    background-color: #607D8B;
+}
+
+.end{
+    text-align: center;
 }
