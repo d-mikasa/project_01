@@ -38,6 +38,6 @@ unset($_SESSION['room_name']);
 
     <!-- ヘッダー部分読み込み -->
     <?php require_once('parts/top.parts.php'); ?>
-    更新しました
+    <div class = "end">更新しました</div>
         <!-- フッター部分読み込み -->
         <?php require_once('parts/footer.parts.php'); ?>

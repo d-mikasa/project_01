@@ -21,7 +21,7 @@ if ($_SESSION['mode'] == 'create') {
 
 <!--新規作成モードなら新規部屋名を表示 -->
 <?php if ($_SESSION['mode'] == 'create') : ?>
-    <table>
+    <table class = "conf_newroom">
         <tr>
             <th>新規部屋名</th>
             <td><?= $_SESSION['room_name'] ?></td>
@@ -29,7 +29,7 @@ if ($_SESSION['mode'] == 'create') {
     </table>
 <?php endif; ?>
 
-<form action="room_done.php" method="post">
+<form action="room_done.php" method="post" id = "confForm">
     <?php for ($i = 0; $i < count($set_data); $i++) : ?>
         <input type="hidden" name="set_data[<?= $i ?>][capacity]" value="<?= $set_data[$i]['capacity'] ?>">
         <input type="hidden" name="set_data[<?= $i ?>][price]" value="<?= $set_data[$i]['price'] ?>">
@@ -37,23 +37,25 @@ if ($_SESSION['mode'] == 'create') {
 
         <table class="roomedit_table">
             <tr>
-                <th rowspan="3">プラン[<?= $i + 1 ?>]</th>
-                <th>人数</th>
-                <td><?= $set_data[$i]['capacity'] ?></td>
+                <th rowspan="3" class = "confPlan">部屋[<?= $i + 1 ?>]</th>
+                <th class = "confcapa">人数</th>
+                <td class = "confcapa_detail"><?= $set_data[$i]['capacity'] ?></td>
             </tr>
             <tr>
-                <th>料金</th>
-                <td><?= $set_data[$i]['price'] ?></td>
+                <th class = "confPrice">料金</th>
+                <td class = "confPrice_detail"><?= $set_data[$i]['price'] ?></td>
             </tr>
             <tr>
-                <th>コメント</th>
-                <td><?= $set_data[$i]['remarks'] ?></td>
+                <th class = "confCome">コメント</th>
+                <td class = "confCome_detail"><?= $set_data[$i]['remarks'] ?></td>
             </tr>
         </table>
         <p><br></p>
     <?php endfor; ?>
-    <p><input type="submit" value="確認"></p>
-    <p><input type="submit" value="キャンセル" formaction="room_edit.php"></p>
+    <div class = "confDone">
+    <p><input type="submit" value="確認" class = "DoneAdd"></p>
+    <p><input type="submit" value="キャンセル" formaction="room_edit.php" class = "Donenot"></p>
+    </div>
 </form>
 <!-- フッター部分読み込み -->
 <?php require_once('parts/footer.parts.php'); ?>
