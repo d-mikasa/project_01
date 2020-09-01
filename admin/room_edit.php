@@ -57,7 +57,7 @@ if (!empty($_FILES)) {
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php include('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php'); ?>
 <main>
 
     <form action="room_conf.php" method="post">
@@ -114,7 +114,7 @@ if (!empty($_FILES)) {
 
 </main>
 <!-- フッター部分読み込み -->
-<?php include('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php'); ?>
 <script>
     function btn_check(btn, value = null) {
         var res = confirm("画像をアップロードしますか？");
@@ -177,5 +177,3 @@ if (!empty($_FILES)) {
         tr.parentNode.deleteRow(tr.sectionRowIndex);
     }
 </script>
-
-</html>

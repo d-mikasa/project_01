@@ -37,7 +37,7 @@ if (!empty($_POST['attestation'])) {
             <div class="error">
                 <?= $error; ?>
             </div>
-            <p class="id">ログインID<input type="text" name="id" size="30" value="<?=(empty($_POST['id']) ? '' : h($_POST['id']));?>"></p>
+            <p class="id">ログインID<input type="text" name="id" size="30" value="<?=(!empty($_POST['id']) ? h($_POST['id']) : '');?>"></p>
             <p class="pas">パスワード<input type="password" name="pass" size="30"></p>
             <p><input type="submit" value="認証" name="attestation"></p>
         </form>

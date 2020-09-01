@@ -17,7 +17,7 @@ if ($_SESSION['mode'] == 'create') {
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php include('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php'); ?>
 
 <!--新規作成モードなら新規部屋名を表示 -->
 <?php if ($_SESSION['mode'] == 'create') : ?>
@@ -56,6 +56,4 @@ if ($_SESSION['mode'] == 'create') {
     <p><input type="submit" value="キャンセル" formaction="room_edit.php"></p>
 </form>
 <!-- フッター部分読み込み -->
-<?php include('parts/footer.parts.php'); ?>
-
-</html>
+<?php require_once('parts/footer.parts.php'); ?>

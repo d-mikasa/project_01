@@ -41,9 +41,7 @@ unset($_SESSION['room_name']);
 ?>
 
     <!-- ヘッダー部分読み込み -->
-    <?php include('parts/top.parts.php'); ?>
+    <?php require_once('parts/top.parts.php'); ?>
     更新しました
         <!-- フッター部分読み込み -->
-        <?php include('parts/footer.parts.php'); ?>
-
-</html>
+        <?php require_once('parts/footer.parts.php'); ?>
