@@ -3,6 +3,7 @@ require_once('../class/Library.php');
 
 //画像保存先
 const IMGS_PATH = '../img/';
+const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
 
 //最大表示領域
 const MAX_VIEW = 3;
@@ -31,7 +32,7 @@ if ($view == 0) {
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
     // 権限変更
-    exec('sudo chmod 0777 ' . IMGS_PATH);
+    exec('sudo chmod 777 ' . IMGS_PATH);
 
     if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
         $name = $_FILES['userfile']['name'];
@@ -52,7 +53,8 @@ if (!empty($_FILES)) {
     }
 
     // 元の状態に戻す
-    exec('sudo chmod 0755 ' . IMGS_PATH);
+    exec('sudo chmod 755 ' . IMGS_PATH);
+
 }
 
 ?>

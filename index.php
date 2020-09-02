@@ -283,6 +283,10 @@ $(function() {
                     当日のキャンセルまたは、不泊の場合：100％　頂戴いたします。</p>
             </div>
 
+            <div id="reservation-link">
+                <a href="login.php">会員の方は こちら から予約</a>
+            </div>
+
             <div id="reservation-mail">
                 <a href=""><img src="./img/mail.png"></a>
             </div>

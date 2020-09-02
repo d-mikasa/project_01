@@ -10,7 +10,6 @@ if (!empty($_POST['attestation'])) {
         $error = 'IDかパスワードが入力されていません';
     } else {
         $admin_user = new AdminUser();
-
         // PDOクラスのメソッドを使う
         $error = $admin_user->userLogin($_POST['id'], $_POST['pass']);
     }
