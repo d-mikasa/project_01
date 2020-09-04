@@ -1,5 +1,15 @@
 <?php
+require_once('class/Library.php');
+
+$pdo = new RoomShow();
+$room = $pdo->room();
+
+if ($_SESSION['user_auth'] == false) {
+    header('Location: login.php');
+}
+
 ?>
+
 <!doctype html>
 <html lang="ja">
 
@@ -33,17 +43,17 @@
         <p>→</p>
         <div class="step_done">完了</div>
     </contaner>
-    <main class = "reservation_main">
+    <main class="reservation_main">
         <form action="reservation_conf.php" method="post">
-        <div class = "titles">情報入力欄</div>
+            <div class="titles">情報入力欄</div>
             <table>
                 <tr>
                     <th>部屋名</th>
                     <td>
-                        <select name="room_name">
-                            <option value="A">部屋A</option>
-                            <option value="B">部屋B</option>
-                            <option value="C">部屋C</option>
+                        <select name="room_name" id="target">
+                            <?php foreach ($room as $value) : ?>
+                                <option value="<?= $value['id'] ?>"><?= $value['name'] ?> (<?= $value['capacity'] ?>名様  ¥<?= number_format($value['price'])?>)</option>
+                            <?php endforeach; ?>
                         </select>
                     </td>
                 </tr>
@@ -68,14 +78,14 @@
                 <tr>
                     <th>支払い方法</th>
                     <td>
-                       <div> <input type="radio" name="peyment" value="cash_after" checked>現金（現地支払い）</div>
+                        <div> <input type="radio" name="peyment" value="cash_after" checked>現金（現地支払い）</div>
                         <div><input type="radio" name="peyment" value="card_now">クレジットカード（オンライン決算）</div>
                         <div><input type="radio" name="peyment" value="card_after">クレジットカード（現地支払い）</div>
                     </td>
                 </tr>
 
             </table>
-            <p class = "submit_form"><input type="submit" value="予約"></p>
+            <p class="submit_form"><input type="submit" value="予約"></p>
         </form>
 
     </main>

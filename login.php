@@ -1,4 +1,18 @@
 <?php
+require_once('class/Library.php');
+$error = '';
+unset($_SESSION['user_auth']);
+
+if (!empty($_POST['login'])) {
+    if (empty($_POST['login_id']) or empty($_POST['pass'])) {
+        $error = 'IDかパスワードが入力されていません';
+    } else {
+        $user = new UserLogin();
+        // PDOクラスのメソッドを使う
+        $error = $user->Login($_POST['login_id'],$_POST['pass']);
+    }
+}
+
 ?>
 <!doctype html>
 <html lang="ja">
@@ -25,14 +39,16 @@
         <h2>ログインページ</h2>
     </header>
     <main class = "login_main">
-        <form action="reservation.php" method="post">
+        <form action="" method="post">
         <div class = "titles">ログイン情報</div>
+        <div class="error">
+                <?= $error; ?>
+            </div>
             <table>
-
                 <tr>
                     <th>ログインID</th>
                     <td>
-                        <input type="text" name="login_id">
+                        <input type="text" name="login_id" value="<?=(!empty($_POST['login_id']) ? h($_POST['login_id']) : '');?>">
                     </td>
                 </tr>
                 <tr>
@@ -43,7 +59,7 @@
                 </tr>
 
             </table>
-            <p class = "submit_form"><input type="submit" value="ログイン" class = "login_button"></p>
+            <p class = "submit_form"><input type="submit" value="ログイン" class = "login_button" name = "login"></p>
         </form>
 
     </main>

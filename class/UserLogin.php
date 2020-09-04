@@ -1,10 +1,10 @@
 <?php
-class AdminUser extends Model
+class UserLogin extends Model
 {
-    public function userLogin($id, $pass)
+    public function Login($id,$pass)
     {
         parent::connect();
-        $sql = 'SELECT * FROM admin_user WHERE login_id = ? AND delete_flg = FALSE';
+        $sql = 'SELECT * FROM user WHERE login_id = ? AND status = 1';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
         $result = $stmt->fetch();
@@ -14,9 +14,9 @@ class AdminUser extends Model
         }
 
         if ($result['login_pass'] === $pass) {
-            $_SESSION['admin_name'] = $result['name'];
-            $_SESSION['auth'] = 1;
-            header('Location: top.php');
+            $_SESSION['user_name'] = $result['name'];
+            $_SESSION['user_auth'] = 1;
+            header('Location: reservation.php');
             exit;
         }
 
