@@ -50,7 +50,8 @@ if (empty($_POST['check_out'])) {
 }
 
 //日付の整合性に関するバリデーション
-if (empty($error['check_in']) and empty($error['check_out'])) { //チェックイン・チェックアウトが入力されていた場合
+if (empty($error['check_in']) and empty($error['check_out'])) {
+     //チェックイン・チェックアウトが入力されていた場合
     if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
         $error['check_in'] = 'チェックイン日時がチェックアウト日時より後に指定されています';
     }
@@ -91,9 +92,8 @@ print_r('</pre>');
 //選択した部屋が予約されていないかどうか
 // if ($reservation != 'not reservation room') {
 
-    //予約情報に選択した部屋番号が存在していた場合、すでに予約済みかどうかを判定する
+    // 予約情報に選択した部屋番号が存在していた場合、すでに予約済みかどうかを判定する
 //     foreach($reservation as $value){
-//         $check_ar = in_array($value,$_POST['check_in']);
 
 //     }
 //     if ($reservation['status'] == 1) {
