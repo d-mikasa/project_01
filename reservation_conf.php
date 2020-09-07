@@ -1,65 +1,113 @@
 <?php
 require_once('class/Library.php');
 $error = [];
-print_r('<pre>');
-print_r($_POST);
-print_r('</pre>');
+
+
 
 $pdo = new RoomShow();
+//プルダウンの内容を取得する
 $room = $pdo->room();
-$select = $pdo ->room_select($_POST['room_name']);
-$reservation = $pdo ->room_reservation($_POST['room_name']);
 
-// print_r('<pre>');
-// print_r($select);
-// print_r('</pre>');
+//選択した部屋の内容を取得する
+$select = $pdo->room_select($_POST['room_name']);
+
+//選択した部屋が予約されているかを取得する
+$reservation = $pdo->room_reservation($_POST['room_name']);
+
+print_r('<pre>');
+print_r($select);
+print_r('</pre>');
+
+
+
+
 
 /*
-バリデーションチェック
+バリデーション群
 */
-//空欄がないかのチェック
-if(empty($_POST['room_name'])){//部屋名が空欄になることはない？
-    $error['room'] = '部屋名が空欄です';
-}
-if(empty($_POST['check_in'])){
+//部屋のバリデーション
+// if (empty($_POST['room_name'])) { //部屋名が空欄になることはない？
+//     $error['room'] = '部屋名が空欄です';
+// }
+
+////////////////////////////////////////////日付系のバリデーションまとめ////////////////////////////////////////////
+//チェックインのバリデーション
+if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日時が空欄です';
-}
-if(empty($_POST['check_out'])){
-    $error['check_out'] = 'チェックアウト日時が空欄です';
-}
-if(empty($_POST['capacity'])){
-    $error['capacity'] = '宿泊人数が空欄です';
-}
-if(empty($_POST['peyment'])){//支払い方法が空欄になることはない？
-    $error['peyment'] = '支払い方法が空欄です';
-}
-
-//宿泊日数系のバリデーションチェック
-if (strtotime($_POST['check_in']) < time()) {
-    $error['check_in'] = 'チェックイン日時が過去を指定しています';
-}
-
-if(strtotime($_POST['check_out']) < time()){
-    $error['check_out'] = 'チェックアウト日時が過去を指定しています';
-}
-
-if(strtotime($_POST['check_in']) > strtotime($_POST['check_out'])){
-    $error['check_in'] = 'チェックイン日時がチェックアウト日時より後に指定されています';
-}
-
-if(strtotime($_POST['check_in']) == strtotime($_POST['check_out'])){
-    $error['check_out'] = 'チェックイン日時とチェックアウト日時が同日に指定されています';
-}
-
-if ($_POST['capacity'] != $select['capacity']) {
-    if ($_POST['capacity'] < $select['capacity']) {
-        $error['capacity'] = '宿泊人数が少ないです。';
-    } else {
-        $error['capacity'] = '宿泊人数が多いです。';
+} else {
+    if (strtotime($_POST['check_in']) < time()) {
+        $error['check_in'] = 'チェックイン日時が過去を指定しています';
     }
 }
 
-// $reservation['status'] ==
+//チェックアウトのバリデーション
+if (empty($_POST['check_out'])) {
+    $error['check_out'] = 'チェックアウト日時が空欄です';
+} else {
+    if (strtotime($_POST['check_out']) < time()) {
+        $error['check_out'] = 'チェックアウト日時が過去を指定しています';
+    }
+}
+
+//日付の整合性に関するバリデーション
+if (empty($error['check_in']) and empty($error['check_out'])) { //チェックイン・チェックアウトが入力されていた場合
+    if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
+        $error['check_in'] = 'チェックイン日時がチェックアウト日時より後に指定されています';
+    }
+
+    if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
+        $error['check_out'] = 'チェックイン日時とチェックアウト日時が同日に指定されています';
+    }
+
+    //予約が日付以内の物であるかどうかの確認
+    if (strtotime($_POST['check_in']) >= (time() + 90) or strtotime($_POST['check_out']) >= (time() + 90)) {
+        $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
+    }
+}
+
+//宿泊日数系のバリデーションチェック
+
+//宿泊人数のバリデーション
+if (empty($_POST['capacity'])) {
+    $error['capacity'] = '宿泊人数が空欄です';
+} else {
+    //部屋詳細から該当の宿泊人数のプランがあるかを検索する
+    if ($_POST['capacity'] != $select['capacity']) {
+        if ($_POST['capacity'] < $select['capacity']) {
+            $error['capacity'] = '宿泊人数が少ないです。';
+        } else {
+            $error['capacity'] = '宿泊人数が多いです。';
+        }
+    }
+}
+
+//支払い方法のバリデーション
+// if (empty($_POST['peyment'])) { //支払い方法が空欄になることはない？
+//     $error['peyment'] = '支払い方法が空欄です';
+// }
+print_r('<pre>');
+print_r($reservation);
+print_r('</pre>');
+//選択した部屋が予約されていないかどうか
+// if ($reservation != 'not reservation room') {
+
+    //予約情報に選択した部屋番号が存在していた場合、すでに予約済みかどうかを判定する
+//     foreach($reservation as $value){
+//         $check_ar = in_array($value,$_POST['check_in']);
+
+//     }
+//     if ($reservation['status'] == 1) {
+
+
+//         $error['ather'] = 'すでに予約されています';
+//     }
+// }
+
+echo $error['check_in'] . '<br>';
+echo $error['check_out'] . '<br>';
+echo $error['capacity'] . '<br>';
+echo $error['ather'] . '<br>';
+
 
 ?>
 <!doctype html>
