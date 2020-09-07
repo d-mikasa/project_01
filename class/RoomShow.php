@@ -36,7 +36,7 @@ class RoomShow extends Model
     {
         try {
             parent::connect();
-            $sql = 'SELECT reservation.id, reservation.user_id, reservation.room_detail_id, reservation.number, reservation.total_price, reservation.status, reservation.created_at, reservation.updated_at, reservation.delete_flg, reservation_detail.date, reservation_detail.price FROM reservation INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id WHERE reservation.room_detail_id = ?';
+            $sql = 'SELECT reservation.id, reservation.user_id, reservation.room_detail_id, reservation.number, reservation.total_price, reservation.status, reservation.created_at, reservation.updated_at, reservation.delete_flg, reservation_detail.price, GROUP_CONCAT(reservation_detail.date) AS "date" FROM reservation INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id GROUP BY reservation.id WHERE reservation.id = ?';
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
