@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+h1 {
+    font-family: serif;
+    text-align: center;
+    font-size: 60px;
+    margin-bottom: -20px;
+}
+
+h2 {
+    font-family: serif;
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+body {
+    width: 100%;
+    height: 800px;
+    background-image: url("../img/kumiko.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.titles{
+    font-family: serif;
+    text-align: center;
+    font-size: 26px;
+   margin-bottom: 5px;
+}
+
+
+.reservation_main {
+    width: 70%;
+    height: 450px;
+    margin: auto;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login_main {
+    width: 70%;
+    height: 300px;
+    margin: auto;
+    margin-top: 20px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.step_group {
+    width: 70%;
+    margin: auto;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.step_group div {
+    background-color: #bdc3c7;
+    width: 17rem;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.step_group .step_input {
+    background-color: #c0392b;
+    width: 17rem;
+    height: 60px;
+    text-align: center;
+}
+
+
+form {
+    width: 70%;
+
+}
+
+table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 20px;
+
+}
+
+th{
+     width: 40%;
+    text-align: center;
+}
+
+td,th{
+    padding-bottom: 5px;
+    border-bottom: 1px solid black;
+}
+
+.submit_form{
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+}
+
+td>input{
+    width: 100%;
+}
