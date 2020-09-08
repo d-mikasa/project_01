@@ -8,6 +8,10 @@ if (empty($_SESSION['auth'])) {
 if(empty($_SESSION['mode'])){
     header('Location: room_list.php');
 }
+//EDITからURL直打ちで来られた時の対処
+if(empty($_POST)){
+    header('Location: room_edit.php');
+}
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
 if ($_SESSION['mode'] == 'create') {

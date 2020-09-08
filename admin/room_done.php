@@ -8,6 +8,12 @@ if (empty($_SESSION['auth'])) {
 if(empty($_SESSION['mode'])){
     header('Location: room_list.php');
 }
+//EDITからURL直打ちで来られた時の対処
+if(empty($_POST)){
+    header('Location: room_edit.php');
+}
+
+
 
 //空値、空白などが入っている場合、エラーを吐くのでここでNULLを上書き
 if (!empty($_POST['set_data'])) {

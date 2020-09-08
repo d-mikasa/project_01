@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {
         case 'create': //新規作成が押された場合
             $_SESSION['mode'] = 'create';
+            $_SESSION['data_id'] = 0;
             header('Location: room_edit.php');
             break;
 
