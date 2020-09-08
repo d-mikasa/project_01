@@ -1,7 +1,7 @@
 <?php
 class UpdateDetail extends Model
 {
-    public function update($id, $list, $room = NULL)
+    public function update($id , $list, $room = NULL)
     {
         //まずは該当のIDデータを全て削除する
         parent::connect();

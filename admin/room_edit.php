@@ -8,6 +8,15 @@ const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
 //最大表示領域
 const MAX_VIEW = 3;
 
+//リダイレクト処理
+if (empty($_SESSION['auth'])) {
+    header('Location: login.php');
+}
+if(empty($_SESSION['mode'])){
+    header('Location: room_list.php');
+}
+
+
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
     $a = new EditList();

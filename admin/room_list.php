@@ -1,9 +1,15 @@
 <?php
 require_once('../class/Library.php');
 
-if ($_SESSION['auth'] == false) {
+//リダイレクト処理
+if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
+
+//URL直打ちされた時に、前回編集した内容へ飛ばない様に初期化
+unset($_SESSION['mode']);
+unset($_SESSION['data_id']);
+
 
 $a = new roomList();
 $room_list = $a->room_get();
@@ -12,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {
         case 'create': //新規作成が押された場合
             $_SESSION['mode'] = 'create';
+            $_SESSION['data_id'] = 0;
             header('Location: room_edit.php');
             break;
 
