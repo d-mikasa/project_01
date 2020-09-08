@@ -7,7 +7,7 @@ $room = $pdo->room();
 if ($_SESSION['user_auth'] == false) {
     header('Location: login.php');
 }
-
+//testhogehoge
 ?>
 
 <!doctype html>
