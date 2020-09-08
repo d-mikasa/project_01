@@ -2,8 +2,6 @@
 require_once('class/Library.php');
 $error = [];
 
-
-
 $pdo = new RoomShow();
 //プルダウンの内容を取得する
 $room = $pdo->room();
@@ -13,12 +11,20 @@ $select = $pdo->room_select($_POST['room_name']);
 
 //選択した部屋が予約されているかを取得する
 $reservation = $pdo->room_reservation($_POST['room_name']);
+echo 'POSTの値' . '<br>';
+print_r('<pre>');
+print_r($_POST);
+print_r('</pre>');
 
+echo 'Selectの値' . '<br>';
 print_r('<pre>');
 print_r($select);
 print_r('</pre>');
 
-
+echo 'reservationの値' . '<br>';
+print_r('<pre>');
+print_r($reservation);
+print_r('</pre>');
 
 
 
@@ -51,7 +57,8 @@ if (empty($_POST['check_out'])) {
 
 //日付の整合性に関するバリデーション
 if (empty($error['check_in']) and empty($error['check_out'])) {
-     //チェックイン・チェックアウトが入力されていた場合
+    //チェックイン・チェックアウトが入力されていた場合
+
     if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
         $error['check_in'] = 'チェックイン日時がチェックアウト日時より後に指定されています';
     }
@@ -61,9 +68,48 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     }
 
     //予約が日付以内の物であるかどうかの確認
-    if (strtotime($_POST['check_in']) >= (time() + 90) or strtotime($_POST['check_out']) >= (time() + 90)) {
+    if (strtotime($_POST['check_in']) >= (strtotime("+90 day")) or strtotime($_POST['check_out']) >= (strtotime("+90 day"))) {
         $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
     }
+
+    // 期間内の日付をすべて取得
+    for ($i = date('Ymd', strtotime($_POST['check_in'])); $i <= date('Ymd', strtotime($_POST['check_out'])); $i++) {
+        $year = substr($i, 0, 4);
+        $month = substr($i, 4, 2);
+        $day = substr($i, 6, 2);
+
+        if (checkdate($month, $day, $year)) {
+            $days[] = date('Y-m-d', strtotime($i));
+        }
+    }
+
+    //チェックイン・アウト時の時間を追加
+    for ($i = 0; $i < count($days); $i++) {
+        if ($i == 0) {
+            $days[$i] = $days[$i] . ' 16:00:00.000000';
+        } elseif ($i == count($days) - 1) {
+            $days[$i] = $days[$i] . ' 10:00:00.000000';
+        } else {
+            $days[$i] = $days[$i] . ' 00:00:00.000000';
+        }
+    }
+    //日付が予約済みかチェックする
+    for ($i = 0; $i < count($days); $i++) {
+        $ch_days = explode(',', $reservation['date']);
+        for ($k = 0; $k < count($ch_days); $k++) {
+            echo 'for' . $i . '-' . $k . '回目　　' . '予約情報＝' . $ch_days[$k] . '　　入力情報情報＝' . $days[$i] . '' . '<br>';
+            if (strtotime($ch_days[$k]) === strtotime($days[$i])) {
+                $error['ather'] = 'すでに予約済みの日程が含まれます';
+                echo 'イコールがあるよ!!!!!!';
+            }
+        }
+    }
+
+
+    echo 'daysの値' . '<br>';
+    print_r('<pre>');
+    print_r($days);
+    print_r('</pre>');
 }
 
 //宿泊日数系のバリデーションチェック
@@ -74,9 +120,7 @@ if (empty($_POST['capacity'])) {
 } else {
     //部屋詳細から該当の宿泊人数のプランがあるかを検索する
     if ($_POST['capacity'] != $select['capacity']) {
-        if ($_POST['capacity'] < $select['capacity']) {
-            $error['capacity'] = '宿泊人数が少ないです。';
-        } else {
+        if ($_POST['capacity'] > $select['capacity']) {
             $error['capacity'] = '宿泊人数が多いです。';
         }
     }
@@ -86,28 +130,15 @@ if (empty($_POST['capacity'])) {
 // if (empty($_POST['peyment'])) { //支払い方法が空欄になることはない？
 //     $error['peyment'] = '支払い方法が空欄です';
 // }
-print_r('<pre>');
-print_r($reservation);
-print_r('</pre>');
-//選択した部屋が予約されていないかどうか
-// if ($reservation != 'not reservation room') {
-
-    // 予約情報に選択した部屋番号が存在していた場合、すでに予約済みかどうかを判定する
-//     foreach($reservation as $value){
-
-//     }
-//     if ($reservation['status'] == 1) {
-
-
-//         $error['ather'] = 'すでに予約されています';
-//     }
-// }
 
 echo $error['check_in'] . '<br>';
 echo $error['check_out'] . '<br>';
 echo $error['capacity'] . '<br>';
 echo $error['ather'] . '<br>';
 
+if (empty($error)) {
+    echo 'hoifha;ksf;asih;f';
+}
 
 ?>
 <!doctype html>
@@ -136,71 +167,129 @@ echo $error['ather'] . '<br>';
         <h1>CICACU</h1>
         <h2>予約ページ</h2>
     </header>
-    <contaner class="step_group">
-        <div class="step_conf">入力</div>
-        <p>→</p>
-        <div class="step_input">確認</div>
-        <p>→</p>
-        <div class="step_done">完了</div>
-    </contaner>
-    <main class="reservation_main">
-        <form action="reservation_conf.php" method="post">
-            <div class="titles">情報入力欄</div>
-            <table>
-                <tr>
-                    <th>部屋名</th>
-                    <td>
-                        <?= $_POST['room_name'] ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>チェックイン</th>
-                    <td>
-                        <?= $_POST['check_in'] ?>
 
-                    </td>
-                </tr>
-                <tr>
-                    <th>チェックアウト</th>
-                    <td>
-                        <?= $_POST['check_out'] ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th>宿泊人数</th>
-                    <td>
-                        <?= $_POST['capacity'] ?>
-                    </td>
-                </tr>
-                <tr>
-                    <th>支払い方法</th>
-                    <td>
-                        <?php
-                        switch ($_POST['peyment']) {
-                            case 'card_after':
-                                echo 'クレジットカード（オンライン決算）';
-                                break;
-                            case 'card_now':
-                                echo 'クレジットカード（現地支払い）';
-                                break;
-                            default:
-                                echo '現金（現地支払い）';
-                                break;
-                        }
+    <?php if (empty($error)) : ?>
+        <contaner class="step_group">
+            <div class="step_conf">入力</div>
+            <p>→</p>
+            <div class="step_input">確認</div>
+            <p>→</p>
+            <div class="step_done">完了</div>
+        </contaner>
+        <main class="reservation_main">
+            <form action="reservation_conf.php" method="post">
+                <div class="titles">情報入力欄</div>
+                <table>
+                    <tr>
+                        <th>部屋名</th>
+                        <td>
+                            <?= $_POST['room_name'] ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>チェックイン</th>
+                        <td>
+                            <?= $_POST['check_in'] ?>
 
-                        ?>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>チェックアウト</th>
+                        <td>
+                            <?= $_POST['check_out'] ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>宿泊人数</th>
+                        <td>
+                            <?= $_POST['capacity'] ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>支払い方法</th>
+                        <td>
+                            <?php
+                            switch ($_POST['peyment']) {
+                                case 'card_after':
+                                    echo 'クレジットカード（オンライン決算）';
+                                    break;
+                                case 'card_now':
+                                    echo 'クレジットカード（現地支払い）';
+                                    break;
+                                default:
+                                    echo '現金（現地支払い）';
+                                    break;
+                            }
 
-            </table>
-            <p class="submit_form">
-                以上の内容でお間違い無いでしょうか？
-                <input type="submit" value="確認">
-            </p>
-        </form>
+                            ?>
+                        </td>
+                    </tr>
 
-    </main>
+                </table>
+                <p class="submit_form">
+                    以上の内容でお間違い無いでしょうか？
+                    <input type="submit" value="確認">
+                </p>
+            </form>
+
+        </main>
+    <?php else : ?>
+        <contaner class="step_group">
+            <div class="step_input">入力</div>
+            <p>→</p>
+            <div class="step_conf">確認</div>
+            <p>→</p>
+            <div class="step_done">完了</div>
+        </contaner>
+        <main class="reservation_main">
+            <form action="reservation_conf.php" method="post">
+                <div class="titles">情報入力欄</div>
+                <table>
+                    <tr>
+                        <th>部屋名<br><span class="error"><?php if (!empty($error['room'])) echo $error['room'] ?></span></th>
+                        <td>
+                            <select name="room_name" id="target">
+                                <?php foreach ($room as $value) : ?>
+                                    <option value="<?= $value['id'] ?>" <?php if (($_POST['room_name']) == $value['id']) echo 'selected' ?>><?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>チェックイン <br><span class="error"><?php if (!empty($error['check_in'])) echo $error['check_in'] ?></span></th>
+                        <td>
+                            <input type="date" name="check_in" value="<?php if (!empty($_POST['check_in'])) echo $_POST['check_in'] ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>チェックアウト <br><span class="error"><?php if (!empty($error['check_out'])) echo $error['check_out'] ?></span></th>
+                        <td>
+                            <input type="date" name="check_out" value="<?php if (!empty($_POST['check_out'])) echo $_POST['check_out'] ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>宿泊人数 <br><span class="error"><?php if (!empty($error['capacity'])) echo $error['capacity'] ?></span></th>
+                        <td>
+                            <input type="number" name="capacity" min="1" value="<?php if (!empty($_POST['capacity'])) echo $_POST['capacity'] ?>">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
+                        <td>
+                            <div> <input type="radio" name="peyment" value="cash_after" <?php if ($_POST['peyment'] == 'cash_after') echo 'checked' ?>>現金（現地支払い）</div>
+                            <div><input type="radio" name="peyment" value="card_now" <?php if ($_POST['peyment'] == 'card_now') echo 'checked' ?>>クレジットカード（オンライン決算）</div>
+                            <div><input type="radio" name="peyment" value="card_after" <?php if ($_POST['peyment'] == 'card_after') echo 'checked' ?>>クレジットカード（現地支払い）</div>
+                        </td>
+                    </tr>
+
+                </table>
+                <span class="error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></span>
+                <p class="submit_form"><input type="submit" value="予約"></p>
+            </form>
+
+        </main>
+    <?php endif; ?>
 </body>
 
 </html>
