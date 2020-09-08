@@ -1,6 +1,14 @@
 <?php
 require_once('../class/Library.php');
 
+//リダイレクト処理
+if (empty($_SESSION['auth'])) {
+    header('Location: login.php');
+}
+if(empty($_SESSION['mode'])){
+    header('Location: room_list.php');
+}
+
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
 if ($_SESSION['mode'] == 'create') {
     $temp = $_POST['plan'][0];

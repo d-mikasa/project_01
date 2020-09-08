@@ -1,6 +1,14 @@
 <?php
 require_once('../class/Library.php');
 
+//リダイレクト処理
+if (empty($_SESSION['auth'])) {
+    header('Location: login.php');
+}
+if(empty($_SESSION['mode'])){
+    header('Location: room_list.php');
+}
+
 //空値、空白などが入っている場合、エラーを吐くのでここでNULLを上書き
 if (!empty($_POST['set_data'])) {
     for ($i = 0; $i < count($_POST['set_data']); $i++) {
@@ -30,10 +38,9 @@ if ($_SESSION['mode'] == 'edit') {
 }
 
 //セッションを初期化
-unset($_SESSION['tmp_path']);
-unset($_SESSION['img_name']);
 unset($_SESSION['mode']);
 unset($_SESSION['room_name']);
+unset($_SESSION['data_id']);
 ?>
 
     <!-- ヘッダー部分読み込み -->
