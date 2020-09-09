@@ -15,12 +15,16 @@ class Model
     }
 }
 
-//////////////////////処理を読み込んでいる/////////////////////
-require_once('AdminUser.php');
-require_once('RoomList.php');
-require_once('DeleteList.php');
-require_once('EditList.php');
-require_once('UpdateDetail.php');
-require_once('GetPage.php');
-require_once('ShowList.php');
-require_once('ImageUpdata.php');
+//////////////////////Adminの処理を読み込んでいる/////////////////////
+require_once('admin/AdminUser.php');
+require_once('admin/RoomList.php');
+require_once('admin/DeleteList.php');
+require_once('admin/EditList.php');
+require_once('admin/UpdateDetail.php');
+require_once('admin/GetPage.php');
+require_once('admin/ShowList.php');
+require_once('admin/ImageUpdata.php');
+
+//////////////////////User側の処理を読み込んでいる/////////////////////
+require_once('UserLogin.php');
+require_once('RoomShow.php');
