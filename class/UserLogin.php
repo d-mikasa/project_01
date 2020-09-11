@@ -16,6 +16,7 @@ class UserLogin extends Model
         if ($result['login_pass'] === $pass) {
             $_SESSION['user_name'] = $result['name'];
             $_SESSION['user_auth'] = 1;
+            $_SESSION['user_id'] = $result['id'];
             header('Location: reservation.php');
             exit;
         }

@@ -25,7 +25,8 @@ class RoomShow extends Model
             room.name,
             room_detail.capacity,
             room_detail.price,
-            room_detail.remarks
+            room_detail.remarks,
+            room_detail.name
             FROM room_detail
             INNER JOIN room
             ON room_detail.room_id = room.id
@@ -49,7 +50,7 @@ class RoomShow extends Model
             $sql = <<<EOD
             SELECT reservation.id,
             reservation.user_id,
-            reservation.room_id,
+            reservation.room_detail_id,
             reservation.number,
             reservation.total_price,
             reservation.status,
@@ -61,7 +62,7 @@ class RoomShow extends Model
             FROM reservation
             INNER JOIN reservation_detail
             ON reservation.id = reservation_detail.reservation_id
-            WHERE reservation.room_id = ?
+            WHERE reservation.room_detail_id = ?
             GROUP BY reservation.id
             EOD;
             $stmt = $this->dbh->prepare($sql);

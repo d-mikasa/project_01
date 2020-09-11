@@ -12,10 +12,10 @@ $select = $pdo->room_select($_POST['room_name']);
 //選択した部屋が予約されているかを取得する
 $reservation = $pdo->room_reservation($_POST['room_name']);
 
-// echo 'POSTの値' . '<br>';
-// print_r('<pre>');
-// print_r($_POST);
-// print_r('</pre>');
+echo 'POSTの値' . '<br>';
+print_r('<pre>');
+print_r($_POST);
+print_r('</pre>');
 
 // echo 'Selectの値' . '<br>';
 // print_r('<pre>');
@@ -147,7 +147,9 @@ if (empty($error)) {
 	<header>
 		<h1>CICACU</h1>
 		<h2>予約ページ</h2>
-	</header> <?php if (empty($error)) : ?> <contaner class="step_group">
+	</header>
+    <?php if (empty($error)) : ?> <!--エラーが無く、送信することが可能な画面-->
+    <contaner class="step_group">
 		<div class="step_conf">入力</div>
 		<p>→</p>
 		<div class="step_input">確認</div>
@@ -155,7 +157,15 @@ if (empty($error)) {
 		<div class="step_done">完了</div>
 	</contaner>
 	<main class="reservation_main">
-		<form action="reservation_conf.php" method="post">
+		<form action="reservation_done.php" method="post">
+        <input type="hidden" name = "room_name" value = "<?=$_POST['room_name']?>">
+        <input type="hidden" name = "check_in" value = "<?=$_POST['check_in']?>">
+        <input type="hidden" name = "check_out" value = "<?=$_POST['check_out']?>">
+        <input type="hidden" name = "capacity" value = "<?=$_POST['capacity']?>">
+        <input type="hidden" name = "peyment" value = "<?=$_POST['peyment']?>">
+        <input type="hidden" name = "price" value = "<?=$reservation['price']?>">
+        <input type="hidden" name = "room_name" value = "<?=$select['name']?>">
+
 			<div class="titles">情報入力欄</div>
 			<table>
 				<tr>
@@ -198,7 +208,9 @@ if (empty($error)) {
                     <input type="submit" value="確認">
                 </p>
 		</form>
-	</main> <?php else : ?> <contaner class="step_group">
+	</main>
+    <?php else : ?><!--エラーがあって、もう一度フォームを送信する-->
+     <contaner class="step_group">
 		<div class="step_input">入力</div>
 		<p>→</p>
 		<div class="step_conf">確認</div>
