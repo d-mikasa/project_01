@@ -5,12 +5,8 @@ print_r('<pre>');
 print_r($_POST);
 print_r('</pre>');
 $pdo = new UpdateReservation();
-$days = $pdo -> Reservation($_POST['room_name'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'],$_POST['room_name']);
+$days = $pdo -> into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'],$_POST['room_id']);
 
-echo 'DAYSの値' . '<br>';
-print_r('<pre>');
-print_r($days);
-print_r('</pre>');
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -21,6 +17,9 @@ print_r('</pre>');
     <title>Document</title>
 </head>
 
-<body></body>
+<body>
+予約しました。
+<a href="reservation.php"></a>
+</body>
 
 </html>

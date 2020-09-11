@@ -1,7 +1,7 @@
 <?php
 class RoomShow extends Model
 {
-    public function room()//プルダウンリストに表示する部屋を検索する
+    public function room() //プルダウンリストに表示する部屋を検索する
     {
         parent::connect();
         $sql = 'SELECT room_detail.id, room.name, room_detail.capacity, room_detail.price, room_detail.remarks FROM room_detail JOIN room ON room_detail.room_id = room.id';
@@ -16,25 +16,44 @@ class RoomShow extends Model
         return $result;
     }
 
-    public function room_select($id)//選択した部屋の内容を表示する
+    public function reservation_check($id) //選択した部屋の内容を表示する
     {
         try {
             parent::connect();
             $sql = <<<EOD
-            SELECT room_detail.id,
-            room.name,
+            SELECT
+            reservation.id,
+             reservation.user_id,
+            reservation.room_id,
+            reservation.room_detail_id,
+            reservation.room_detail_name,
+            reservation.number,
+            reservation.total_price,
+            reservation.status,
+            reservation.created_at,
+            reservation.updated_at,
+            reservation.delete_flg,
+            reservation_detail.price AS "reservation_price",
+            GROUP_CONCAT(reservation_detail.date) AS "date",
+            room.name AS "room_name",
             room_detail.capacity,
             room_detail.price,
-            room_detail.remarks,
             room_detail.name
-            FROM room_detail
-            INNER JOIN room
-            ON room_detail.room_id = room.id
-            WHERE room_detail.id = ?
+            FROM reservation
+            INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id
+            INNER JOIN room ON reservation.room_id = room.id
+            INNER JOIN room_detail ON reservation.room_detail_id = room_detail.id
+            WHERE  reservation.room_id = ?
+            GROUP BY reservation.id
             EOD;
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
+
+            if (empty($result)) {
+                return 'not reservation room';
+            }
+
             return $result;
         } catch (PDOException $e) {
             header('Content-Type: text/plain; charset=UTF-8', true, 500);
@@ -43,33 +62,28 @@ class RoomShow extends Model
     }
 
 
-    public function room_reservation($id)
+    public function room_detail($id)
     {
         try {
             parent::connect();
             $sql = <<<EOD
-            SELECT reservation.id,
-            reservation.user_id,
-            reservation.room_detail_id,
-            reservation.number,
-            reservation.total_price,
-            reservation.status,
-            reservation.created_at,
-            reservation.updated_at,
-            reservation.delete_flg,
-            reservation_detail.price,
-            GROUP_CONCAT(reservation_detail.date) AS "date"
-            FROM reservation
-            INNER JOIN reservation_detail
-            ON reservation.id = reservation_detail.reservation_id
-            WHERE reservation.room_detail_id = ?
-            GROUP BY reservation.id
+            SELECT
+            room.id,
+            room.name,
+            room_detail.id AS "detail_id",
+            room_detail.capacity,
+            room_detail.remarks,
+            room_detail.price,
+            room_detail.name AS "detail_name"
+            FROM room
+            INNER JOIN room_detail
+            ON room.id = room_detail.room_id
             EOD;
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if(empty($result)){
-                return 'not reservation room';
+            if (empty($result)) {
+                return 'not found room';
             }
             return $result;
         } catch (PDOException $e) {
@@ -77,6 +91,4 @@ class RoomShow extends Model
             exit($e->getMessage());
         }
     }
-
-
 }
