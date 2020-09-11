@@ -10,7 +10,6 @@ if (empty($_SESSION['auth'])) {
 unset($_SESSION['mode']);
 unset($_SESSION['data_id']);
 
-
 $a = new roomList();
 $room_list = $a->room_get();
 

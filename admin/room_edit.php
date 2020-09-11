@@ -16,7 +16,6 @@ if(empty($_SESSION['mode'])){
     header('Location: room_list.php');
 }
 
-
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
     $a = new EditList();

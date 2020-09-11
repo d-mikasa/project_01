@@ -2,12 +2,11 @@
 require_once('class/Library.php');
 
 $pdo = new RoomShow();
-$room = $pdo->room();
+$pull_down_list = $pdo->room();
 
 if ($_SESSION['user_auth'] == false) {
     header('Location: login.php');
 }
-
 ?>
 
 <!doctype html>
@@ -50,8 +49,8 @@ if ($_SESSION['user_auth'] == false) {
                 <tr>
                     <th>部屋名</th>
                     <td>
-                        <select name="room_name" id="target">
-                            <?php foreach ($room as $value) : ?>
+                        <select name="detail_id" id="target">
+                            <?php foreach ($pull_down_list as $value) : ?>
                                 <option value="<?= $value['id'] ?>"><?= $value['name'] ?> (<?= $value['capacity'] ?>名様  ¥<?= number_format($value['price'])?>)</option>
                             <?php endforeach; ?>
                         </select>

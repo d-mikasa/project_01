@@ -28,3 +28,4 @@ require_once('admin/ImageUpdata.php');
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('UserLogin.php');
 require_once('RoomShow.php');
+require_once('UpdateReservation.php');
