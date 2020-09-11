@@ -14,18 +14,7 @@ class UpdateReservation extends Model
             }
         }
 
-        // echo 'POSTの値' . '<br>';
-        // print_r('<pre>');
-        // print_r($days);
-        // print_r('</pre>');
-
         $total_price = intval($capacity) * intval($price);
-        // echo 'user_id' . $_SESSION['user_id'] . '<br>';
-        // echo 'room_id' . $room_id . '<br>';
-        // echo 'detail_id' . $detail_id . '<br>';
-        // echo 'name' . $name . '<br>';
-        // echo 'capacoty' . $capacity . '<br>';
-        // echo 'total_price' . $total_price . '<br>';
 
         //reservationに追加する
         $sql = <<<EOD

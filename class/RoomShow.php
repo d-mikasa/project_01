@@ -12,11 +12,10 @@ class RoomShow extends Model
         if (empty($result)) {
             return '部屋が存在しません。';
         }
-
         return $result;
     }
 
-    public function reservation_check($id) //選択した部屋の内容を表示する
+    public function reservation_check($id) //選択した部屋の予約状況をチェックする
     {
         try {
             parent::connect();
@@ -62,7 +61,7 @@ class RoomShow extends Model
     }
 
 
-    public function room_detail($id)
+    public function room_detail($id)//選択した部屋の情報を取得
     {
         try {
             parent::connect();

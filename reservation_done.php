@@ -19,7 +19,7 @@ $days = $pdo -> into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST
 
 <body>
 予約しました。
-<a href="reservation.php"></a>
+<a href="reservation.php">トップページへ戻る</a>
 </body>
 
 </html>

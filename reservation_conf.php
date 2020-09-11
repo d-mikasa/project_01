@@ -11,30 +11,7 @@ $pull_down_list = $pdo->room();
 $reservation_check = $pdo->reservation_check($_POST['detail_id']);
 
 //選択した部屋の内容を取得する
-$room_detail = $pdo -> room_detail($_POST['detail_id']);
-
-
-
-echo 'POSTの値' . '<br>';
-print_r('<pre>');
-print_r($_POST);
-print_r('</pre>');
-echo 'listの値' . '<br>';
-print_r('<pre>');
-print_r($pull_down_list);
-print_r('</pre>');
-
-echo 'room_detailの値' . '<br>';
-print_r('<pre>');
-print_r($room_detail);
-print_r('</pre>');
-
-
-// echo 'reservationの値' . '<br>';
-// print_r('<pre>');
-// print_r($reservation);
-// print_r('</pre>');
-
+$room_detail = $pdo->room_detail($_POST['detail_id']);
 
 ////////////////////////////////////////////日付系のバリデーションまとめ////////////////////////////////////////////
 //チェックインのバリデーション
@@ -72,8 +49,9 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
     }
 
+    if (empty($error['check_in']) and empty($error['check_out'])) {
     // 期間内の日付をすべて取得
-    for ($i = date('Ymd', strtotime($_POST['check_in'])); $i <= date('Ymd', strtotime($_POST['check_out'])); $i++) {
+    for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
         $year = substr($i, 0, 4);
         $month = substr($i, 4, 2);
         $day = substr($i, 6, 2);
@@ -85,17 +63,17 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 
     //予約情報がなければ「予約済みかチェックする」処理をしない
     if ($reservation_check != 'not reservation room') {
-        foreach($reservation_check as $value){
-        $ch_days = explode(',', $value['date']);
-        //日付が予約済みかチェックする
-        for ($i = 0; $i < count($days); $i++) {
-            for ($k = 0; $k < count($ch_days); $k++) {
-                if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
-                    $error['ather'] = 'すでに予約済みの日程が含まれます';
+        foreach ($reservation_check as $value) {
+            $ch_days = explode(',', $value['date']);
+            //日付が予約済みかチェックする
+            for ($i = 0; $i < count($days); $i++) {
+                for ($k = 0; $k < count($ch_days); $k++) {
+                    if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
+                        $error['ather'] = 'すでに予約済みの日程が含まれます';
+                    }
                 }
             }
         }
-    }
     }
 }
 
@@ -111,6 +89,7 @@ if (empty($_POST['capacity'])) {
             $error['capacity'] = '宿泊人数が多いです。';
         }
     }
+}
 }
 
 ?>
@@ -161,7 +140,7 @@ if (empty($_POST['capacity'])) {
                     <tr>
                         <th>部屋名</th>
                         <td>
-                         <?=$room_detail['name']?>
+                            <?= $room_detail['name'] ?>
                         </td>
                     </tr>
                     <tr>
@@ -214,7 +193,7 @@ if (empty($_POST['capacity'])) {
                 <div class="titles">情報入力欄</div>
                 <table>
                     <tr>
-                        <th>部屋名<br><span class="error"><?php if (!empty($error['room'])) echo $error['room'] ?></span></th>
+                        <th>部屋名</th>
                         <td>
                             <select name="detail_id" id="target">
                                 <?php foreach ($pull_down_list as $value) : ?>
@@ -223,24 +202,52 @@ if (empty($_POST['capacity'])) {
                             </select>
                         </td>
                     </tr>
+
+                    <?php if (!empty($error['room'])) : ?>
+                        <tr>
+                            <td> <span class="error"><?= $error['room'] ?></span></td>
+                        </tr>
+                    <?php endif; ?>
+
                     <tr>
-                        <th>チェックイン <br><span class="error"><?php if (!empty($error['check_in'])) echo $error['check_in'] ?></span></th>
+                        <th>チェックイン</th>
                         <td>
                             <input type="date" name="check_in" value="<?php if (!empty($_POST['check_in'])) echo $_POST['check_in'] ?>">
                         </td>
                     </tr>
+
+                    <?php if (!empty($error['check_in'])) : ?>
+                        <tr>
+                            <td colspan = "2"><span class="error"><?= $error['check_in'] ?></span></td>
+                        </tr>
+                    <?php endif; ?>
+
                     <tr>
-                        <th>チェックアウト <br><span class="error"><?php if (!empty($error['check_out'])) echo $error['check_out'] ?></span></th>
+                        <th>チェックアウト </th>
                         <td>
                             <input type="date" name="check_out" value="<?php if (!empty($_POST['check_out'])) echo $_POST['check_out'] ?>">
                         </td>
                     </tr>
+
+                    <?php if (!empty($error['check_out'])) : ?>
+                        <tr>
+                            <td colspan = "2"><span class="error"><?= $error['check_out'] ?></span></td>
+                        </tr>
+                    <?php endif; ?>
+
                     <tr>
-                        <th>宿泊人数 <br><span class="error"><?php if (!empty($error['capacity'])) echo $error['capacity'] ?></span></th>
+                        <th>宿泊人数 </th>
                         <td>
                             <input type="number" name="capacity" min="1" value="<?php if (!empty($_POST['capacity'])) echo $_POST['capacity'] ?>">
                         </td>
                     </tr>
+
+                    <?php if (!empty($error['capacity'])) : ?>
+                        <tr>
+                            <td colspan = "2"><span class="error"><?= $error['capacity'] ?></span></td>
+                        </tr>
+                    <?php endif; ?>
+
                     <tr>
                         <th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
                         <td>
