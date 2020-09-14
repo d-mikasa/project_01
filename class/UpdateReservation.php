@@ -13,6 +13,14 @@ class UpdateReservation extends Model
                 $days[] = date('Y-m-d H:i:s', strtotime($i));
             }
         }
+        // echo 'detail_id = ' . $detail_id . '<br>';
+        // echo 'check_in = ' . $check_in . '<br>';
+        // echo 'check_out = ' . $check_out . '<br>';
+        // echo 'capacity = ' . $capacity . '<br>';
+        // echo 'peyment = ' . $peyment . '<br>';
+        // echo 'price = ' . $price . '<br>';
+        // echo 'name = ' . $name . '<br>';
+        // echo 'room_id = ' . $room_id . '<br>';
 
         $total_price = intval($capacity) * intval($price);
 
@@ -22,7 +30,7 @@ class UpdateReservation extends Model
         VALUES(?,?,?,?,?,?,?,?,?,?)
         EOD;
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$_SESSION['user_id'],$room_id,$detail_id,$name,$capacity,$total_price,NULL,NULL,NULL,1]);
+        $stmt->execute([$_SESSION['user_id'],$room_id,$detail_id,$name,$capacity,$total_price,1,NULL,NULL,1]);
 
     //reservation_detailに追加する
     $sql ="SELECT  AUTO_INCREMENT
@@ -38,7 +46,12 @@ class UpdateReservation extends Model
         EOD;
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id[0]['AUTO_INCREMENT']-1,$days[$i],$price]);
-
     }
+    $sql = <<<EOD
+    INSERT INTO reservation_payment(reservation_id,payment_id)
+    VALUES(?,?)
+    EOD;
+    $stmt = $this->dbh->prepare($sql);
+    $stmt->execute([$id[0]['AUTO_INCREMENT']-1,$peyment]);
     }
 }

@@ -77,6 +77,7 @@ class RoomShow extends Model
             FROM room
             INNER JOIN room_detail
             ON room.id = room_detail.room_id
+            WHERE room_detail.id = ?
             EOD;
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);

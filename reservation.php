@@ -77,9 +77,9 @@ if ($_SESSION['user_auth'] == false) {
                 <tr>
                     <th>支払い方法</th>
                     <td>
-                        <div> <input type="radio" name="peyment" value="cash_after" checked>現金（現地支払い）</div>
-                        <div><input type="radio" name="peyment" value="card_now">クレジットカード（オンライン決算）</div>
-                        <div><input type="radio" name="peyment" value="card_after">クレジットカード（現地支払い）</div>
+                        <div> <input type="radio" name="peyment" value="1" checked>現金（現地支払い）</div>
+                        <div><input type="radio" name="peyment" value="2">クレジットカード（オンライン決算）</div>
+                        <div><input type="radio" name="peyment" value="3">クレジットカード（現地支払い）</div>
                     </td>
                 </tr>
 
