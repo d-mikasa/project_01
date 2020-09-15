@@ -73,10 +73,17 @@ border-color: #999999 transparent transparent transparent;
     display: flex;
 }
 
-main {
+.login_main {
     background-color: rgba(255, 255, 255, 0.7);
     width: 400px;
     height: 370px;
+    margin: auto;
+}
+
+.reservation_main{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 500px;
+    height: 500px;
     margin: auto;
 }
 
