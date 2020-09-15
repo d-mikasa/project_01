@@ -1,0 +1,145 @@
+@charset "UTF-8";
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+nav {
+    float: left;
+    width: 15%;
+    height: 100vh;
+    background-color: white;
+    text-align: center;
+}
+
+nav>img {
+    margin-top: 15px;
+    width: 31%; /* 横幅を割合で指定 */
+    height: auto; /* 高さは自動指定 */
+    display: inline-block;
+
+
+}
+
+.status {
+    margin-top: 30px;
+    height: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+
+.status>div,
+.status>span{
+    font-size: 20px;
+    margin: auto;
+}
+
+.status_now {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    background-color: #b58166;
+    color: white;
+}
+
+.triangle{
+    width: 0;
+height: 0;
+border-style: solid;
+border-width: 15px 35px 0 35px;
+border-color: #999999 transparent transparent transparent;
+/* padding: 10px 0 10px 0; */
+}
+
+.background_login {
+    background: url("../img/header_sub.png") repeat center;
+    background-size: cover;
+    position: relative;
+    height: 100%;
+    display: flex;
+}
+.background_reservation {
+    background: url("../img/reservation_back.png") repeat center;
+    background-size: cover;
+    position: relative;
+    height: 100%;
+    display: flex;
+}
+
+.login_main {
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 400px;
+    height: 370px;
+    margin: auto;
+}
+
+.reservation_main{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 500px;
+    height: 500px;
+    margin: auto;
+}
+
+.width {
+    font-family: 'Prompt', sans-serif;
+    width: 300px;
+    margin: auto;
+    margin-top: 30px;
+}
+
+.top_title {
+    font-size: 65px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bottom_title {
+    margin-top: -20px;
+    font-size: 30px;
+    text-align: center;
+    text-align-last: justify;
+}
+
+
+
+form>div{
+    text-align: center;
+}
+
+.id_form {
+    width: 100%;
+    background-color: rgba(1, 1, 1, 0);
+}
+
+.error {
+    height: 40px;
+    padding-top: 13px;
+    font-size: 15px;
+    font-weight: bold;
+    color: red;
+
+}
+
+.pass_form {
+    width: 100%;
+    margin-top: 10px;
+    background-color: rgba(1, 1, 1, 0);
+}
+
+.login_button {
+    margin-top: 25px;
+    background-color: #6495ed;
+    color: white;
+    height: 30px;
+    width: 100%;
+    outline: none;
+    border: none;
+    text-align: center;
+}

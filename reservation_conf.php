@@ -50,46 +50,46 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     }
 
     if (empty($error['check_in']) and empty($error['check_out'])) {
-    // 期間内の日付をすべて取得
-    for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
-        $year = substr($i, 0, 4);
-        $month = substr($i, 4, 2);
-        $day = substr($i, 6, 2);
+        // 期間内の日付をすべて取得
+        for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
+            $year = substr($i, 0, 4);
+            $month = substr($i, 4, 2);
+            $day = substr($i, 6, 2);
 
-        if (checkdate($month, $day, $year)) {
-            $days[] = date('Y-m-d', strtotime($i));
+            if (checkdate($month, $day, $year)) {
+                $days[] = date('Y-m-d', strtotime($i));
+            }
         }
-    }
 
-    //予約情報がなければ「予約済みかチェックする」処理をしない
-    if ($reservation_check != 'not reservation room') {
-        foreach ($reservation_check as $value) {
-            $ch_days = explode(',', $value['date']);
-            //日付が予約済みかチェックする
-            for ($i = 0; $i < count($days); $i++) {
-                for ($k = 0; $k < count($ch_days); $k++) {
-                    if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
-                        $error['ather'] = 'すでに予約済みの日程が含まれます';
+        //予約情報がなければ「予約済みかチェックする」処理をしない
+        if ($reservation_check != 'not reservation room') {
+            foreach ($reservation_check as $value) {
+                $ch_days = explode(',', $value['date']);
+                //日付が予約済みかチェックする
+                for ($i = 0; $i < count($days); $i++) {
+                    for ($k = 0; $k < count($ch_days); $k++) {
+                        if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
+                            $error['ather'] = 'すでに予約済みの日程が含まれます';
+                        }
                     }
                 }
             }
         }
     }
-}
 
-//宿泊日数系のバリデーションチェック
+    //宿泊日数系のバリデーションチェック
 
-//宿泊人数のバリデーション
-if (empty($_POST['capacity'])) {
-    $error['capacity'] = '宿泊人数が空欄です';
-} else {
-    //部屋詳細から該当の宿泊人数のプランがあるかを検索する
-    if ($_POST['capacity'] != $room_detail['capacity']) {
-        if ($_POST['capacity'] > $room_detail['capacity']) {
-            $error['capacity'] = '宿泊人数が多いです。';
+    //宿泊人数のバリデーション
+    if (empty($_POST['capacity'])) {
+        $error['capacity'] = '宿泊人数が空欄です';
+    } else {
+        //部屋詳細から該当の宿泊人数のプランがあるかを検索する
+        if ($_POST['capacity'] != $room_detail['capacity']) {
+            if ($_POST['capacity'] > $room_detail['capacity']) {
+                $error['capacity'] = '宿泊人数が多いです。';
+            }
         }
     }
-}
 }
 
 ?>
@@ -134,6 +134,7 @@ if (empty($_POST['capacity'])) {
                 <input type="hidden" name="price" value="<?= $room_detail['price'] ?>">
                 <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>">
                 <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
+                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
 
                 <div class="titles">情報入力欄</div>
                 <table>
@@ -159,14 +160,14 @@ if (empty($_POST['capacity'])) {
                         <th>支払い方法</th>
                         <td> <?php
                                 switch ($_POST['peyment']) {
-                                    case 'card_after':
+                                    case '1':
+                                        echo '現金（現地支払い）';
+                                        break;
+                                    case '2':
                                         echo 'クレジットカード（オンライン決算）';
                                         break;
-                                    case 'card_now':
-                                        echo 'クレジットカード（現地支払い）';
-                                        break;
                                     default:
-                                        echo '現金（現地支払い）';
+                                        echo 'クレジットカード（現地支払い）';
                                         break;
                                 }
 
@@ -218,7 +219,7 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['check_in'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['check_in'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['check_in'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
@@ -231,7 +232,7 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['check_out'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['check_out'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['check_out'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
@@ -244,16 +245,16 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['capacity'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['capacity'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['capacity'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
                     <tr>
                         <th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
                         <td>
-                            <div> <input type="radio" name="peyment" value="cash_after" <?php if ($_POST['peyment'] == 'cash_after') echo 'checked' ?>>現金（現地支払い）</div>
-                            <div><input type="radio" name="peyment" value="card_now" <?php if ($_POST['peyment'] == 'card_now') echo 'checked' ?>>クレジットカード（オンライン決算）</div>
-                            <div><input type="radio" name="peyment" value="card_after" <?php if ($_POST['peyment'] == 'card_after') echo 'checked' ?>>クレジットカード（現地支払い）</div>
+                            <div> <input type="radio" name="peyment" value="1" <?php if ($_POST['peyment'] == '1') echo 'checked' ?>>現金（現地支払い）</div>
+                            <div><input type="radio" name="peyment" value="2" <?php if ($_POST['peyment'] == '2') echo 'checked' ?>>クレジットカード（オンライン決算）</div>
+                            <div><input type="radio" name="peyment" value="3" <?php if ($_POST['peyment'] == '3') echo 'checked' ?>>クレジットカード（現地支払い）</div>
                         </td>
                     </tr>
                 </table>
