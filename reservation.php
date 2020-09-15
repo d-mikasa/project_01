@@ -22,26 +22,28 @@ if ($_SESSION['user_auth'] == false) {
     <meta name="description" content="CICACU(シカク)">
     <meta name="keywords" content="CICACU,cafe饗茶庵,鹿沼,ゲストハウス,民宿">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--スマホ用に見れるように-->
-    <meta name="robots" content="noindex,nofollow,noarchive">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/reservation_style.css">
+    <link rel="stylesheet" href="./css/reservation.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
+    <!--Googleフォント-->
+    <!--font-family: 'Prompt', sans-serif;-->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
 </head>
 
-<body class="reservation">
-    <header>
-        <h1>CICACU</h1>
-        <h2>予約ページ</h2>
-    </header>
-    <contaner class="step_group">
-        <div class="step_input">入力</div>
-        <p>→</p>
-        <div class="step_conf">確認</div>
-        <p>→</p>
-        <div class="step_done">完了</div>
-    </contaner>
+<body class="background_reservation">
+    <nav>
+        <img src="img/logo.png" class="header_logo">
+        <div class="status">
+            <div class = "status_none">ログイン</div>
+            <span class="triangle"></span>
+            <div class = "status_now">情報入力</div>
+            <span class="triangle"></span>
+            <div class = "status_none">内容確認</div>
+            <span class="triangle"></span>
+            <div class = "status_none">予約完了</div>
+        </div>
+    </nav>
     <main class="reservation_main">
         <form action="reservation_conf.php" method="post">
             <div class="titles">情報入力欄</div>
