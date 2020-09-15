@@ -1,14 +1,12 @@
 <?php
 require_once('class/Library.php');
-echo 'POSTの値' . '<br>';
-print_r('<pre>');
-print_r($_POST);
-print_r('</pre>');
 $pdo = new UpdateReservation();
-$pdo -> into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'],$_POST['room_id']);
-$total_price = $_POST['price'] * $_POST['capacity'];
+$insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
-$to = 'natume21gin@gmail.com';
+$total_price = $insert_date['total_price'];
+
+//メール送信内容
+$to = $insert_date['user_mail'];
 $title = '予約完了のお知らせ';
 $message = <<<EOD
 -----------------------------------------------------------------------
@@ -40,21 +38,23 @@ $message = <<<EOD
 
 -----------------------------------------------------------------------
 【料金明細】
-$_POST[price] 円× $_POST[capacity] 人
-合計：$total_price 円（税込・サービス料別）
+料金            ：$_POST[price] 円× $_POST[capacity] 人
+宿泊日数    ：$insert_date[stay_total] 日
+合計            ：$insert_date[total_price] 円（税込・サービス料別）
 EOD;
 
 $header = 'From: d.mikasa@ebacorp.jp' . "\r\n";
 $header .= 'Return-Path: d.mikasa@ebacorp.jp';
 
+
 mb_language("Japanese");
 mb_internal_encoding("UTF-8");
 
-
-if(mb_send_mail($to, $title, $message, $header)){
-    echo "メールを送信しました";
+//メール送信メソッド
+if (mb_send_mail($to, $title, $message, $header)) {
+    $mail_info =  "ご登録頂いたメールアドレスに、確認メールを送信致しました";
 } else {
-  echo "メールの送信に失敗しました";
+    $mail_info =  "メールの送信に失敗しました";
 };
 
 ?>
@@ -65,11 +65,13 @@ if(mb_send_mail($to, $title, $message, $header)){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./css/reservation_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
 </head>
 
 <body>
-予約しました。
-<a href="reservation.php">トップページへ戻る</a>
+    予約しました。
+    <a href="reservation.php">トップページへ戻る</a>
 </body>
 
 </html>

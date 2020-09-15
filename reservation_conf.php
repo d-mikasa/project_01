@@ -50,53 +50,46 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     }
 
     if (empty($error['check_in']) and empty($error['check_out'])) {
-    // 期間内の日付をすべて取得
-    for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
-        $year = substr($i, 0, 4);
-        $month = substr($i, 4, 2);
-        $day = substr($i, 6, 2);
+        // 期間内の日付をすべて取得
+        for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
+            $year = substr($i, 0, 4);
+            $month = substr($i, 4, 2);
+            $day = substr($i, 6, 2);
 
-        if (checkdate($month, $day, $year)) {
-            $days[] = date('Y-m-d', strtotime($i));
+            if (checkdate($month, $day, $year)) {
+                $days[] = date('Y-m-d', strtotime($i));
+            }
         }
-    }
-    print_r('<pre>');
-    print_r($room_detail);
-    print_r('</pre>');
-    print_r('<pre>');
-    print_r($_POST);
-    print_r('</pre>');
 
-
-    //予約情報がなければ「予約済みかチェックする」処理をしない
-    if ($reservation_check != 'not reservation room') {
-        foreach ($reservation_check as $value) {
-            $ch_days = explode(',', $value['date']);
-            //日付が予約済みかチェックする
-            for ($i = 0; $i < count($days); $i++) {
-                for ($k = 0; $k < count($ch_days); $k++) {
-                    if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
-                        $error['ather'] = 'すでに予約済みの日程が含まれます';
+        //予約情報がなければ「予約済みかチェックする」処理をしない
+        if ($reservation_check != 'not reservation room') {
+            foreach ($reservation_check as $value) {
+                $ch_days = explode(',', $value['date']);
+                //日付が予約済みかチェックする
+                for ($i = 0; $i < count($days); $i++) {
+                    for ($k = 0; $k < count($ch_days); $k++) {
+                        if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
+                            $error['ather'] = 'すでに予約済みの日程が含まれます';
+                        }
                     }
                 }
             }
         }
     }
-}
 
-//宿泊日数系のバリデーションチェック
+    //宿泊日数系のバリデーションチェック
 
-//宿泊人数のバリデーション
-if (empty($_POST['capacity'])) {
-    $error['capacity'] = '宿泊人数が空欄です';
-} else {
-    //部屋詳細から該当の宿泊人数のプランがあるかを検索する
-    if ($_POST['capacity'] != $room_detail['capacity']) {
-        if ($_POST['capacity'] > $room_detail['capacity']) {
-            $error['capacity'] = '宿泊人数が多いです。';
+    //宿泊人数のバリデーション
+    if (empty($_POST['capacity'])) {
+        $error['capacity'] = '宿泊人数が空欄です';
+    } else {
+        //部屋詳細から該当の宿泊人数のプランがあるかを検索する
+        if ($_POST['capacity'] != $room_detail['capacity']) {
+            if ($_POST['capacity'] > $room_detail['capacity']) {
+                $error['capacity'] = '宿泊人数が多いです。';
+            }
         }
     }
-}
 }
 
 ?>
@@ -226,7 +219,7 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['check_in'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['check_in'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['check_in'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
@@ -239,7 +232,7 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['check_out'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['check_out'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['check_out'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
@@ -252,7 +245,7 @@ if (empty($_POST['capacity'])) {
 
                     <?php if (!empty($error['capacity'])) : ?>
                         <tr>
-                            <td colspan = "2"><span class="error"><?= $error['capacity'] ?></span></td>
+                            <td colspan="2"><span class="error"><?= $error['capacity'] ?></span></td>
                         </tr>
                     <?php endif; ?>
 
