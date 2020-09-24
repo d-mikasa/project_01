@@ -32,18 +32,7 @@ if ($_SESSION['user_auth'] == false) {
 </head>
 
 <body class="background_reservation">
-    <nav>
-        <img src="img/logo.png" class="header_logo">
-        <div class="status">
-            <div class = "status_none">ログイン</div>
-            <span class="triangle"></span>
-            <div class = "status_now">情報入力</div>
-            <span class="triangle"></span>
-            <div class = "status_none">内容確認</div>
-            <span class="triangle"></span>
-            <div class = "status_none">予約完了</div>
-        </div>
-    </nav>
+<?= getNav('reservation'); ?>
     <main class="reservation_main">
         <form action="reservation_conf.php" method="post">
             <div class="titles">情報入力欄</div>
