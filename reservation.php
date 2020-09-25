@@ -36,8 +36,9 @@ if ($_SESSION['user_auth'] == false) {
     <main class="reservation_main">
         <form action="reservation_conf.php" method="post">
             <div class="titles">情報入力欄</div>
-            <table>
-                <tr>
+            <table class = "reservation_table">
+
+                <tr  class = "reservation_room_name">
                     <th>部屋名</th>
                     <td>
                         <select name="detail_id" id="target">
@@ -47,25 +48,29 @@ if ($_SESSION['user_auth'] == false) {
                         </select>
                     </td>
                 </tr>
-                <tr>
+
+                <tr  class = "reservation_check_in">
                     <th>チェックイン</th>
                     <td>
                         <input type="date" name="check_in">
                     </td>
                 </tr>
-                <tr>
+
+                <tr  class = "reservation_check_out">
                     <th>チェックアウト</th>
                     <td>
                         <input type="date" name="check_out">
                     </td>
                 </tr>
-                <tr>
+
+                <tr  class = "reservation_capacity">
                     <th>宿泊人数</th>
                     <td>
                         <input type="number" name="capacity" min="1">
                     </td>
                 </tr>
-                <tr>
+                
+                <tr class = "reservation_payment">
                     <th>支払い方法</th>
                     <td>
                         <div> <input type="radio" name="peyment" value="1" checked>現金（現地支払い）</div>

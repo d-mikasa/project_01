@@ -52,7 +52,7 @@ if (!empty($_POST['login'])) {
         </div>
     </nav>
     <main class="login_main">
-        <div class="width">
+        <div class="title_group">
             <div class="top_title">
                 <span>C</span>
                 <span>I</span>
