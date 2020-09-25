@@ -95,70 +95,55 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 ?>
 <!doctype html>
 <html lang="ja">
-
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>CICACU</title>
-    <meta name="description" content="CICACU(シカク)">
-    <meta name="keywords" content="CICACU,cafe饗茶庵,鹿沼,ゲストハウス,民宿">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--スマホ用に見れるように-->
-    <meta name="robots" content="noindex,nofollow,noarchive">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/reservation_style.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>CICACU</title>
+	<meta name="description" content="CICACU(シカク)">
+	<meta name="keywords" content="CICACU,cafe饗茶庵,鹿沼,ゲストハウス,民宿">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<!--スマホ用に見れるように-->
+	<meta name="robots" content="noindex,nofollow,noarchive">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="./css/reservation.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
-
-<body class="reservation">
-    <header>
-        <h1>CICACU</h1>
-        <h2>予約ページ</h2>
-    </header>
-    <?php if (empty($error)) : ?>
-        <!--エラーが無く、送信することが可能な画面-->
-        <contaner class="step_group">
-            <div class="step_conf">入力</div>
-            <p>→</p>
-            <div class="step_input">確認</div>
-            <p>→</p>
-            <div class="step_done">完了</div>
-        </contaner>
-        <main class="reservation_main">
-            <form action="reservation_done.php" method="post">
-                <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>">
-                <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>">
-                <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>">
-                <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>">
-                <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>">
-                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>">
-                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>">
-                <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
-                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
-
-                <div class="titles">情報入力欄</div>
-                <table>
-                    <tr>
-                        <th>部屋名</th>
-                        <td>
-                            <?= $room_detail['name'] ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>チェックイン</th>
-                        <td> <?= $_POST['check_in'] ?> </td>
-                    </tr>
-                    <tr>
-                        <th>チェックアウト</th>
-                        <td> <?= $_POST['check_out'] ?> </td>
-                    </tr>
-                    <tr>
-                        <th>宿泊人数</th>
-                        <td> <?= $_POST['capacity'] ?> </td>
-                    </tr>
-                    <tr>
-                        <th>支払い方法</th>
-                        <td> <?php
+<body class="background_conf"> <?php if (empty($error)) : ?>
+	<!--エラーが無く、送信することが可能な画面-->
+	<main class="reservation_main">
+		<form action="reservation_done.php" method="post">
+			<!--実際に送信する情報群-->
+			<input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>">
+			<input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>">
+			<input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>">
+			<input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>">
+			<input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>">
+			<input type="hidden" name="price" value="<?= $room_detail['price'] ?>">
+			<input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>">
+			<input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
+			<input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
+			<!--実際に送信する情報群-->
+			<div class="titles">情報入力欄</div>
+			<table>
+				<tr>
+					<th>部屋名</th>
+					<td> <?= $room_detail['name'] ?> </td>
+				</tr>
+				<tr>
+					<th>チェックイン</th>
+					<td> <?= $_POST['check_in'] ?> </td>
+				</tr>
+				<tr>
+					<th>チェックアウト</th>
+					<td> <?= $_POST['check_out'] ?> </td>
+				</tr>
+				<tr>
+					<th>宿泊人数</th>
+					<td> <?= $_POST['capacity'] ?> </td>
+				</tr>
+				<tr>
+					<th>支払い方法</th>
+					<td> <?php
                                 switch ($_POST['peyment']) {
                                     case '1':
                                         echo '現金（現地支払い）';
@@ -172,96 +157,60 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                                 }
 
                                 ?> </td>
-                    </tr>
-                </table>
-                <p class="submit_form">
+				</tr>
+			</table>
+			<p class="submit_form">
                     以上の内容でお間違い無いでしょうか？
                     <input type="submit" value="確認">
                 </p>
-            </form>
-        </main>
-    <?php else : ?>
-        <!--エラーがあって、もう一度フォームを送信する-->
-        <contaner class="step_group">
-            <div class="step_input">入力</div>
-            <p>→</p>
-            <div class="step_conf">確認</div>
-            <p>→</p>
-            <div class="step_done">完了</div>
-        </contaner>
-        <main class="reservation_main">
-            <form action="reservation_conf.php" method="post">
-                <div class="titles">情報入力欄</div>
-                <table>
-                    <tr>
-                        <th>部屋名</th>
-                        <td>
-                            <select name="detail_id" id="target">
-                                <?php foreach ($pull_down_list as $value) : ?>
-                                    <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>><?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
-                        </td>
-                    </tr>
-
-                    <?php if (!empty($error['room'])) : ?>
-                        <tr>
-                            <td> <span class="error"><?= $error['room'] ?></span></td>
-                        </tr>
-                    <?php endif; ?>
-
-                    <tr>
-                        <th>チェックイン</th>
-                        <td>
-                            <input type="date" name="check_in" value="<?php if (!empty($_POST['check_in'])) echo $_POST['check_in'] ?>">
-                        </td>
-                    </tr>
-
-                    <?php if (!empty($error['check_in'])) : ?>
-                        <tr>
-                            <td colspan="2"><span class="error"><?= $error['check_in'] ?></span></td>
-                        </tr>
-                    <?php endif; ?>
-
-                    <tr>
-                        <th>チェックアウト </th>
-                        <td>
-                            <input type="date" name="check_out" value="<?php if (!empty($_POST['check_out'])) echo $_POST['check_out'] ?>">
-                        </td>
-                    </tr>
-
-                    <?php if (!empty($error['check_out'])) : ?>
-                        <tr>
-                            <td colspan="2"><span class="error"><?= $error['check_out'] ?></span></td>
-                        </tr>
-                    <?php endif; ?>
-
-                    <tr>
-                        <th>宿泊人数 </th>
-                        <td>
-                            <input type="number" name="capacity" min="1" value="<?php if (!empty($_POST['capacity'])) echo $_POST['capacity'] ?>">
-                        </td>
-                    </tr>
-
-                    <?php if (!empty($error['capacity'])) : ?>
-                        <tr>
-                            <td colspan="2"><span class="error"><?= $error['capacity'] ?></span></td>
-                        </tr>
-                    <?php endif; ?>
-
-                    <tr>
-                        <th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
-                        <td>
-                            <div> <input type="radio" name="peyment" value="1" <?php if ($_POST['peyment'] == '1') echo 'checked' ?>>現金（現地支払い）</div>
-                            <div><input type="radio" name="peyment" value="2" <?php if ($_POST['peyment'] == '2') echo 'checked' ?>>クレジットカード（オンライン決算）</div>
-                            <div><input type="radio" name="peyment" value="3" <?php if ($_POST['peyment'] == '3') echo 'checked' ?>>クレジットカード（現地支払い）</div>
-                        </td>
-                    </tr>
-                </table>
-                <span class="error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></span>
-                <p class="submit_form"><input type="submit" value="予約"></p>
-            </form>
-        </main> <?php endif; ?>
-</body>
-
+		</form>
+	</main>
+</body> <?php else : ?>
+<!--エラーがあって、もう一度フォームを送信する-->
+<body class="background_reservation"> <?= getNav('reservation') ?> <main class="reservation_main">
+		<form action="reservation_conf.php" method="post">
+			<div class="titles">情報入力欄</div>
+			<table>
+				<tr>
+					<th>部屋名</th>
+					<td>
+						<select name="detail_id" id="target"> <?php foreach ($pull_down_list as $value) : ?> <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>><?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)</option> <?php endforeach; ?> </select>
+					</td>
+				</tr> <?php if (!empty($error['room'])) : ?> <tr>
+					<td> <span class="error"><?= $error['room'] ?></span></td>
+				</tr> <?php endif; ?> <tr>
+					<th>チェックイン</th>
+					<td>
+						<input type="date" name="check_in" value="<?php if (!empty($_POST['check_in'])) echo $_POST['check_in'] ?>">
+					</td>
+				</tr> <?php if (!empty($error['check_in'])) : ?> <tr>
+					<td colspan="2"><span class="error"><?= $error['check_in'] ?></span></td>
+				</tr> <?php endif; ?> <tr>
+					<th>チェックアウト </th>
+					<td>
+						<input type="date" name="check_out" value="<?php if (!empty($_POST['check_out'])) echo $_POST['check_out'] ?>">
+					</td>
+				</tr> <?php if (!empty($error['check_out'])) : ?> <tr>
+					<td colspan="2"><span class="error"><?= $error['check_out'] ?></span></td>
+				</tr> <?php endif; ?> <tr>
+					<th>宿泊人数 </th>
+					<td>
+						<input type="number" name="capacity" min="1" value="<?php if (!empty($_POST['capacity'])) echo $_POST['capacity'] ?>">
+					</td>
+				</tr> <?php if (!empty($error['capacity'])) : ?> <tr>
+					<td colspan="2"><span class="error"><?= $error['capacity'] ?></span></td>
+				</tr> <?php endif; ?> <tr>
+					<th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
+					<td>
+						<div> <input type="radio" name="peyment" value="1" <?php if ($_POST['peyment'] == '1') echo 'checked' ?>>現金（現地支払い）</div>
+						<div><input type="radio" name="peyment" value="2" <?php if ($_POST['peyment'] == '2') echo 'checked' ?>>クレジットカード（オンライン決算）</div>
+						<div><input type="radio" name="peyment" value="3" <?php if ($_POST['peyment'] == '3') echo 'checked' ?>>クレジットカード（現地支払い）</div>
+					</td>
+				</tr>
+			</table>
+			<span class="error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></span>
+			<p class="submit_form"><input type="submit" value="予約"></p>
+		</form>
+	</main>
+</body> <?php endif; ?>
 </html>
