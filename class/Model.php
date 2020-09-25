@@ -29,3 +29,4 @@ require_once('admin/ImageUpdata.php');
 require_once('UserLogin.php');
 require_once('RoomShow.php');
 require_once('UpdateReservation.php');
+require_once('Getnav.php');
