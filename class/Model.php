@@ -17,13 +17,10 @@ class Model
 
 //////////////////////Adminの処理を読み込んでいる/////////////////////
 require_once('admin/AdminUser.php');
-require_once('admin/RoomList.php');
-require_once('admin/DeleteList.php');
-require_once('admin/EditList.php');
-require_once('admin/UpdateDetail.php');
+require_once('admin/Room.php');
 require_once('admin/GetPage.php');
-require_once('admin/ShowList.php');
-require_once('admin/ImageUpdata.php');
+
+
 
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('UserLogin.php');

@@ -18,8 +18,8 @@ if(empty($_SESSION['mode'])){
 
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
-    $a = new EditList();
-    $edit_detail = $a->Edit_detail($_SESSION['data_id']);
+    $a = new ReadDetail();
+    $edit_detail = $a->Read_detail($_SESSION['data_id']);
 
     //配列の個数を表示領域に設定
     $view = count($edit_detail);
