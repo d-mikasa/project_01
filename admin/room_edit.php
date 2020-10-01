@@ -18,7 +18,7 @@ if(empty($_SESSION['mode'])){
 
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
-    $a = new ReadDetail();
+    $a = new AdminRoom();
     $edit_detail = $a->Read_detail($_SESSION['data_id']);
 
     //配列の個数を表示領域に設定
@@ -49,7 +49,7 @@ if (!empty($_FILES)) {
         $result = move_uploaded_file($temp, IMGS_PATH . $name);
         if ($result == true) {
             $message = 'ファイルをアップロードしました';
-            $pdo = new ImageUpdata;
+            $pdo = new AdminRoom;
             $pdo->image_update($name, $_SESSION['data_id']);
         } else {
             $message = 'ファイルの移動に失敗しました';

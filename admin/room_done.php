@@ -34,10 +34,10 @@ if (!empty($_POST['set_data'])) {
 
 //変なセッション値が残っていたときのため、一応分岐処理
 if ($_SESSION['mode'] == 'edit') {
-    $update = new UpdateDetail;
+    $update = new AdminRoom;
     $update->update($_SESSION['data_id'], $set_data);
 } else {
-    $update = new UpdateDetail;
+    $update = new AdminRoom;
     $update->update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
 }
 

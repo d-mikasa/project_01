@@ -4,7 +4,7 @@
 【部屋削除機能】
 DBから指定IDの部屋情報を削除する
 */
-class DeleteList extends Model
+class AdminRoom extends Model
 {
     public function Delete_detail($id)
     {
@@ -16,14 +16,12 @@ class DeleteList extends Model
         $sql = 'DELETE FROM room_detail WHERE room_id = ' . $id;
         $pdo->query($sql);
     }
-}
+
 
 /*
 【部屋詳細情報取得】
 DBから指定IDの部屋情報を取得する機能
 */
-class ReadDetail extends Model
-{
     public function Read_detail($id)
     {
         try {
@@ -39,14 +37,12 @@ class ReadDetail extends Model
             exit($e->getMessage());
         }
     }
-}
+
 
 /*
 【部屋編集機能】
 DBから指定IDの部屋情報を編集する
 */
-class UpdateDetail extends Model
-{
     public function update($id , $list, $room = NULL)
     {
         //まずは該当のIDデータを全て削除する
@@ -93,10 +89,9 @@ class UpdateDetail extends Model
             }
         }
     }
-}
 
-class ShowList extends Model
-{
+
+
     public function show_room()
     {
         parent::connect();
@@ -118,12 +113,11 @@ class ShowList extends Model
         $result = $stmt->fetchAll();
         return $result;
     }
-}
+
 
 
  //データベースの中にIDの一致するものを検索する
- class RoomList extends Model
- {
+
      public function room_get()
      {
          parent::connect();
@@ -134,10 +128,9 @@ class ShowList extends Model
          $result = $stmt->fetchAll();
          return $result;
      }
- }
 
- class ImageUpdata extends Model
-{
+
+
     public function image_update($img, $id)
     {
         parent::connect();
@@ -146,4 +139,4 @@ class ShowList extends Model
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$img, $id]);
     }
-}
+	}

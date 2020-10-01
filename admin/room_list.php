@@ -10,7 +10,7 @@ if (empty($_SESSION['auth'])) {
 unset($_SESSION['mode']);
 unset($_SESSION['data_id']);
 
-$a = new roomList();
+$a = new AdminRoom;
 $room_list = $a->room_get();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'delete': //削除が押された場合
-            $a = new Deletelist();
+            $a = new AdminRoom();
             $a->Delete_detail($_POST['delete']);
             //重複削除が起きないようにリダイレクト
             header('Location: room_list.php');

@@ -1,6 +1,6 @@
 <?php
 require_once('class/Library.php');
-$showlist = new ShowList;
+$showlist = new AdminRoom;
 $room = $showlist->show_room();
 
 ?>
