@@ -1,8 +1,9 @@
 <?php
 require_once('../class/Library.php');
 
-//画像保存先
+//画像保存先 ローカル環境
 const IMGS_PATH = '../img/';
+//画像保存先 本番環境
 const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
 
 //最大表示領域
@@ -44,13 +45,13 @@ if ($view == 0) {
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
     // 権限変更
-    exec('sudo chmod 777 ' . IMGS_PATH);
+    exec('sudo chmod 777 ' . FULL_PATH);
 
     if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
         $name = $_FILES['userfile']['name'];
         $name = mb_convert_encoding($name, 'cp932', 'utf8');
         $temp = $_FILES['userfile']['tmp_name'];
-        $result = move_uploaded_file($temp, IMGS_PATH . $name);
+        $result = move_uploaded_file($temp, FULL_PATH . $name);
         if ($result == true) {
             $message = 'ファイルをアップロードしました';
             $pdo = new AdminRoom;

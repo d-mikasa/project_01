@@ -184,5 +184,10 @@ class AdminRoom extends Model
         $sql = 'UPDATE room SET img = ? WHERE id = ?';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$img, $id]);
+
+        //roomテーブルの更新日を現在の日付に上書き
+        $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$id]);
     }
 }
