@@ -10,9 +10,13 @@ if (empty($_SESSION['auth'])) {
 unset($_SESSION['mode']);
 unset($_SESSION['data_id']);
 
+//roomテーブルの情報を全て取得
 $a = new AdminRoom;
 $room_list = $a->get_room_all();
 
+/*
+押されたボタンの種類別に処理する
+*/
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {
         case 'create': //新規作成が押された場合

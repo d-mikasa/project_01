@@ -6,7 +6,6 @@
 
 class AdminRoom extends Model
 {
-
     ///////////////////////////////////////////////////////////////////////////
     /**
      *DBから指定IDの部屋情報を削除する
@@ -147,8 +146,13 @@ class AdminRoom extends Model
 
     public function get_room_all()
     {
+        //connectメソッドにアクセス
         parent::connect();
+
+        //PDOを取得
         $pdo = $this->dbh;
+
+        //roomテーブルの情報を取得する
         $sql = 'SELECT * FROM room';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -170,8 +174,13 @@ class AdminRoom extends Model
 
     public function room_img_update($img, $id)
     {
+        //connectメソッドにアクセス
         parent::connect();
+
+        //PDOを取得
         $pdo = $this->dbh;
+
+        //roomテーブルのimgに画像名（拡張子付き）をUPDATE
         $sql = 'UPDATE room SET img = ? WHERE id = ?';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$img, $id]);

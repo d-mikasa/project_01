@@ -16,6 +16,9 @@ if(empty($_SESSION['mode'])){
     header('Location: room_list.php');
 }
 
+/*
+編集ボタンからこのページに遷移してきた場合
+*/
 if ($_SESSION['mode'] == 'edit') {
     //配列に値をいれる
     $a = new AdminRoom();
@@ -24,6 +27,7 @@ if ($_SESSION['mode'] == 'edit') {
     //配列の個数を表示領域に設定
     $view = count($edit_detail);
 } else {
+    //新規作成が押された場合の初期表示数は１
     $view = 1;
 }
 
@@ -62,7 +66,6 @@ if (!empty($_FILES)) {
 
     // 元の状態に戻す
     exec('sudo chmod 755 ' . IMGS_PATH);
-
 }
 
 ?>
@@ -159,9 +162,8 @@ if (!empty($_FILES)) {
             return false;
         }
     }
-</script>
 
-<script>
+
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
     const VIEW = "<?= MAX_VIEW ?>";
 
@@ -228,6 +230,7 @@ if (!empty($_FILES)) {
         }
     }
 
+       ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
     window.onload = function() {
         var table = document.getElementById("table");
         var row_len = table.rows.length - 1;
