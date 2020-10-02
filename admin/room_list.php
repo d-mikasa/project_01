@@ -11,7 +11,7 @@ unset($_SESSION['mode']);
 unset($_SESSION['data_id']);
 
 $a = new AdminRoom;
-$room_list = $a->room_get();
+$room_list = $a->get_room_all();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {

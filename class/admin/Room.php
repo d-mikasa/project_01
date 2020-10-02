@@ -159,35 +159,13 @@ class AdminRoom extends Model
 
     ///////////////////////////////////////////////////////////////////////////
     /**
-     *about
+     *画像のアップデート（roomのimgカラムにパスを追加、画像のアップロード）を行う
      *
-     *infomation
+     *このクラスではroomテーブルのimgカラムのパスを追加することのみ行う
      *
-     *@param text
-     *@return text
-     */
-    //データベースの中にIDの一致するものを検索する
-
-    public function room_get()
-    {
-        parent::connect();
-        $pdo = $this->dbh;
-        $sql = 'SELECT * FROM room';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll();
-        return $result;
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    /**
-     *about
-     *
-     *infomation
-     *
-     *@param text
-     *@return text
+     *@param $img 画像の名前
+     *@param $id roomテーブルのid(room_id)のこと
+     *@return null
      */
 
     public function room_img_update($img, $id)
