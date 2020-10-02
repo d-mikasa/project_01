@@ -76,9 +76,7 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
             }
         }
     }
-
-    //宿泊日数系のバリデーションチェック
-
+}
     //宿泊人数のバリデーション
     if (empty($_POST['capacity'])) {
         $error['capacity'] = '宿泊人数が空欄です';
@@ -90,8 +88,6 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
             }
         }
     }
-}
-
 ?>
 <!doctype html>
 <html lang="ja">
@@ -111,6 +107,7 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 </head>
 
 <body class="background_conf"> <?php if (empty($error)) : ?>
+    <?= getNav('conf') ?>
         <!--エラーが無く、送信することが可能な画面-->
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
@@ -125,8 +122,8 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                 <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
                 <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
                 <!--実際に送信する情報群-->
-                <div class="titles">情報入力欄</div>
-                <table>
+                <div class="titles">ご予約内容確認</div>
+                <table class = "conf_check_table">
                     <tr>
                         <th>部屋名</th>
                         <td> <?= $room_detail['name'] ?> </td>
@@ -160,9 +157,12 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                                 ?> </td>
                     </tr>
                 </table>
+
+                <div class = "final_check">以上の内容でお間違い無いでしょうか？</div>
                 <p class="submit_form">
-                    以上の内容でお間違い無いでしょうか？
-                    <input type="submit" value="確認">
+
+                    <button type="submit" value="確認">確認</button>
+                    <button type="button" value="キャンセル" onclick="location.href='reservation.php'" >キャンセル</button>
                 </p>
             </form>
         </main>
@@ -178,10 +178,10 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         <?= getNav('reservation') ?>
         <main class="reservation_main">
 
-          <!--情報を入力する場所-->
+            <!--情報を入力する場所-->
             <form action="reservation_conf.php" method="post">
                 <div class="titles">情報入力欄</div>
-                <table>
+                <table class="reservation_table">
                     <!--部屋名を入力する場所-->
                     <tr class="reservation_room_name">
                         <th>部屋名</th>
@@ -190,12 +190,10 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                         </td>
                     </tr>
 
-                    <!--部屋名を入力する場所のエラー-->
-                    <?php if (!empty($error['room'])) : ?>
+                    <!--dummy-->
                         <tr class="room_name_error">
-                            <td> <span class="error"><?= $error['room'] ?></span></td>
+                            <td colspan="2" class="error"></td>
                         </tr>
-                    <?php endif; ?>
 
                     <!--チェックインを入力する場所-->
                     <tr class="reservation_check_in">
@@ -204,27 +202,41 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                             <input type="date" name="check_in" value="<?php if (!empty($_POST['check_in'])) echo $_POST['check_in'] ?>">
                         </td>
                     </tr>
+
                     <!--チェックインエラー表示-->
-                    <?php if (!empty($error['check_in'])) : ?>
-                    <tr>
-                            <td colspan="2"><span class="error"><?= $error['check_in'] ?></span></td>
+                        <!-- dammy error message -->
+                        <tr class="room_name_error">
+                            <td colspan="2" class="error"><?php if (!empty($error['check_in'])) echo $error['check_in'] ?></td>
                         </tr>
-                        <?php endif; ?>
-                        <tr>
+
+
+
+                    <tr>
                         <th>チェックアウト </th>
                         <td>
                             <input type="date" name="check_out" value="<?php if (!empty($_POST['check_out'])) echo $_POST['check_out'] ?>">
                         </td>
-                    </tr> <?php if (!empty($error['check_out'])) : ?> <tr>
-                            <td colspan="2"><span class="error"><?= $error['check_out'] ?></span></td>
-                        </tr> <?php endif; ?> <tr>
+                    </tr>
+
+                    <!-- チェックアウトのエラー -->
+                        <tr class="room_name_error">
+                            <td colspan="2" class="error"><?php if (!empty($error['check_out'])) echo $error['check_out'] ?></td>
+                        </tr>
+
+
+                    <tr>
                         <th>宿泊人数 </th>
                         <td>
                             <input type="number" name="capacity" min="1" value="<?php if (!empty($_POST['capacity'])) echo $_POST['capacity'] ?>">
                         </td>
-                    </tr> <?php if (!empty($error['capacity'])) : ?> <tr>
-                            <td colspan="2"><span class="error"><?= $error['capacity'] ?></span></td>
-                        </tr> <?php endif; ?> <tr>
+                    </tr>
+
+                        <tr class="room_name_error">
+                            <td colspan="2" class="error"> <?php if (!empty($error['capacity'])) echo $error['capacity'] ?> </td>
+                        </tr>
+
+
+                    <tr>
                         <th>支払い方法 <br><span class="error"><?php if (!empty($error['payment'])) echo $error['peyment'] ?></span></th>
                         <td>
                             <div> <input type="radio" name="peyment" value="1" <?php if ($_POST['peyment'] == '1') echo 'checked' ?>>現金（現地支払い）</div>
@@ -233,8 +245,8 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                         </td>
                     </tr>
                 </table>
-                <span class="error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></span>
-                <p class="submit_form"><input type="submit" value="予約"></p>
+                <div class="date_error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></div>
+                <p class="submit_form"><button type="submit" >予約</p>
             </form>
         </main>
     </body> <?php endif; ?>
