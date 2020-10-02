@@ -1,101 +1,154 @@
 <?php
 
-/*
-【部屋削除機能】
-DBから指定IDの部屋情報を削除する
-*/
+///////////////////////////////////////////////////
+//Adminユーザーが部屋を操作する系の処理
+//////////////////////////////////////////////////
+
 class AdminRoom extends Model
 {
-    public function Delete_detail($id)
+
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *DBから指定IDの部屋情報を削除する
+     *
+     *roomとroom_detailの中からroom_id(id)が引数と一致するものを削除する
+     *
+     *@param $id roomテーブルのid
+     *@return なし
+     */
+
+    public function delete_detail($id)
     {
+        //connectメソッドにアクセス
         parent::connect();
+
+        //PDOを取得
         $pdo = $this->dbh;
+
+        //roomテーブルの中から、idが一致するものを削除する
         $sql = 'DELETE FROM room WHERE id = ' . $id;
         $pdo->query($sql);
 
+        //room_detailの中からroom_id(roomテーブルのidカラム)が一致するものを削除する
         $sql = 'DELETE FROM room_detail WHERE room_id = ' . $id;
         $pdo->query($sql);
     }
 
 
-/*
-【部屋詳細情報取得】
-DBから指定IDの部屋情報を取得する機能
-*/
-    public function Read_detail($id)
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *DBから指定IDの部屋情報を取得する機能
+     *
+     *room_idが引数のidと一致するroom_detailを全て取得する
+     *
+     *@param $id roomテーブルのid
+     *@return $result idが一致するroom_detailを全て
+     */
+
+    public function get_detail($id)
     {
-        try {
-            parent::connect();
-            $pdo = $this->dbh;
-            $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([$id]);
-            $result = $stmt->fetchAll();
-            return $result;
-        } catch (PDOException $e) {
-            header("Content-Type: text/plain; charset=UTF-8", true, 500);
-            exit($e->getMessage());
-        }
+        //connectメソッドにアクセス
+        parent::connect();
+
+        //PDOを取得
+        $pdo = $this->dbh;
+
+        //room_detailテーブルの中からidが一致するものを取得($resultに格納)
+        $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
+        $detail = $pdo->prepare($sql);
+        $detail->execute([$id]);
+        $result = $detail->fetchAll();
+        return $result;
     }
 
 
-/*
-【部屋編集機能】
-DBから指定IDの部屋情報を編集する
-*/
-    public function update($id , $list, $room = NULL)
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *部屋の情報を更新（追加）する機能
+     *
+     *新規作成か更新かで処理を変える。カラムを減らした時に対応できる様、どちらの場合でもidと一致するデータを削除する。
+     *[新規作成の場合]roomテーブルに部屋を追加後、追加したidを取得しroom_detailに情報を追加
+     *[更新の場合]引数になっているidと一致するroom_detailの内容を作成する。
+     *
+     *@param $id 検索するroomのid
+     *@param $set_data 追加する部屋の詳細情報を多次元配列に格納している
+     *@param $room 更新しようとしている部屋の名前
+     *@return null
+     */
+
+    public function room_update($id, $set_data, $room = NULL)
     {
-        //まずは該当のIDデータを全て削除する
+        /*
+        room_detailの初期化処理
+        */
+        //connectメソッドにアクセス
         parent::connect();
+
+        //PDOを取得
         $pdo = $this->dbh;
+
+        //room_detailから、引数とroom_idが一致するものを全て削除する
         $sql = 'DELETE FROM room_detail WHERE room_id = ?';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
 
-             //登録モードにより処理を帰る
-             //モード：新規作成の処理
+        /*
+        モード：新規作成の処理
+        */
         if ($_SESSION['mode'] == 'create') {
+            //新規部屋情報の追加
             $sql = 'INSERT INTO room(name) VALUES (?)';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$room]);
-            $sql ="SELECT  AUTO_INCREMENT
+
+            //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
+            $sql = "SELECT  AUTO_INCREMENT
             FROM  INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = 'd_mikasa'
             AND   TABLE_NAME   = 'room'";
-            $stmt = $pdo -> query($sql) -> fetchAll();
-            $id = $stmt;
+            $stmt = $pdo->query($sql)->fetch();
+            $id = $stmt['AUTO_INCREMENT'] - 1;
 
-            $sql = 'SELECT * FROM room ORDER BY created_at DESC LIMIT 1';
-            $stmt = $pdo -> query($sql) -> fetch();
-            $id = $stmt['id'];
-
-            for ($i = 0; $i < count($list); $i++) {
+            //room_detailの数だけforでINSERTする
+            for ($i = 0; $i < count($set_data); $i++) {
                 $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id, $list[$i]['capacity'], $list[$i]['remarks'], $list[$i]['price']]);
+                $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
             }
         }
 
-        //モード：編集の処理
+        /*
+        モード：編集の処理
+        */
         if ($_SESSION['mode'] == 'edit') {
+
+            //roomテーブルの更新日を現在の日付に上書き
             $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id]);
 
-            for ($i = 0; $i < count($list); $i++) {
+            //room_detailの数だけforでINSERTする
+            for ($i = 0; $i < count($set_data); $i++) {
                 $sql = 'INSERT INTO room_detail (room_id, capacity, remarks, price) VALUES (?,?,?,?)';
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id, $list[$i]['capacity'], $list[$i]['remarks'], $list[$i]['price']]);
+                $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
             }
         }
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *roomテーブルの情報を全て取得する
+     *
+     *@param null
+     *@return roomテーブルの全カラム
+     */
 
-    public function show_room()
+    public function get_room_all()
     {
         parent::connect();
-        $pdo = $this -> dbh;
+        $pdo = $this->dbh;
         $sql = 'SELECT * FROM room';
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -103,35 +156,41 @@ DBから指定IDの部屋情報を編集する
         return $result;
     }
 
-    public function show_detail($id)
+
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *about
+     *
+     *infomation
+     *
+     *@param text
+     *@return text
+     */
+    //データベースの中にIDの一致するものを検索する
+
+    public function room_get()
     {
         parent::connect();
-        $pdo = $this -> dbh;
-        $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
+        $pdo = $this->dbh;
+        $sql = 'SELECT * FROM room';
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute();
         $result = $stmt->fetchAll();
         return $result;
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *about
+     *
+     *infomation
+     *
+     *@param text
+     *@return text
+     */
 
- //データベースの中にIDの一致するものを検索する
-
-     public function room_get()
-     {
-         parent::connect();
-         $pdo = $this -> dbh;
-         $sql = 'SELECT * FROM room';
-         $stmt = $pdo->prepare($sql);
-         $stmt->execute();
-         $result = $stmt->fetchAll();
-         return $result;
-     }
-
-
-
-    public function image_update($img, $id)
+    public function room_img_update($img, $id)
     {
         parent::connect();
         $pdo = $this->dbh;
@@ -139,4 +198,4 @@ DBから指定IDの部屋情報を編集する
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$img, $id]);
     }
-	}
+}

@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'delete': //削除が押された場合
             $a = new AdminRoom();
-            $a->Delete_detail($_POST['delete']);
+            $a->delete_detail($_POST['delete']);
             //重複削除が起きないようにリダイレクト
             header('Location: room_list.php');
             exit;

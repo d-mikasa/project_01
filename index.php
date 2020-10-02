@@ -1,7 +1,7 @@
 <?php
 require_once('class/Library.php');
 $showlist = new AdminRoom;
-$room = $showlist->show_room();
+$room = $showlist->get_room_all();
 
 ?>
 <!doctype html>
@@ -244,7 +244,7 @@ $(function() {
                     <div class="roomA-text">
                         <h3><?= $room_value['name'] ?></h3>
                         <p>
-                            <?php $detail = $showlist->show_detail($room_value['id']) ?>
+                            <?php $detail = $showlist->get_detail($room_value['id']) ?>
                             <?php for ($i = 0; $i < count($detail); $i++) : ?>
                                 <?php if(!empty($detail[$i]['capacity'])) echo $detail[$i]['capacity'] . '名様：' ?>
                                 <?php if(!empty($detail[$i]['price'])) echo '¥' .  number_format($detail[$i]['price']) ?>
