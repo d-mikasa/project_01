@@ -11,8 +11,8 @@ unset($_SESSION['mode']);
 unset($_SESSION['data_id']);
 
 //roomテーブルの情報を全て取得
-$a = new AdminRoom;
-$room_list = $a->get_room_all();
+$a = new Room;
+$room_list = $a->getRoomAll();
 
 /*
 押されたボタンの種類別に処理する
@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'delete': //削除が押された場合
-            $a = new AdminRoom();
-            $a->delete_detail($_POST['delete']);
+            $a = new Room();
+            $a->deleteDetail($_POST['delete']);
             //重複削除が起きないようにリダイレクト
             header('Location: room_list.php');
             exit;

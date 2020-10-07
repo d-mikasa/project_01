@@ -4,7 +4,7 @@
 //Adminユーザーが部屋を操作する系の処理
 //////////////////////////////////////////////////
 
-class AdminRoom extends Model
+class Room extends Model
 {
     ///////////////////////////////////////////////////////////////////////////
     /**
@@ -16,21 +16,18 @@ class AdminRoom extends Model
      *@return なし
      */
 
-    public function delete_detail($id)
+    public function deleteDtail($id)
     {
         //connectメソッドにアクセス
         parent::connect();
 
-        //PDOを取得
-        $pdo = $this->dbh;
-
         //roomテーブルの中から、idが一致するものを削除する
         $sql = 'DELETE FROM room WHERE id = ' . $id;
-        $pdo->query($sql);
+        $this->dbh->query($sql);
 
         //room_detailの中からroom_id(roomテーブルのidカラム)が一致するものを削除する
         $sql = 'DELETE FROM room_detail WHERE room_id = ' . $id;
-        $pdo->query($sql);
+        $this->dbh->query($sql);
     }
 
 
@@ -44,17 +41,14 @@ class AdminRoom extends Model
      *@return $result idが一致するroom_detailを全て
      */
 
-    public function get_detail($id)
+    public function getDetail($id)
     {
         //connectメソッドにアクセス
         parent::connect();
 
-        //PDOを取得
-        $pdo = $this->dbh;
-
         //room_detailテーブルの中からidが一致するものを取得($resultに格納)
         $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
-        $detail = $pdo->prepare($sql);
+        $detail = $this->dbh->prepare($sql);
         $detail->execute([$id]);
         $result = $detail->fetchAll();
         return $result;
@@ -75,7 +69,7 @@ class AdminRoom extends Model
      *@return null
      */
 
-    public function room_update($id, $set_data, $room = NULL)
+    public function roomUpdate($id, $set_data, $room = NULL)
     {
         /*
         room_detailの初期化処理
@@ -83,12 +77,10 @@ class AdminRoom extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-        //PDOを取得
-        $pdo = $this->dbh;
 
         //room_detailから、引数とroom_idが一致するものを全て削除する
         $sql = 'DELETE FROM room_detail WHERE room_id = ?';
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
 
         /*
@@ -97,21 +89,23 @@ class AdminRoom extends Model
         if ($_SESSION['mode'] == 'create') {
             //新規部屋情報の追加
             $sql = 'INSERT INTO room(name) VALUES (?)';
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$room]);
 
             //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
-            $sql = "SELECT  AUTO_INCREMENT
+            $sql = <<<EOD
+            SELECT  AUTO_INCREMENT
             FROM  INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = 'd_mikasa'
-            AND   TABLE_NAME   = 'room'";
-            $stmt = $pdo->query($sql)->fetch();
+            AND   TABLE_NAME   = 'room'
+            EOD;
+            $stmt = $this->dbh->query($sql)->fetch();
             $id = $stmt['AUTO_INCREMENT'] - 1;
 
             //room_detailの数だけforでINSERTする
             for ($i = 0; $i < count($set_data); $i++) {
                 $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
-                $stmt = $pdo->prepare($sql);
+                $stmt = $this->dbh->prepare($sql);
                 $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
             }
         }
@@ -123,13 +117,13 @@ class AdminRoom extends Model
 
             //roomテーブルの更新日を現在の日付に上書き
             $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
 
             //room_detailの数だけforでINSERTする
             for ($i = 0; $i < count($set_data); $i++) {
                 $sql = 'INSERT INTO room_detail (room_id, capacity, remarks, price) VALUES (?,?,?,?)';
-                $stmt = $pdo->prepare($sql);
+                $stmt = $this->dbh->prepare($sql);
                 $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
             }
         }
@@ -144,17 +138,14 @@ class AdminRoom extends Model
      *@return roomテーブルの全カラム
      */
 
-    public function get_room_all()
+    public function getRoomAll()
     {
         //connectメソッドにアクセス
         parent::connect();
 
-        //PDOを取得
-        $pdo = $this->dbh;
-
         //roomテーブルの情報を取得する
         $sql = 'SELECT * FROM room';
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll();
         return $result;
@@ -172,22 +163,19 @@ class AdminRoom extends Model
      *@return null
      */
 
-    public function room_img_update($img, $id)
+    public function roomImgUpdate($img, $id)
     {
         //connectメソッドにアクセス
         parent::connect();
 
-        //PDOを取得
-        $pdo = $this->dbh;
-
         //roomテーブルのimgに画像名（拡張子付き）をUPDATE
         $sql = 'UPDATE room SET img = ? WHERE id = ?';
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$img, $id]);
 
         //roomテーブルの更新日を現在の日付に上書き
         $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
     }
 }

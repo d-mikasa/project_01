@@ -1,7 +1,7 @@
 <?php
 require_once('class/Library.php');
-$showlist = new AdminRoom;
-$room = $showlist->get_room_all();
+$Room = new Room;
+$room = $Room->getRoomAll();
 
 ?>
 <!doctype html>
@@ -234,24 +234,23 @@ $(function() {
             </div>
 
 
-            <?php foreach ($room as $room_value) : ?>
+            <?php foreach($room as $room_value):?>
                 <div class="roomA">
                     <?php if(empty($room_value['img'])):?>
-                    <img src="<?= './img/noimage.jpg'?>">
+                    <img src="<?='./img/noimage.jpg'?>">
                     <?php else:?>
-                        <img src="<?= './img/' . $room_value['img'] ?>">
+                        <img src="<?='./img/' . $room_value['img']?>">
                     <?php endif;?>
                     <div class="roomA-text">
-                        <h3><?= $room_value['name'] ?></h3>
+                        <h3><?=$room_value['name']?></h3>
                         <p>
-                            <?php $detail = $showlist->get_detail($room_value['id']) ?>
-                            <?php for ($i = 0; $i < count($detail); $i++) : ?>
-                                <?php if(!empty($detail[$i]['capacity'])) echo $detail[$i]['capacity'] . '名様：' ?>
-                                <?php if(!empty($detail[$i]['price'])) echo '¥' .  number_format($detail[$i]['price']) ?>
-                                <?php if(!empty($detail[$i]['remarks'])) echo '(' . $detail[$i]['remarks'] . ')' ?>
-
+                            <?php $detail = $Room->getDetail($room_value['id']) ?>
+                            <?php foreach($detail as $value):?>
+                                <?php echo !empty($value['capacity']) ? $value['capacity'] . '名様：' : ''?>
+                                <?php echo !empty($value['price']) ? '¥' . number_format($value['price']) : ''?>
+                                <?php echo !empty($value['remarks']) ? '(' . $value['remarks'] . ')' : ''?>
                                 <br>
-                            <?php endfor; ?>
+                            <?php endforeach;?>
                         </p>
                     </div>
                 </div>

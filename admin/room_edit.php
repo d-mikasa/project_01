@@ -19,8 +19,8 @@ if (empty($_SESSION['auth'])) {
 */
 if ($_GET['mode'] == '"edit"') {
     //配列に値をいれる
-    $a = new AdminRoom();
-    $edit_detail = $a->get_detail($_GET['id']);
+    $a = new Room();
+    $edit_detail = $a->getDetail($_GET['id']);
 
     //配列の個数を表示領域に設定
     $view = count($edit_detail);
@@ -51,8 +51,8 @@ if (!empty($_FILES)) {
         $result = move_uploaded_file($temp, FULL_PATH . $name);
         if ($result == true) {
             $message = 'ファイルをアップロードしました';
-            $pdo = new AdminRoom;
-            $pdo->room_img_update($name, $_SESSION['data_id']);
+            $pdo = new Room;
+            $pdo->roomImgUpdate($name, $_SESSION['data_id']);
         } else {
             $message = 'ファイルの移動に失敗しました';
         }
