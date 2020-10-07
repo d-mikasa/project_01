@@ -22,7 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case 'create': //新規作成が押された場合
             $_SESSION['mode'] = 'create';
             $_SESSION['data_id'] = 0;
-            header('Location: room_edit.php');
+
+            //headerにGETをつけて飛ばす
+            header('Location: room_edit.php?mode="create"');
             break;
 
         case 'delete': //削除が押された場合
@@ -36,7 +38,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case 'edit': //編集ボタンが押された場合
             $_SESSION['mode'] = 'edit';
             $_SESSION['data_id'] = $_POST['edit'];
-            header('Location: room_edit.php');
+            $hoge = 'Location: room_edit.php?mode="edit"&id=' . $_POST['edit'];
+
+            //headerにGETをつけて飛ばす
+            header($hoge);
             exit;
             break;
 
@@ -82,8 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <tr class="table_name">
                 <td class="list_id">
                     ID
-                    <button type="submit" value="id" name="up_sort" id = "up">▲</button>
-                    <button type="submit" value="id" name="down_sort" id = "down">▼</button>
+                    <button type="submit" value="id" name="up_sort" id="up">▲</button>
+                    <button type="submit" value="id" name="down_sort" id="down">▼</button>
                 </td>
 
                 <td class="list_img">
@@ -91,20 +96,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </td>
                 <td class="list_name">
                     部屋名
-                    <button type="submit" value="name" name="up_sort" id = "up">▲</button>
-                    <button type="submit" value="name" name="down_sort" id = "down">▼</button>
+                    <button type="submit" value="name" name="up_sort" id="up">▲</button>
+                    <button type="submit" value="name" name="down_sort" id="down">▼</button>
                 </td>
 
                 <td class="list_created_at">
                     登録日時
-                    <button type="submit" value="created_at" name="up_sort" id = "up">▲</button>
-                    <button type="submit" value="created_at" name="down_sort" id = "down">▼</button>
+                    <button type="submit" value="created_at" name="up_sort" id="up">▲</button>
+                    <button type="submit" value="created_at" name="down_sort" id="down">▼</button>
                 </td>
 
                 <td class="list_updated_at">
                     更新
-                        <button type="submit" value="updated_at" name="up_sort" id = "up">▲</button>
-                        <button type="submit" value="updated_at" name="down_sort" id = "down">▼</button>
+                    <button type="submit" value="updated_at" name="up_sort" id="up">▲</button>
+                    <button type="submit" value="updated_at" name="down_sort" id="down">▼</button>
                 </td>
                 <td class="list_create">
                     <button type="submit" name="create" value="新規作成">
@@ -113,15 +118,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </td>
             </tr>
             <?php foreach ($room_list as $list) : ?>
-                <tr class = "dataerea">
+                <tr class="dataerea">
                     <td class="id_data"><?= $list['id'] ?></td>
                     <td class="img_data"><img src="../img/<?= $list['img'] ?>" alt="" class="listimage"></td>
                     <td class="name_data"><?= $list['name'] ?></td>
                     <td class="created_data"><?= $list['created_at'] ?></td>
                     <td class="updated_data"><?= $list['updated_at'] ?></td>
                     <td class="edit_group">
-                        <p><button type="submit" name="edit" value="<?= $list['id'] ?>" class = "editButten">編集</button></p>
-                        <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()" class = "deleteButten">削除</button></p>
+                        <p><button type="submit" name="edit" value="<?= $list['id'] ?>" class="editButten">編集</button></p>
+                        <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
                     </td>
                 </tr>
             <?php endforeach; ?>

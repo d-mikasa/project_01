@@ -13,17 +13,14 @@ const MAX_VIEW = 3;
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
-if(empty($_SESSION['mode'])){
-    header('Location: room_list.php');
-}
 
 /*
 編集ボタンからこのページに遷移してきた場合
 */
-if ($_SESSION['mode'] == 'edit') {
+if ($_GET['mode'] == '"edit"') {
     //配列に値をいれる
     $a = new AdminRoom();
-    $edit_detail = $a->get_detail($_SESSION['data_id']);
+    $edit_detail = $a->get_detail($_GET['id']);
 
     //配列の個数を表示領域に設定
     $view = count($edit_detail);
@@ -79,10 +76,10 @@ if (!empty($_FILES)) {
 
         <!--新規作成モードなら新規部屋名を表示 -->
         <?php if ($_SESSION['mode'] == 'create') : ?>
-            <table class = "newcreate">
-            <tr>
-            <th>新規部屋名</th>
-            </tr>
+            <table class="newcreate">
+                <tr>
+                    <th>新規部屋名</th>
+                </tr>
                 <tr>
                     <td><input type="text" name="plan[0][room_name]"></td>
                 </tr>
@@ -145,7 +142,7 @@ if (!empty($_FILES)) {
                 <input type="file" name="userfile" id="sample1">
                 </tr>
                 </table>
-                <p id = "doneImage">
+                <p id="doneImage">
                     <input type="submit" value="画像を更新" onclick="return btn_check()">
                 </p>
             </div>
@@ -231,7 +228,7 @@ if (!empty($_FILES)) {
         }
     }
 
-       ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
+    ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
     window.onload = function() {
         var table = document.getElementById("table");
         var row_len = table.rows.length - 1;

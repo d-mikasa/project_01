@@ -37,6 +37,7 @@ if (!empty($_POST['set_data'])) {
 if ($_SESSION['mode'] == 'edit') {
     $update = new AdminRoom;
     $update->room_update($_SESSION['data_id'], $set_data);
+    echo 'hogehoge';
 } else {
     $update = new AdminRoom;
     $update->room_update($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
