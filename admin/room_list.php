@@ -5,26 +5,17 @@ require_once('../class/Library.php');
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
-
-//URL直打ちされた時に、前回編集した内容へ飛ばない様に初期化
-unset($_SESSION['mode']);
-unset($_SESSION['data_id']);
-
 //roomテーブルの情報を全て取得
 $a = new Room;
 $room_list = $a->getRoomAll();
-
 /*
 押されたボタンの種類別に処理する
 */
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {
         case 'create': //新規作成が押された場合
-            $_SESSION['mode'] = 'create';
-            $_SESSION['data_id'] = 0;
-
             //headerにGETをつけて飛ばす
-            header('Location: room_edit.php?mode="create"');
+            header('Location: room_edit.php?mode="create"&id=0');
             break;
 
         case 'delete': //削除が押された場合
@@ -36,12 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'edit': //編集ボタンが押された場合
-            $_SESSION['mode'] = 'edit';
-            $_SESSION['data_id'] = $_POST['edit'];
-            $hoge = 'Location: room_edit.php?mode="edit"&id=' . $_POST['edit'];
+            $url = 'Location: room_edit.php?mode="edit"&id=' . $_POST['edit'];
 
             //headerにGETをつけて飛ばす
-            header($hoge);
+            header($url);
             exit;
             break;
 

@@ -29,6 +29,10 @@ if ($_GET['mode'] == '"edit"') {
     $view = 1;
 }
 
+echo '<pre>';
+print_r($edit_detail);
+echo '</pre>';
+
 //最大表示領域を超えていた場合、表示領域を上書き
 if ($view > MAX_VIEW) {
     $view = MAX_VIEW;
@@ -72,10 +76,10 @@ if (!empty($_FILES)) {
 <?php require_once('parts/top.parts.php'); ?>
 <main>
 
-    <form action="room_conf.php" method="post">
+    <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
 
         <!--新規作成モードなら新規部屋名を表示 -->
-        <?php if ($_SESSION['mode'] == 'create') : ?>
+        <?php if ($_GET['mode'] == 'create') : ?>
             <table class="newcreate">
                 <tr>
                     <th>新規部屋名</th>

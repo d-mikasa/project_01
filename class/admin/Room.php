@@ -50,7 +50,12 @@ class Room extends Model
         $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
         $detail = $this->dbh->prepare($sql);
         $detail->execute([$id]);
-        $result = $detail->fetchAll();
+        $result['detail'] = $detail->fetchAll();
+
+        $sql = 'SELECT name FROM room WHERE id = ?';
+        $detail = $this->dbh->prepare($sql);
+        $detail->execute([$id]);
+        $result['room'] = $detail->fetch();
         return $result;
     }
 

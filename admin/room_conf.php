@@ -5,16 +5,13 @@ require_once('../class/Library.php');
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
-if(empty($_SESSION['mode'])){
-    header('Location: room_list.php');
-}
 //EDITからURL直打ちで来られた時の対処
-if(empty($_POST)){
-    header('Location: room_edit.php');
-}
+// if(empty($_POST)){
+//     header('Location: room_list.php');
+// }
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
-if ($_SESSION['mode'] == 'create') {
+if ($_GET['mode'] == 'create') {
     $temp = $_POST['plan'][0];
     $_SESSION['room_name'] = $temp['room_name'];
     for ($i = 1; $i < count($_POST['plan']); $i++) {
@@ -32,7 +29,7 @@ if ($_SESSION['mode'] == 'create') {
 <?php require_once('parts/top.parts.php'); ?>
 
 <!--新規作成モードなら新規部屋名を表示 -->
-<?php if ($_SESSION['mode'] == 'create') : ?>
+<?php if ($_GET['mode'] == 'create') : ?>
     <table class = "conf_newroom">
         <tr>
             <th>新規部屋名</th>
