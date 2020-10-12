@@ -87,7 +87,7 @@ if (!empty($_FILES)) {
                     <th>部屋名</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="plan[0][room_name]" value="<?=$room_name['name']?>"></td>
+                    <td><input type="text" name="plan[room_name][0]" value="<?=$room_name['name']?>"></td>
                 </tr>
             </table>
 
@@ -111,15 +111,15 @@ if (!empty($_FILES)) {
                 <tr>
                     <td>部屋[<?= $i ?>]</td>
                     <td>
-                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['capacity'] ?>">名様
+                        <input type="text" name="plan[room_detail][<?= $i -1 ?>][capacity]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['capacity'] ?>">名様
                     </td>
 
                     <td>
-                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['price'] ?>">円
+                        <input type="text" name="plan[room_detail][<?= $i-1 ?>][price]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['price'] ?>">円
                     </td>
 
                     <td>
-                        <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i-1]['remarks'])) echo $detail[$i-1]['remarks'] ?> </textarea>
+                        <textarea name="plan[room_detail][<?= $i-1 ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i-1]['remarks'])) echo $detail[$i-1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
             <?php endfor; ?>

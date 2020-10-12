@@ -14,18 +14,16 @@ echo '<pre>';
 print_r($_POST);
 echo '</pre>';
 
-//配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
-if ($_GET['mode'] == 'create') {
-    $temp = $_POST['plan'][0];
-    $_SESSION['room_name'] = $temp['room_name'];
-    for ($i = 1; $i < count($_POST['plan']); $i++) {
-        $set_data[$i - 1] = $_POST['plan'][$i];
-    }
-} else {
-    for ($i = 1; $i <= count($_POST['plan']); $i++) {
-        $set_data[$i - 1] = $_POST['plan'][$i];
-    }
-}
+$room_name = $_POST['plan']['room_name'][0];
+$room_detail = $_POST['plan']['room_detail'];
+
+echo '<pre>';
+print_r($room_name);
+echo '</pre>';
+echo '<pre>';
+print_r($room_detail);
+echo '</pre>';
+
 
 ?>
 
@@ -37,29 +35,29 @@ if ($_GET['mode'] == 'create') {
     <table class = "conf_newroom">
         <tr>
             <th>新規部屋名</th>
-            <td><?= $_SESSION['room_name'] ?></td>
+            <td><?= $room_name ?></td>
         </tr>
     </table>
 
 <form action="room_done.php" method="post" id = "confForm">
-    <?php for ($i = 0; $i < count($set_data); $i++) : ?>
-        <input type="hidden" name="set_data[<?= $i ?>][capacity]" value="<?= $set_data[$i]['capacity'] ?>">
-        <input type="hidden" name="set_data[<?= $i ?>][price]" value="<?= $set_data[$i]['price'] ?>">
-        <input type="hidden" name="set_data[<?= $i ?>][remarks]" value="<?= $set_data[$i]['remarks'] ?>">
+    <?php for ($i = 0; $i < count($room_detail); $i++) : ?>
+        <input type="hidden" name="set_data[<?= $i ?>][capacity]" value="<?= $room_detail[$i]['capacity'] ?>">
+        <input type="hidden" name="set_data[<?= $i ?>][price]" value="<?= $room_detail[$i]['price'] ?>">
+        <input type="hidden" name="set_data[<?= $i ?>][remarks]" value="<?= $room_detail[$i]['remarks'] ?>">
 
         <table class="roomedit_table">
             <tr>
                 <th rowspan="3" class = "confPlan">部屋[<?= $i + 1 ?>]</th>
                 <th class = "confcapa">人数</th>
-                <td class = "confcapa_detail"><?= $set_data[$i]['capacity'] ?></td>
+                <td class = "confcapa_detail"><?= $room_detail[$i]['capacity'] ?></td>
             </tr>
             <tr>
                 <th class = "confPrice">料金</th>
-                <td class = "confPrice_detail"><?= $set_data[$i]['price'] ?></td>
+                <td class = "confPrice_detail"><?= $room_detail[$i]['price'] ?></td>
             </tr>
             <tr>
                 <th class = "confCome">コメント</th>
-                <td class = "confCome_detail"><?= $set_data[$i]['remarks'] ?></td>
+                <td class = "confCome_detail"><?= $room_detail[$i]['remarks'] ?></td>
             </tr>
         </table>
         <p><br></p>
