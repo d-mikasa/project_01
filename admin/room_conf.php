@@ -8,7 +8,11 @@ if (empty($_SESSION['auth'])) {
 //EDITからURL直打ちで来られた時の対処
 // if(empty($_POST)){
 //     header('Location: room_list.php');
-// }
+//
+
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
 
 //配列[1]は新規作成のフラグとしてpostさせているため、ここで配列を入れ直す
 if ($_GET['mode'] == 'create') {
@@ -29,14 +33,13 @@ if ($_GET['mode'] == 'create') {
 <?php require_once('parts/top.parts.php'); ?>
 
 <!--新規作成モードなら新規部屋名を表示 -->
-<?php if ($_GET['mode'] == 'create') : ?>
+
     <table class = "conf_newroom">
         <tr>
             <th>新規部屋名</th>
             <td><?= $_SESSION['room_name'] ?></td>
         </tr>
     </table>
-<?php endif; ?>
 
 <form action="room_done.php" method="post" id = "confForm">
     <?php for ($i = 0; $i < count($set_data); $i++) : ?>

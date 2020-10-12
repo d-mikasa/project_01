@@ -33,6 +33,9 @@ echo '<pre>';
 print_r($edit_detail);
 echo '</pre>';
 
+$detail = $edit_detail['detail'];
+$room_name = $edit_detail['room'];
+
 //最大表示領域を超えていた場合、表示領域を上書き
 if ($view > MAX_VIEW) {
     $view = MAX_VIEW;
@@ -78,17 +81,15 @@ if (!empty($_FILES)) {
 
     <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
 
-        <!--新規作成モードなら新規部屋名を表示 -->
-        <?php if ($_GET['mode'] == 'create') : ?>
+<!-- 部屋名を取得・表示する -->
             <table class="newcreate">
                 <tr>
-                    <th>新規部屋名</th>
+                    <th>部屋名</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="plan[0][room_name]"></td>
+                    <td><input type="text" name="plan[0][room_name]" value="<?=$room_name['name']?>"></td>
                 </tr>
             </table>
-        <?php endif; ?>
 
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
@@ -110,15 +111,15 @@ if (!empty($_FILES)) {
                 <tr>
                     <td>部屋[<?= $i ?>]</td>
                     <td>
-                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['capacity'] ?>">名様
+                        <input type="text" name="plan[<?= $i ?>][capacity]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['capacity'] ?>">名様
                     </td>
 
                     <td>
-                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($edit_detail[$i - 1]['capacity'])) echo $edit_detail[$i - 1]['price'] ?>">円
+                        <input type="text" name="plan[<?= $i ?>][price]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['price'] ?>">円
                     </td>
 
                     <td>
-                        <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($edit_detail[$i - 1]['remarks'])) echo $edit_detail[$i - 1]['remarks'] ?> </textarea>
+                        <textarea name="plan[<?= $i ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i-1]['remarks'])) echo $detail[$i-1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
             <?php endfor; ?>

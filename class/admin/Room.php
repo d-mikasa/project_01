@@ -50,12 +50,12 @@ class Room extends Model
         $sql = 'SELECT * FROM room_detail WHERE room_id = ?';
         $detail = $this->dbh->prepare($sql);
         $detail->execute([$id]);
-        $result['detail'] = $detail->fetchAll();
+        $result['detail'] = $detail->fetchAll(PDO::FETCH_ASSOC);
 
         $sql = 'SELECT name FROM room WHERE id = ?';
         $detail = $this->dbh->prepare($sql);
         $detail->execute([$id]);
-        $result['room'] = $detail->fetch();
+        $result['room'] = $detail->fetch(PDO::FETCH_ASSOC);
         return $result;
     }
 
