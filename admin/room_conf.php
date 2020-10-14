@@ -5,13 +5,11 @@ require_once('../class/Library.php');
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
-//EDITからURL直打ちで来られた時の対処
-// if(empty($_POST)){
-//     header('Location: room_list.php');
-//
 
 $room_name = $_POST['plan']['room_name'][0];
 $room_detail = $_POST['plan']['room_detail'];
+
+echo count($room_detail);
 ?>
 
 <!-- ヘッダー部分読み込み -->

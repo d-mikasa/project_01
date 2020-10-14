@@ -22,15 +22,23 @@ if ($_GET['mode'] == 'edit') {
     $a = new Room();
     $edit_detail = $a->getDetail($_GET['id']);
 
+    //marge処理記載場所
+    if (!empty($_POST)) {
+        $detail = $_POST['set_data']['room_detail'] + $edit_detail['detail'];
+        $name = $_POST['set_data']['room_name'];
+    }else{
+        $detail = $edit_detail['detail'];
+        $name = $edit_detail['room']['name'];
+    }
+
+
     //配列の個数を表示領域に設定
-    $view = count($edit_detail);
+    $view = count($detail);
 } else {
     //新規作成が押された場合の初期表示数は１
     $view = 1;
 }
 
-$detail = $edit_detail['detail'];
-$room_name = $edit_detail['room'];
 
 //最大表示領域を超えていた場合、表示領域を上書き
 if ($view > MAX_VIEW) {
@@ -74,17 +82,17 @@ if (!empty($_FILES)) {
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php'); ?>
 <main>
-    <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
+    <form action="room_conf.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post">
 
-<!-- 部屋名を取得・表示する -->
-            <table class="newcreate">
-                <tr>
-                    <th>部屋名</th>
-                </tr>
-                <tr>
-                    <td><input type="text" name="plan[room_name][0]" value="<?=$room_name['name']?>"></td>
-                </tr>
-            </table>
+        <!-- 部屋名を取得・表示する -->
+        <table class="newcreate">
+            <tr>
+                <th>部屋名</th>
+            </tr>
+            <tr>
+                <td><input type="text" name="plan[room_name][0]" value="<?= $name?>"></td>
+            </tr>
+        </table>
 
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
@@ -106,15 +114,15 @@ if (!empty($_FILES)) {
                 <tr>
                     <td>部屋[<?= $i ?>]</td>
                     <td>
-                        <input type="text" name="plan[room_detail][<?= $i -1 ?>][capacity]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['capacity'] ?>">名様
+                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['capacity'] ?>">名様
                     </td>
 
                     <td>
-                        <input type="text" name="plan[room_detail][<?= $i-1 ?>][price]" value="<?php if (!empty($detail[$i-1]['capacity'])) echo $detail[$i-1]['price'] ?>">円
+                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['price'] ?>">円
                     </td>
 
                     <td>
-                        <textarea name="plan[room_detail][<?= $i-1 ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i-1]['remarks'])) echo $detail[$i-1]['remarks'] ?> </textarea>
+                        <textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i - 1]['remarks'])) echo $detail[$i - 1]['remarks'] ?> </textarea>
                     </td>
                 </tr>
             <?php endfor; ?>
@@ -134,9 +142,9 @@ if (!empty($_FILES)) {
     <div class="borderLine"></div>
 
     <!--編集を押した時のみ画像編集を表示する-->
-    <?php if ($_SESSION['mode'] === 'edit') : ?>
+    <?php if ($_GET['mode'] === 'edit') : ?>
 
-        <form action="room_edit.php" method="post" enctype="multipart/form-data">
+        <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
                 <input type="file" name="userfile" id="sample1">
@@ -182,9 +190,9 @@ if (!empty($_FILES)) {
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="plan[' + row_len + '][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="plan[' + row_len + '][price]">円</td>';
-        var remarks = '<td><textarea name="plan[' + row_len + '][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]">円</td>';
+        var remarks = '<td><textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;
