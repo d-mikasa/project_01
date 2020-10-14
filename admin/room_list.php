@@ -13,9 +13,10 @@ $room_list = $a->getRoomAll();
 */
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch (key($_POST)) {
-        case 'create': //新規作成が押された場合
+        case 'create':
+            //新規作成が押された場合
             //headerにGETをつけて飛ばす
-            header('Location: room_edit.php?mode="create"&id=0');
+            header('Location: room_edit.php?mode=create&id=0');
             break;
 
         case 'delete': //削除が押された場合
@@ -27,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'edit': //編集ボタンが押された場合
-            $url = 'Location: room_edit.php?mode="edit"&id=' . $_POST['edit'];
+            $url = 'Location: room_edit.php?mode=edit&id=' . $_POST['edit'];
 
             //headerにGETをつけて飛ばす
             header($url);

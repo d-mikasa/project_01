@@ -17,7 +17,7 @@ if (empty($_SESSION['auth'])) {
 /*
 編集ボタンからこのページに遷移してきた場合
 */
-if ($_GET['mode'] == '"edit"') {
+if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
     $a = new Room();
     $edit_detail = $a->getDetail($_GET['id']);
@@ -28,10 +28,6 @@ if ($_GET['mode'] == '"edit"') {
     //新規作成が押された場合の初期表示数は１
     $view = 1;
 }
-
-echo '<pre>';
-print_r($edit_detail);
-echo '</pre>';
 
 $detail = $edit_detail['detail'];
 $room_name = $edit_detail['room'];
@@ -78,7 +74,6 @@ if (!empty($_FILES)) {
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php'); ?>
 <main>
-
     <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
 
 <!-- 部屋名を取得・表示する -->

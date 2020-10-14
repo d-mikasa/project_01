@@ -74,7 +74,7 @@ class Room extends Model
      *@return null
      */
 
-    public function roomUpdate($id, $set_data, $room = NULL)
+    public function roomUpdate($id, $set_data, $room = NULL,$mode)
     {
         /*
         room_detailの初期化処理
@@ -91,7 +91,7 @@ class Room extends Model
         /*
         モード：新規作成の処理
         */
-        if ($_SESSION['mode'] == 'create') {
+        if ($mode== 'create') {
             //新規部屋情報の追加
             $sql = 'INSERT INTO room(name) VALUES (?)';
             $stmt = $this->dbh->prepare($sql);
@@ -118,12 +118,17 @@ class Room extends Model
         /*
         モード：編集の処理
         */
-        if ($_SESSION['mode'] == 'edit') {
+        if ($mode == 'edit') {
 
             //roomテーブルの更新日を現在の日付に上書き
             $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
+
+            //ルーム名の更新
+            $sql = 'UPDATE room SET name = ? WHERE id = ?';
+            $stmt = $this->dbh->prepare($sql);
+            $stmt->execute([$room,$id]);
 
             //room_detailの数だけforでINSERTする
             for ($i = 0; $i < count($set_data); $i++) {
