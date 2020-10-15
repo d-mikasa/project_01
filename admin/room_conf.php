@@ -8,41 +8,38 @@ if (empty($_SESSION['auth'])) {
 
 $room_name = $_POST['plan']['room_name'][0];
 $room_detail = $_POST['plan']['room_detail'];
-
-echo count($room_detail);
 ?>
 
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php'); ?>
 
 <form action="room_done.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" id="confForm">
-    <input type="hidden" name="set_data[room_name]" value="<?= $room_name ?>">
+    <input type="hidden" name="set_data[room_name]" value="<?=$room_name?>">
 
     <table class="conf_newroom">
         <tr>
             <th>新規部屋名</th>
-            <td><?= $room_name ?></td>
+            <td><?=$room_name?></td>
         </tr>
     </table>
     <?php for ($i = 0; $i < count($room_detail); $i++) : ?>
-
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][capacity]" value="<?= $room_detail[$i]['capacity']?>">
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][price]" value="<?= $room_detail[$i]['price']?>">
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][remarks]" value="<?= $room_detail[$i]['remarks']?>">
+        <input type="hidden" name="set_data[room_detail][<?=$i?>][capacity]" value="<?=$room_detail[$i]['capacity']?>">
+        <input type="hidden" name="set_data[room_detail][<?=$i?>][price]" value="<?=$room_detail[$i]['price']?>">
+        <input type="hidden" name="set_data[room_detail][<?=$i?>][remarks]" value="<?=$room_detail[$i]['remarks']?>">
 
         <table class="roomedit_table">
             <tr>
-                <th rowspan="3" class="confPlan">部屋[<?= $i + 1 ?>]</th>
+                <th rowspan="3" class="confPlan">部屋[<?=$i + 1?>]</th>
                 <th class="confcapa">人数</th>
-                <td class="confcapa_detail"><?= $room_detail[$i]['capacity'] ?></td>
+                <td class="confcapa_detail"><?=$room_detail[$i]['capacity']?></td>
             </tr>
             <tr>
                 <th class="confPrice">料金</th>
-                <td class="confPrice_detail"><?= $room_detail[$i]['price'] ?></td>
+                <td class="confPrice_detail"><?=$room_detail[$i]['price']?></td>
             </tr>
             <tr>
                 <th class="confCome">コメント</th>
-                <td class="confCome_detail"><?= $room_detail[$i]['remarks'] ?></td>
+                <td class="confCome_detail"><?=$room_detail[$i]['remarks']?></td>
             </tr>
         </table>
         <p><br></p>

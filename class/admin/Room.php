@@ -22,12 +22,14 @@ class Room extends Model
         parent::connect();
 
         //roomテーブルの中から、idが一致するものを削除する
-        $sql = 'DELETE FROM room WHERE id = ' . $id;
-        $this->dbh->query($sql);
+        $sql = 'DELETE FROM room WHERE id = ?';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id]);
 
         //room_detailの中からroom_id(roomテーブルのidカラム)が一致するものを削除する
-        $sql = 'DELETE FROM room_detail WHERE room_id = ' . $id;
-        $this->dbh->query($sql);
+        $sql = 'DELETE FROM room_detail WHERE room_id = ?';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id]);
     }
 
 
@@ -71,6 +73,7 @@ class Room extends Model
      *@param $id 検索するroomのid
      *@param $set_data 追加する部屋の詳細情報を多次元配列に格納している
      *@param $room 更新しようとしている部屋の名前
+     *@param $mode 編集なのか新規作成なのかのフラグ
      *@return null
      */
 
@@ -179,13 +182,8 @@ class Room extends Model
         parent::connect();
 
         //roomテーブルのimgに画像名（拡張子付き）をUPDATE
-        $sql = 'UPDATE room SET img = ? WHERE id = ?';
+        $sql = 'UPDATE room SET img = ? ,updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$img, $id]);
-
-        //roomテーブルの更新日を現在の日付に上書き
-        $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute([$id]);
     }
 }

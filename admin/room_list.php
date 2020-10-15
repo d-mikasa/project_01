@@ -107,19 +107,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </button>
                 </td>
             </tr>
-            <?php foreach ($room_list as $list) : ?>
+            <?php foreach ($room_list as $list) :?>
                 <tr class="dataerea">
-                    <td class="id_data"><?= $list['id'] ?></td>
-                    <td class="img_data"><img src="../img/<?= $list['img'] ?>" alt="" class="listimage"></td>
-                    <td class="name_data"><?= $list['name'] ?></td>
-                    <td class="created_data"><?= $list['created_at'] ?></td>
-                    <td class="updated_data"><?= $list['updated_at'] ?></td>
+                    <td class="id_data"><?=$list['id']?></td>
+                    <td class="img_data"><img src="../img/<?=$list['img']?>" alt="" class="listimage"></td>
+                    <td class="name_data"><?=$list['name']?></td>
+                    <td class="created_data"><?=$list['created_at']?></td>
+                    <td class="updated_data"><?=$list['updated_at']?></td>
                     <td class="edit_group">
-                        <p><button type="submit" name="edit" value="<?= $list['id'] ?>" class="editButten">編集</button></p>
-                        <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
+                        <p><button type="submit" name="edit" value="<?=$list['id']?>" class="editButten">編集</button></p>
+                        <p><button type="submit" name="delete" value="<?=$list['id']?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endforeach;?>
     </form>
 </main>
 </table>
