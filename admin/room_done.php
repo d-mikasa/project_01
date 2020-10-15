@@ -14,17 +14,6 @@ if(empty($_POST)){
 $update = new Room;
 $update->roomUpdate($_GET['id'], $_POST['set_data']['room_detail'], $_POST['set_data']['room_name'],$_GET['mode']);
 
-
-
-
-// //変なセッション値が残っていたときのため、一応分岐処理
-// if ($_SESSION['mode'] == 'edit') {
-//     $update = new Room;
-//     $update->roomUpdate($_SESSION['data_id'], $set_data);
-// } else {
-//     $update = new Room;
-//     $update->roomUpdate($_SESSION['data_id'], $set_data, $_SESSION['room_name']);
-// }
 ?>
 
     <!-- ヘッダー部分読み込み -->

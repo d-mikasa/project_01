@@ -63,7 +63,7 @@ if (!empty($_FILES)) {
         if ($result == true) {
             $message = 'ファイルをアップロードしました';
             $pdo = new Room;
-            $pdo->roomImgUpdate($name, $_SESSION['data_id']);
+            $pdo->roomImgUpdate($name, $_GET['id']);
         } else {
             $message = 'ファイルの移動に失敗しました';
         }
