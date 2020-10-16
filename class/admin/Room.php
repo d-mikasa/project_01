@@ -85,7 +85,6 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-
         //room_detailから、引数とroom_idが一致するものを全て削除する
         $sql = 'DELETE FROM room_detail WHERE room_id = ?';
         $stmt = $this->dbh->prepare($sql);

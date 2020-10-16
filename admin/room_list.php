@@ -8,6 +8,7 @@ if (empty($_SESSION['auth'])) {
 //roomテーブルの情報を全て取得
 $a = new Room;
 $room_list = $a->getRoomAll();
+
 /*
 押されたボタンの種類別に処理する
 */
@@ -29,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'edit': //編集ボタンが押された場合
             $url = 'Location: room_edit.php?mode=edit&id=' . $_POST['edit'];
-
             //headerにGETをつけて飛ばす
             header($url);
             exit;
