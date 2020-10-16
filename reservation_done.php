@@ -65,12 +65,16 @@ if (mb_send_mail($to, $title, $message, $header)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./css/reservation_style.css">
+    <link rel="stylesheet" href="./css/reservation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
 </head>
 
 <body>
-    予約しました。
+<?= getNav('done') ?>
+    <div>
+    予約致しました。<br>
+お客様のメールアドレスへ、確認のメールをお送りいたしました。
+    </div>
     <a href="reservation.php">トップページへ戻る</a>
 </body>
 
