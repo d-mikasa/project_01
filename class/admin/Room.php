@@ -106,8 +106,10 @@ class Room extends Model
             WHERE TABLE_SCHEMA = 'd_mikasa'
             AND   TABLE_NAME   = 'room'
             EOD;
-            $stmt = $this->dbh->query($sql)->fetch();
-            $id = $stmt['AUTO_INCREMENT'] - 1;
+            $stmt = $this->dbh->prepare($sql);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            $id = $result['AUTO_INCREMENT'] - 1;
 
             //room_detailの数だけforでINSERTする
             for ($i = 0; $i < count($set_data); $i++) {
