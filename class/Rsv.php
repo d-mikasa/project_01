@@ -138,7 +138,7 @@ class rsvUpdate extends Model
         VALUES(?,?,?,?,?,?,?,?,?,?)
         EOD;
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$_SESSION['user_id'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
+        $stmt->execute([$_SESSION['user_auth'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
 
         //reservation_detailに追加する
         //AutoIncrementから番号を取得
@@ -174,7 +174,7 @@ class rsvUpdate extends Model
         WHERE id = ?
         EOD;
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$_SESSION['user_id']]);
+        $stmt->execute([$_SESSION['user_auth']]);
         $user_date = $stmt->fetch(PDO::FETCH_ASSOC);
         $return_list['user_mail'] = $user_date['mail'];
         $return_list['total_price'] = $total_price;
