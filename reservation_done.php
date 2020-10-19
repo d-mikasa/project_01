@@ -1,6 +1,6 @@
 <?php
 require_once('class/Library.php');
-$pdo = new UpdateReservation();
+$pdo = new rsvUpdate();
 $insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
 $total_price = $insert_date['total_price'];
@@ -15,7 +15,7 @@ $message = <<<EOD
 お答えできませんので、あらかじめご了承ください。
 -----------------------------------------------------------------------
 
-このたびは、CICACU　をご予約いただき誠にありがとうございます。
+このたびは、CICACUをご予約いただき誠にありがとうございます。
 ご予約いただいた内容をお知らせします。
 
 宿泊代表者氏名：$_SESSION[user_name] 様

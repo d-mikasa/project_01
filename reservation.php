@@ -1,7 +1,7 @@
 <?php
 require_once('class/Library.php');
 
-$pdo = new RoomShow();
+$pdo = new rsvUpdate();
 $pull_down_list = $pdo->room();
 
 if ($_SESSION['user_auth'] == false) {
