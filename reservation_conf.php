@@ -2,7 +2,7 @@
 require_once('class/Library.php');
 $error = [];
 
-$pdo = new RoomShow();
+$pdo = new rsvUpdate();
 
 //プルダウンの内容を取得する
 $pull_down_list = $pdo->room();
