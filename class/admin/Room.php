@@ -16,7 +16,7 @@ class Room extends Model
      *@return なし
      */
 
-    public function deleteDtail($id)
+    public function deleteDetail($id)
     {
         //connectメソッドにアクセス
         parent::connect();
@@ -77,7 +77,7 @@ class Room extends Model
      *@return null
      */
 
-    public function roomUpdate($id, $set_data, $room = NULL,$mode)
+    public function roomUpdate($id, $set_data, $room = NULL, $mode)
     {
         /*
         room_detailの初期化処理
@@ -93,19 +93,17 @@ class Room extends Model
         /*
         モード：新規作成の処理
         */
-        if ($mode== 'create') {
+        if ($mode == 'create') {
             //新規部屋情報の追加
             $sql = 'INSERT INTO room(name) VALUES (?)';
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$room]);
 
             //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
-            $sql = <<<EOD
-            SELECT  AUTO_INCREMENT
-            FROM  INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_SCHEMA = 'd_mikasa'
-            AND   TABLE_NAME   = 'room'
-            EOD;
+            $sql .= 'SELECT  AUTO_INCREMENT';
+            $sql .= 'FROM  INFORMATION_SCHEMA.TABLES';
+            $sql .= 'WHERE TABLE_SCHEMA = \'d_mikasa\'';
+            $sql .= 'AND TABLE_NAME   = \'room\'';
             $stmt = $this->dbh->query($sql)->fetch();
             $id = $stmt['AUTO_INCREMENT'] - 1;
 
@@ -130,7 +128,7 @@ class Room extends Model
             //ルーム名の更新
             $sql = 'UPDATE room SET name = ? WHERE id = ?';
             $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$room,$id]);
+            $stmt->execute([$room, $id]);
 
             //room_detailの数だけforでINSERTする
             for ($i = 0; $i < count($set_data); $i++) {
@@ -161,6 +159,40 @@ class Room extends Model
         $stmt->execute();
         $result = $stmt->fetchAll();
         return $result;
+    }
+
+    /**
+    *リストに表示する部屋をソートする
+    *
+    *何の値をソートするのかを受け取り、GETにある昇順・降順かを読み取る。
+    *
+    *@param $sort ソートが昇順か降順かを判定する。
+    *@param $col 何の値をソートしようとしているのかを判別する。
+    *@return $result 並び替え後の配列(roomテーブル)
+    */
+
+    public function sortRoom($sort, $col)
+    {
+        parent::connect();
+
+        //roomテーブルの情報を取得する
+        switch ($sort) {
+            case 'desc': //降順（大きいもん順）
+                $sql = 'SELECT * FROM room ORDER BY ' . $col . ' DESC';
+                $stmt = $this->dbh->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                return $result;
+                break;
+
+            default: //昇順（小さいもん順）
+                $sql = 'SELECT * FROM room ORDER BY ' . $col . ' ASC';
+                $stmt = $this->dbh->prepare($sql);
+                $stmt->execute();
+                $result = $stmt->fetchAll();
+                return $result;
+                break;
+        }
     }
 
 

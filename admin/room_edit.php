@@ -19,8 +19,8 @@ if (empty($_SESSION['auth'])) {
 */
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
-    $a = new Room();
-    $edit_detail = $a->getDetail($_GET['id']);
+    $Room= new Room();
+    $edit_detail = $Room->getDetail($_GET['id']);
 
     //marge処理記載場所
     if (!empty($_POST)) {
