@@ -24,6 +24,7 @@ require_once('admin/GetPage.php');
 
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('UserLogin.php');
-require_once('RoomShow.php');
-require_once('UpdateReservation.php');
+// require_once('RoomShow.php');
+// require_once('UpdateReservation.php');
+require_once('Rsv.php');
 require_once('Getnav.php');

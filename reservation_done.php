@@ -1,6 +1,6 @@
 <?php
 require_once('class/Library.php');
-$pdo = new UpdateReservation();
+$pdo = new rsvUpdate();
 $insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
 $total_price = $insert_date['total_price'];
@@ -15,7 +15,7 @@ $message = <<<EOD
 お答えできませんので、あらかじめご了承ください。
 -----------------------------------------------------------------------
 
-このたびは、CICACU　をご予約いただき誠にありがとうございます。
+このたびは、CICACUをご予約いただき誠にありがとうございます。
 ご予約いただいた内容をお知らせします。
 
 宿泊代表者氏名：$_SESSION[user_name] 様
@@ -65,12 +65,16 @@ if (mb_send_mail($to, $title, $message, $header)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./css/reservation_style.css">
+    <link rel="stylesheet" href="./css/reservation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
 </head>
 
 <body>
-    予約しました。
+<?= getNav('done') ?>
+    <div>
+    予約致しました。<br>
+お客様のメールアドレスへ、確認のメールをお送りいたしました。
+    </div>
     <a href="reservation.php">トップページへ戻る</a>
 </body>
 
