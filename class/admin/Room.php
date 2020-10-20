@@ -214,7 +214,7 @@ class Room extends Model
      *@return null
      */
 
-    public function roomImgUpdate($id)
+    public function updateRoomImg($id)
     {
         //connectメソッドにアクセス
         // 権限変更
@@ -224,10 +224,10 @@ class Room extends Model
             $pdo->beginTransaction();
 
             exec('sudo chmod 777 ' . self::FULL_PATH);
-            if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
-                $name = $_FILES['userfile']['name'];
+            if ($_FILES['room_img']['error'] == UPLOAD_ERR_OK) {
+                $name = $_FILES['room_img']['name'];
                 $name = mb_convert_encoding($name, 'cp932', 'utf8');
-                $temp = $_FILES['userfile']['tmp_name'];
+                $temp = $_FILES['room_img']['tmp_name'];
                 $result = move_uploaded_file($temp, self::FULL_PATH . $name);
                 if ($result == true) {
                     //データベースのやりとり
@@ -240,7 +240,7 @@ class Room extends Model
                 } else {
                     throw new Exception('ファイルの移動に失敗しました');
                 }
-            } elseif ($_FILES['userfile']['error'] == UPLOAD_ERR_NO_FILE) {
+            } elseif ($_FILES['room_img']['error'] == UPLOAD_ERR_NO_FILE) {
                 throw new Exception('ファイルがアップロードされませんでした');
             } else {
                 throw new Exception('なぜか失敗しました');

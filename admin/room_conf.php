@@ -6,8 +6,8 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 
-$room_name = $_POST['plan']['room_name'][0];
-$room_detail = $_POST['plan']['room_detail'];
+$room_name = $_POST['set_data']['room_name'][0];
+$room_detail = $_POST['set_data']['room_detail'];
 ?>
 
 <!-- ヘッダー部分読み込み -->

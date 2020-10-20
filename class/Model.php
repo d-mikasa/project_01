@@ -2,7 +2,6 @@
 class Model
 {
     protected $dbh;
-    protected $hoge = 'hoge';
 
     public function connect()
     {

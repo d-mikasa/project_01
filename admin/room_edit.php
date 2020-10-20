@@ -11,14 +11,14 @@ if (empty($_SESSION['auth'])) {
 */
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
-    $Room= new Room();
+    $Room = new Room();
     $edit_detail = $Room->getDetail($_GET['id']);
 
     //marge処理記載場所
     if (!empty($_POST['set_data'])) {
         $detail = $_POST['set_data']['room_detail'] + $edit_detail['detail'];
         $name = $_POST['set_data']['room_name'];
-    }else{
+    } else {
         $detail = $edit_detail['detail'];
         $name = $edit_detail['room']['name'];
     }
@@ -34,7 +34,7 @@ if ($_GET['mode'] == 'edit') {
 //最大表示領域を超えていた場合、表示領域を上書き
 //データベースの値がMAXVIEW以上あった場合に、無理やり３つに変更する
 
-    $Room= new Room();
+$Room = new Room();
 if ($view > $Room::MAX_VIEW) {
     $view = $Room::MAX_VIEW;
 }
@@ -47,7 +47,7 @@ if ($view == 0) {
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
 
-   $Room -> roomImgUpdate($_GET['id']);
+    $Room->updateRoomImg($_GET['id']);
 }
 
 ?>
@@ -63,7 +63,9 @@ if (!empty($_FILES)) {
                 <th>部屋名</th>
             </tr>
             <tr>
-                <td><input type="text" name="plan[room_name][0]" value="<?= $name?>"></td>
+                <td>
+                    <input type="text" name="set_data[room_name][0]" value="<?= $name ?>">
+                </td>
             </tr>
         </table>
 
@@ -85,17 +87,19 @@ if (!empty($_FILES)) {
             </tr>
             <?php for ($i = 1; $i <= $view; $i++) : ?>
                 <tr>
-                    <td>部屋[<?= $i ?>]</td>
                     <td>
-                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['capacity'] ?>">名様
+                        部屋[<?= $i ?>]
+                    </td>
+                    <td>
+                        <input type="text" name="set_data[room_detail][<?= $i - 1 ?>][capacity]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : '' ?>">名様
                     </td>
 
                     <td>
-                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['price'] ?>">円
+                        <input type="text" name="set_data[room_detail][<?= $i - 1 ?>][price]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : '' ?>">円
                     </td>
 
                     <td>
-                        <textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i - 1]['remarks'])) echo $detail[$i - 1]['remarks'] ?> </textarea>
+                        <textarea name="set_data[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"> <?= !empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : '' ?> </textarea>
                     </td>
                 </tr>
             <?php endfor; ?>
@@ -120,7 +124,7 @@ if (!empty($_FILES)) {
         <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
-                <input type="file" name="userfile" id="sample1">
+                <input type="file" name="room_img" id="sample1">
                 </tr>
                 </table>
                 <p id="doneImage">
@@ -163,9 +167,9 @@ if (!empty($_FILES)) {
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]">円</td>';
-        var remarks = '<td><textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][price]">円</td>';
+        var remarks = '<td><textarea name="set_data[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;
@@ -174,7 +178,7 @@ if (!empty($_FILES)) {
         cell4.innerHTML = remarks;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
+        if (row_len = VIEW) {
             document.getElementById('add_plan').style.visibility = "hidden";
         } else {
             document.getElementById('add_plan').style.visibility = "visible";
@@ -211,11 +215,12 @@ if (!empty($_FILES)) {
 
     ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
     window.onload = function() {
+        alert('JavaScriptのアラート');
         var table = document.getElementById("table");
         var row_len = table.rows.length - 1;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
+        if (row_len = VIEW) {
             document.getElementById('add_plan').style.visibility = "hidden";
         } else {
             document.getElementById('add_plan').style.visibility = "visible";
