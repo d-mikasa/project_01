@@ -149,7 +149,7 @@ if (!empty($_FILES)) {
 </script>
 <script>
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
-    const VIEW = "<?= MAX_VIEW ?>";
+    const VIEW = "<?= $Room::MAX_VIEW ?>";
 
     function add_plan(id) {
         // テーブル取得
@@ -166,11 +166,15 @@ if (!empty($_FILES)) {
         // 行数取得
         var row_len = table.rows.length - 1;
 
+        console.log('row_count =' + row_len);
+
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
         var capacity = '<td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
         var price = ' <td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][price]">円</td>';
         var remarks = '<td><textarea name="set_data[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
+
+
 
         // セルの内容入力
         cell1.innerHTML = room;
@@ -179,58 +183,58 @@ if (!empty($_FILES)) {
         cell4.innerHTML = remarks;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len = VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
-        }
-
         if (row_len == 1) {
             document.getElementById('del_plan').style.visibility = "hidden";
+            document.getElementById('add_plan').style.visibility = "visible";
+        } else if (row_len < VIEW) {
+            document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "visible";
         } else {
             document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "hidden";
         }
+
     }
 
 
     ////////////////////////////////*行を削除する処理*//////////////////////////////////
     function del_plan(obj) {
+
         var table = document.getElementById("table");
         // 0で先頭を削除。インデックスを指定する。
         var rows = table.deleteRow(-1);
         var row_len = table.rows.length - 1;
 
-        //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
-        }
+        console.log('row_count =' + row_len);
 
+        //ボタンの表示非表示を切り替える処理
         if (row_len == 1) {
             document.getElementById('del_plan').style.visibility = "hidden";
+            document.getElementById('add_plan').style.visibility = "visible";
+        } else if (row_len < VIEW) {
+            document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "visible";
         } else {
             document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "hidden";
         }
     }
 
-    ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
-    window.onload = function() {
-        alert('JavaScriptのアラート');
-        var table = document.getElementById("table");
-        var row_len = table.rows.length - 1;
+        ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
+        window.onload = function() {
+            var table = document.getElementById("table");
+            var row_len = table.rows.length - 1;
+            console.log('first_contact');
+            console.log('row_count =' + row_len);
 
-        //ボタンの表示非表示を切り替える処理
-        if (row_len = VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
+            //ボタンの表示非表示を切り替える処理
+            if (row_len == 1) {
+                console.log('MOST_MIN');
+                document.getElementById('del_plan').style.visibility = "hidden";
+            }
+            if (row_len == VIEW) {
+                console.log('MOST_MAX');
+                document.getElementById('add_plan').style.visibility = "hidden";
+            }
         }
-
-        if (row_len == 1) {
-            document.getElementById('del_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('del_plan').style.visibility = "visible";
-        }
-    }
 </script>
