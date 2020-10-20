@@ -332,11 +332,11 @@ th {
     text-align: center;
 }
 
-.Donenot {
+.CancelBtn {
     background-color: #f44336;
 }
 
-.DoneAdd {
+.DoneBtn {
     background-color: #607D8B;
 }
 

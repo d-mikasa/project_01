@@ -45,8 +45,8 @@ $room_detail = $_POST['set_data']['room_detail'];
         <p><br></p>
     <?php endfor; ?>
     <div class="confDone">
-        <p><input type="submit" value="確認" class="DoneAdd"></p>
-        <p><input type="submit" value="キャンセル" formaction="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" class="Donenot"></p>
+        <p><input type="submit" value="確認" class="DoneBtn"></p>
+        <p><input type="submit" value="キャンセル" formaction="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" class="CancelBtn"></p>
     </div>
 </form>
 <!-- フッター部分読み込み -->
