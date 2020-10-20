@@ -1,14 +1,6 @@
 <?php
 require_once('../class/Library.php');
 
-//画像保存先 ローカル環境
-const IMGS_PATH = '../img/';
-//画像保存先 本番環境
-const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
-
-//最大表示領域
-const MAX_VIEW = 3;
-
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
@@ -23,14 +15,13 @@ if ($_GET['mode'] == 'edit') {
     $edit_detail = $Room->getDetail($_GET['id']);
 
     //marge処理記載場所
-    if (!empty($_POST)) {
+    if (!empty($_POST['set_data'])) {
         $detail = $_POST['set_data']['room_detail'] + $edit_detail['detail'];
         $name = $_POST['set_data']['room_name'];
     }else{
         $detail = $edit_detail['detail'];
         $name = $edit_detail['room']['name'];
     }
-
 
     //配列の個数を表示領域に設定
     $view = count($detail);
@@ -41,8 +32,11 @@ if ($_GET['mode'] == 'edit') {
 
 
 //最大表示領域を超えていた場合、表示領域を上書き
-if ($view > MAX_VIEW) {
-    $view = MAX_VIEW;
+//データベースの値がMAXVIEW以上あった場合に、無理やり３つに変更する
+
+    $Room= new Room();
+if ($view > $Room::MAX_VIEW) {
+    $view = $Room::MAX_VIEW;
 }
 
 //表示領域がなかった場合、１を代入
@@ -52,29 +46,8 @@ if ($view == 0) {
 
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
-    // 権限変更
-    exec('sudo chmod 777 ' . FULL_PATH);
 
-    if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
-        $name = $_FILES['userfile']['name'];
-        $name = mb_convert_encoding($name, 'cp932', 'utf8');
-        $temp = $_FILES['userfile']['tmp_name'];
-        $result = move_uploaded_file($temp, FULL_PATH . $name);
-        if ($result == true) {
-            $message = 'ファイルをアップロードしました';
-            $pdo = new Room;
-            $pdo->roomImgUpdate($name, $_GET['id']);
-        } else {
-            $message = 'ファイルの移動に失敗しました';
-        }
-    } elseif ($_FILES['userfile']['error'] == UPLOAD_ERR_NO_FILE) {
-        $message = 'ファイルがアップロードされませんでした';
-    } else {
-        $message = 'ファイルのアップロードに失敗しました';
-    }
-
-    // 元の状態に戻す
-    exec('sudo chmod 755 ' . IMGS_PATH);
+   $Room -> roomImgUpdate($_GET['id']);
 }
 
 ?>

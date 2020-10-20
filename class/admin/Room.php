@@ -6,6 +6,13 @@
 
 class Room extends Model
 {
+
+    //画像保存先 本番環境
+    const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
+    //最大表示領域
+    const MAX_VIEW = 3;
+    //画像保存先 ローカル環境
+    const IMGS_PATH = '../img/';
     ///////////////////////////////////////////////////////////////////////////
     /**
      *DBから指定IDの部屋情報を削除する
@@ -77,7 +84,7 @@ class Room extends Model
      *@return null
      */
 
-    public function roomUpdate($id, $set_data, $room = NULL, $mode)
+    public function roomUpdate($id, $set_data, $room = null, $mode)
     {
         /*
         room_detailの初期化処理
@@ -162,14 +169,14 @@ class Room extends Model
     }
 
     /**
-    *リストに表示する部屋をソートする
-    *
-    *何の値をソートするのかを受け取り、GETにある昇順・降順かを読み取る。
-    *
-    *@param $sort ソートが昇順か降順かを判定する。
-    *@param $col 何の値をソートしようとしているのかを判別する。
-    *@return $result 並び替え後の配列(roomテーブル)
-    */
+     *リストに表示する部屋をソートする
+     *
+     *何の値をソートするのかを受け取り、GETにある昇順・降順かを読み取る。
+     *
+     *@param $sort ソートが昇順か降順かを判定する。
+     *@param $col 何の値をソートしようとしているのかを判別する。
+     *@return $result 並び替え後の配列(roomテーブル)
+     */
 
     public function sortRoom($sort, $col)
     {
@@ -207,14 +214,52 @@ class Room extends Model
      *@return null
      */
 
-    public function roomImgUpdate($img, $id)
+    public function roomImgUpdate($id)
     {
         //connectメソッドにアクセス
+        // 権限変更
         parent::connect();
+        $pdo = $this->dbh;
+        try {
+            $pdo->beginTransaction();
 
-        //roomテーブルのimgに画像名（拡張子付き）をUPDATE
-        $sql = 'UPDATE room SET img = ? ,updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute([$img, $id]);
+            exec('sudo chmod 777 ' . self::FULL_PATH);
+            if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
+                $name = $_FILES['userfile']['name'];
+                $name = mb_convert_encoding($name, 'cp932', 'utf8');
+                $temp = $_FILES['userfile']['tmp_name'];
+                $result = move_uploaded_file($temp, self::FULL_PATH . $name);
+                if ($result == true) {
+                    //データベースのやりとり
+                    parent::connect();
+                    // $this->dbh->exec('SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED');
+                    //roomテーブルのimgに画像名（拡張子付き）をUPDATE
+                    $sql = 'UPDATE room SET img = ? ,updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
+                    $stmt = $this->dbh->prepare($sql);
+                    $stmt->execute([$name, $id]);
+                } else {
+                    throw new Exception('ファイルの移動に失敗しました');
+                }
+            } elseif ($_FILES['userfile']['error'] == UPLOAD_ERR_NO_FILE) {
+                throw new Exception('ファイルがアップロードされませんでした');
+            } else {
+                throw new Exception('なぜか失敗しました');
+            }
+
+            // 元の状態に戻す
+            exec('sudo chmod 755 ' . self::FULL_PATH);
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $url = 'Location: room_edit.php?mode=' . $_GET['mode'] . '&id=' . $_GET['id'];
+            header($url);
+            exit();
+        } catch (Exception $e) { // ファイル送信時のエラー
+            // 処理の巻き戻し
+            $pdo->rollback();
+            $url = 'Location: room_edit.php?mode=' . $_GET['mode'] . '&id=' . $_GET['id'];
+            header($url);
+            exit();
+        }
+        $pdo->commit();
     }
 }
