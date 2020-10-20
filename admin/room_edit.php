@@ -125,7 +125,6 @@ if (!empty($_FILES)) {
             <div class="img_up">
                 <h2>画像の編集</h2>
                 <input type="file" name="room_img" id="sample1">
-                </tr>
                 </table>
                 <p id="doneImage">
                     <input type="submit" value="画像を更新" onclick="return btn_check()">
@@ -135,6 +134,8 @@ if (!empty($_FILES)) {
     <?php endif; ?>
 
 </main>
+<!-- フッター部分読み込み -->
+<?php require_once('parts/footer.parts.php'); ?>
 
 <script>
     ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
@@ -145,8 +146,8 @@ if (!empty($_FILES)) {
             return false;
         }
     }
-
-
+</script>
+<script>
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
     const VIEW = "<?= MAX_VIEW ?>";
 
@@ -233,6 +234,3 @@ if (!empty($_FILES)) {
         }
     }
 </script>
-
-<!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
