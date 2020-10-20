@@ -29,7 +29,7 @@ function getPage()
     $name['room']['done'] = '完了画面';
 
     //新規作成か編集かを判断する
-    if (!empty($_GET)) {
+    if (!empty($_GET['mode'])) {
         switch ($_GET['mode']) {
         case 'edit':
             $name['room']['edit'] = '部屋編集';

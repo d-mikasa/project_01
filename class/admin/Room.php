@@ -186,7 +186,7 @@ class Room extends Model
                 break;
 
             default: //昇順（小さいもん順）
-                $sql = 'SELECT * FROM room ORDER BY ' . $col . ' ASC';
+                $sql = 'SELECT * FROM room ORDER BY ' . $col . '  IS NULL ASC, ' . $col . ' ASC';
                 $stmt = $this->dbh->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll();
