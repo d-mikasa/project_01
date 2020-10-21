@@ -1,7 +1,5 @@
 <?php
 require_once('class/Library.php');
-$error = [];
-
 $pdo = new rsvUpdate();
 
 //プルダウンの内容を取得する
@@ -12,6 +10,9 @@ $reservation_check = $pdo->reservation_check($_POST['detail_id']);
 
 //選択した部屋の内容を取得する
 $room_detail = $pdo->room_detail($_POST['detail_id']);
+
+//エラー内容変数の初期化
+$error = [];
 
 ////////////////////////////////////////////日付系のバリデーションまとめ////////////////////////////////////////////
 //チェックインのバリデーション
@@ -108,7 +109,9 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 
 <body class="background_conf"> <?php if (empty($error)) : ?>
     <?= getNav('conf') ?>
-        <!--エラーが無く、送信することが可能な画面-->
+        <!--
+        エラーが無く、送信することが可能な画面
+        -->
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
                 <!--実際に送信する情報群-->
@@ -121,7 +124,7 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                 <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>">
                 <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
                 <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
-                <!--実際に送信する情報群-->
+
                 <div class="titles">ご予約内容確認</div>
                 <table class = "conf_check_table">
                     <tr>
@@ -186,7 +189,13 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
                     <tr class="reservation_room_name">
                         <th>部屋名</th>
                         <td>
-                            <select name="detail_id" id="target"> <?php foreach ($pull_down_list as $value) : ?> <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>><?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)</option> <?php endforeach; ?> </select>
+                            <select name="detail_id" id="target">
+                                <?php foreach ($pull_down_list as $value) : ?>
+                                <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>>
+                                <?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
                         </td>
                     </tr>
 
