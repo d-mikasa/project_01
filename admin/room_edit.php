@@ -6,6 +6,8 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 
+
+
 /*
 編集ボタンからこのページに遷移してきた場合
 */
@@ -47,7 +49,9 @@ if ($view == 0) {
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
 
-    $Room->updateRoomImg($_GET['id']);
+    $error = $Room->updateRoomImg($_GET['id']);
+}else{
+    $error ='';
 }
 
 ?>
@@ -124,6 +128,7 @@ if (!empty($_FILES)) {
         <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
+                <div><?=$error?></div>
                 <input type="file" name="room_img" id="sample1">
                 </table>
                 <p id="doneImage">

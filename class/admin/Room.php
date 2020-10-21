@@ -92,58 +92,74 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-        //room_detailから、引数とroom_idが一致するものを全て削除する
-        $sql = 'DELETE FROM room_detail WHERE room_id = ?';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute([$id]);
+        try {
+            //トランザクション開始
+            $this->dbh->beginTransaction();
 
-        /*
-        モード：新規作成の処理
-        */
-        if ($mode == 'create') {
-            //新規部屋情報の追加
-            $sql = 'INSERT INTO room(name) VALUES (?)';
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$room]);
-
-            //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
-            $sql .= 'SELECT  AUTO_INCREMENT';
-            $sql .= 'FROM  INFORMATION_SCHEMA.TABLES';
-            $sql .= 'WHERE TABLE_SCHEMA = \'d_mikasa\'';
-            $sql .= 'AND TABLE_NAME   = \'room\'';
-            $stmt = $this->dbh->query($sql)->fetch();
-            $id = $stmt['AUTO_INCREMENT'] - 1;
-
-            //room_detailの数だけforでINSERTする
-            for ($i = 0; $i < count($set_data); $i++) {
-                $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
-                $stmt = $this->dbh->prepare($sql);
-                $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
-            }
-        }
-
-        /*
-        モード：編集の処理
-        */
-        if ($mode == 'edit') {
-
-            //roomテーブルの更新日を現在の日付に上書き
-            $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
+            //room_detailから、引数とroom_idが一致するものを全て削除する
+            $sql = 'DELETE FROM room_detail WHERE room_id = ?';
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
 
-            //ルーム名の更新
-            $sql = 'UPDATE room SET name = ? WHERE id = ?';
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$room, $id]);
-
-            //room_detailの数だけforでINSERTする
-            for ($i = 0; $i < count($set_data); $i++) {
-                $sql = 'INSERT INTO room_detail (room_id, capacity, remarks, price) VALUES (?,?,?,?)';
+            /*
+        モード：新規作成の処理
+        */
+            if ($mode == 'create') {
+                //新規部屋情報の追加
+                $sql = 'INSERT INTO room(name) VALUES (?)';
                 $stmt = $this->dbh->prepare($sql);
-                $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
+                $stmt->execute([$room]);
+
+                //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
+                $sql .= 'SELECT  AUTO_INCREMENT';
+                $sql .= 'FROM  INFORMATION_SCHEMA.TABLES';
+                $sql .= 'WHERE TABLE_SCHEMA = \'d_mikasa\'';
+                $sql .= 'AND TABLE_NAME   = \'room\'';
+                $stmt = $this->dbh->query($sql)->fetch();
+                $id = $stmt['AUTO_INCREMENT'] - 1;
+
+                //room_detailの数だけforでINSERTする
+                for ($i = 0; $i < count($set_data); $i++) {
+                    $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
+                    $stmt = $this->dbh->prepare($sql);
+                    $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
+                }
+
+                $message = '内容を新規作成しました';
             }
+
+
+            /*
+        モード：編集の処理
+        */
+            if ($mode == 'edit') {
+                $this->console_log('editへ遷移');
+                //roomテーブルの更新日を現在の日付に上書き
+                $sql = 'UPDATE room SET updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
+                $stmt = $this->dbh->prepare($sql);
+                $stmt->execute([$id]);
+
+                //ルーム名の更新
+                $sql = 'UPDATE room SET name = ? WHERE id = ?';
+                $stmt = $this->dbh->prepare($sql);
+                $stmt->execute([$room, $id]);
+
+                //room_detailの数だけforでINSERTする
+                for ($i = 0; $i < count($set_data); $i++) {
+                    $sql = 'INSERT INTO room_detail(room_id, capacity, remarks, price) VALUES (?,?,?,?)';
+                    $stmt = $this->dbh->prepare($sql);
+                    $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
+                }
+                $message = '内容の更新に成功しました';
+            }
+        } catch (PDOException $e) {
+            $this->dbh->rollback();
+            $message = '処理に失敗しました';
+            return $message;
+            exit();
         }
+        $this->dbh->commit();
+        return $message;
     }
 
 
@@ -248,18 +264,28 @@ class Room extends Model
 
             // 元の状態に戻す
             exec('sudo chmod 755 ' . self::FULL_PATH);
-        } catch (PDOException $e) {
-            $pdo->rollBack();
-            $url = 'Location: room_edit.php?mode=' . $_GET['mode'] . '&id=' . $_GET['id'];
-            header($url);
-            exit();
+        } catch (PDOException $e) { //DBの接続に失敗した場合
+            $pdo->rollback();
+            $this->console_log($e);
+            $error = 'ファイルのアップロードに失敗しました';
+            return $error;
         } catch (Exception $e) { // ファイル送信時のエラー
             // 処理の巻き戻し
             $pdo->rollback();
-            $url = 'Location: room_edit.php?mode=' . $_GET['mode'] . '&id=' . $_GET['id'];
-            header($url);
-            exit();
+            $this->console_log($e);
+            $error = 'ファイルのアップロードに失敗しました';
+            return $error;
         }
         $pdo->commit();
+        $error = 'ファイルのアップロードに成功しました';
+        return $error;
+    }
+
+
+    function console_log($data)
+    {
+        echo '<script>';
+        echo 'console.log(' . json_encode($data) . ')';
+        echo '</script>';
     }
 }
