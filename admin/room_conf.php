@@ -11,7 +11,7 @@ $room_detail = $_POST['set_data']['room_detail'];
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php');?>
 
 <form action="room_done.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" id="confForm">
     <input type="hidden" name="set_data[room_name]" value="<?=$room_name?>">
