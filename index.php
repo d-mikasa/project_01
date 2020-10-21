@@ -246,9 +246,9 @@ $(function() {
                         <p>
                             <?php $detail = $Room->getDetail($room_value['id']) ?>
                             <?php foreach($detail as $value):?>
-                                <?php echo !empty($value['capacity']) ? $value['capacity'] . '名様：' : ''?>
-                                <?php echo !empty($value['price']) ? '¥' . number_format($value['price']) : ''?>
-                                <?php echo !empty($value['remarks']) ? '(' . $value['remarks'] . ')' : ''?>
+                                <?=!empty($value['capacity']) ? $value['capacity'] . '名様：' : ''?>
+                                <?=!empty($value['price']) ? '¥' . number_format($value['price']) : ''?>
+                                <?=!empty($value['remarks']) ? '(' . $value['remarks'] . ')' : ''?>
                                 <br>
                             <?php endforeach;?>
                         </p>

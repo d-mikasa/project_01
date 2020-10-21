@@ -6,12 +6,12 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 
-$room_name = $_POST['plan']['room_name'][0];
-$room_detail = $_POST['plan']['room_detail'];
+$room_name = $_POST['set_data']['room_name'][0];
+$room_detail = $_POST['set_data']['room_detail'];
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php');?>
 
 <form action="room_done.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" id="confForm">
     <input type="hidden" name="set_data[room_name]" value="<?=$room_name?>">
@@ -43,11 +43,11 @@ $room_detail = $_POST['plan']['room_detail'];
             </tr>
         </table>
         <p><br></p>
-    <?php endfor; ?>
+    <?php endfor;?>
     <div class="confDone">
-        <p><input type="submit" value="確認" class="DoneAdd"></p>
-        <p><input type="submit" value="キャンセル" formaction="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" class="Donenot"></p>
+        <p><input type="submit" value="確認" class="DoneBtn"></p>
+        <p><input type="submit" value="キャンセル" formaction="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" class="CancelBtn"></p>
     </div>
 </form>
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>

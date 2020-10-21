@@ -3,32 +3,49 @@ function getPage()
 {
 
     //URLのドメインより後ろを取得
+    // '/'までの文字数を取得
     $str = strrpos($_SERVER['REQUEST_URI'], '/');
+
+    // '/'までの文字列を取得
     $get_url = substr($_SERVER['REQUEST_URI'], $str + 1);
 
-    //パーツ分け
+    //.phpを文字列から削除
     $str = strrpos($get_url, '.php');
     $url = substr($get_url, 0, $str);
 
-    //URLの_を削除する
-    $url = str_replace('_', '', $url);
+    // ' _' から前の文字列を取得
+    $str = strrpos($url, '_');
 
-    //GETパラメータを取得
-    if (!empty($_GET)) {
-        $url = $url . $_GET['mode'];
-    }
+    //前半部分格納
+    $genre = substr($url, 0, $str);
 
-    //文字列置換コーナー
-    //getの内容
-    $url = str_replace('"create"', '[新規作成]', $url);
-    $url = str_replace('"edit"', '[内容編集]', $url);
+    //後半部分格納
+    $content = substr($url, $str + 1);
 
     //urlの内容
-    $url = str_replace('room', '客室', $url);
-    $url = str_replace('top', 'トップページ', $url);
-    $url = str_replace('list', '一覧', $url);
-    $url = str_replace('edit', '編集', $url);
-    $url = str_replace('conf', '編集確認', $url);
-    $url = str_replace('done', '編集完了', $url);
-    echo '<button class = "title_btn" disabled>' . $url . '</button>';
+    $name['room']['top'] = 'トップページ';
+    $name['room']['list'] = '部屋一覧';
+    $name['room']['conf'] = '確認画面';
+    $name['room']['done'] = '完了画面';
+
+    //新規作成か編集かを判断する
+    if (!empty($_GET['mode'])) {
+        switch ($_GET['mode']) {
+        case 'edit':
+            $name['room']['edit'] = '部屋編集';
+            break;
+        case 'create':
+            $name['room']['edit'] = '新規作成';
+            break;
+        default:
+            $name['room']['edit'] = '編集画面';
+            break;
+        }
+    }else{
+        $name['room']['edit'] = '編集画面';
+    }
+
+    $disp_page = $name[$genre][$content];
+
+    echo '<button class = "title_btn" disabled>' . $disp_page . '</button>';
 }

@@ -14,9 +14,9 @@ class UserLogin extends Model
         }
 
         if ($result['login_pass'] === $pass) {
-            $_SESSION['user_name'] = $result['name'];
-            $_SESSION['user_auth'] = 1;
-            $_SESSION['user_id'] = $result['id'];
+
+            //ログイン状態にユーザーIDを入れて、T/Fを判断させる
+            $_SESSION['user_auth'] = $result['id'];
             header('Location: reservation.php');
             exit;
         }

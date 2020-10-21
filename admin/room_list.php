@@ -6,79 +6,61 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 //roomテーブルの情報を全て取得
-$a = new Room;
-$room_list = $a->getRoomAll();
+$Room = new Room;
+$getRoomAll = $Room->getRoomAll();
 
 /*
 押されたボタンの種類別に処理する
 */
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    switch (key($_POST)) {
-        case 'create':
-            //新規作成が押された場合
-            //headerにGETをつけて飛ばす
-            header('Location: room_edit.php?mode=create&id=0');
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $Room = new Room();
+    $Room->deleteDetail($_POST['delete']);
+    //重複削除が起きないようにリダイレクト
+    header('Location: room_list.php');
+}
+
+if (!empty($_GET['sort'])) {
+
+    switch (key($_GET)) {
+
+        case strpos($_GET['sort'], 'asc') !== false: //sort_upが押された場合
+            //_までの文字数カウント
+            $str = strrpos($_GET['sort'], '-');
+
+            //後半部分格納
+            $content = substr($_GET['sort'], $str + 1);
+
+            $getRoomAll = $Room->sortRoom('asc', $content);
             break;
 
-        case 'delete': //削除が押された場合
-            $a = new Room();
-            $a->deleteDetail($_POST['delete']);
-            //重複削除が起きないようにリダイレクト
-            header('Location: room_list.php');
-            exit;
-            break;
+        case strpos($_GET['sort'], 'desc') !== false: //sort_downが押された場合
+            //_までの文字数カウント
+            $str = strrpos($_GET['sort'], '-');
 
-        case 'edit': //編集ボタンが押された場合
-            $url = 'Location: room_edit.php?mode=edit&id=' . $_POST['edit'];
-            //headerにGETをつけて飛ばす
-            header($url);
-            exit;
-            break;
+            //後半部分格納
+            $content = substr($_GET['sort'], $str + 1);
 
-        case 'up_sort': //▲ボタンが押された場合
-            $sort_main = array();
-            foreach ($room_list as $key => $value) {
-                if ($value[$_POST['up_sort']] == NULL) {
-                    $value[$_POST['up_sort']]  = 'ー';
-                }
-                $sort_main[$key] = $value[$_POST['up_sort']];
-                $sort_sub[$key] = $value['id'];
-            }
-            array_multisort($sort_main, SORT_ASC, $sort_sub, SORT_ASC, $room_list);
-            break;
-
-        case 'down_sort': //▼ボタンが押された場合
-            $sort_main = array();
-            foreach ($room_list as $key => $value) {
-                if ($value[$_POST['down_sort']] == NULL) {
-                    $value[$_POST['down_sort']]  = '0';
-                }
-                $sort_main[$key] = $value[$_POST['down_sort']];
-                $sort_sub[$key] = $value['id'];
-            }
-            array_multisort($sort_main, SORT_DESC, $sort_sub, SORT_ASC, $room_list);
-            break;
-
-        default:
-            //変な値が帰ってきたらとりあえずリダイレクト
-            header('Location: room_list.php');
+            $getRoomAll = $Room->sortRoom('desc', $content);
             break;
     }
 }
-
 ?>
 
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php'); ?>
 
 <main>
-    <form action="" name='btn_form' method="post">
+
+    <!--
+    並び替えのボタン群
+    -->
+    <form action="room_list.php" name='sort_button' method="get">
         <table class="roomlist_table">
             <tr class="table_name">
                 <td class="list_id">
                     ID
-                    <button type="submit" value="id" name="up_sort" id="up">▲</button>
-                    <button type="submit" value="id" name="down_sort" id="down">▼</button>
+                    <button type="submit" value="asc-id" name="sort" id="up">▲</button>
+                    <button type="submit" value="desc-id" name="sort" id="down">▼</button>
                 </td>
 
                 <td class="list_img">
@@ -86,43 +68,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </td>
                 <td class="list_name">
                     部屋名
-                    <button type="submit" value="name" name="up_sort" id="up">▲</button>
-                    <button type="submit" value="name" name="down_sort" id="down">▼</button>
+                    <button type="submit" value="asc-name" name="sort" id="up">▲</button>
+                    <button type="submit" value="desc-name" name="sort" id="down">▼</button>
                 </td>
 
                 <td class="list_created_at">
                     登録日時
-                    <button type="submit" value="created_at" name="up_sort" id="up">▲</button>
-                    <button type="submit" value="created_at" name="down_sort" id="down">▼</button>
+                    <button type="submit" value="asc-created_at" name="sort" id="up">▲</button>
+                    <button type="submit" value="desc-created_at" name="sort" id="down">▼</button>
                 </td>
 
                 <td class="list_updated_at">
                     更新
-                    <button type="submit" value="updated_at" name="up_sort" id="up">▲</button>
-                    <button type="submit" value="updated_at" name="down_sort" id="down">▼</button>
+                    <button type="submit" value="asc-updated_at" name="sort" id="up">▲</button>
+                    <button type="submit" value="desc-updated_at" name="sort" id="down">▼</button>
                 </td>
-                <td class="list_create">
-                    <button type="submit" name="create" value="新規作成">
-                        <p>新規作成</p>
-                    </button>
+    </form>
+
+
+    <!--
+        リスト・新規作成ボタン・削除ボタン・編集ボタン
+    -->
+    <form action="" name='btn_form' method="post">
+        <td class="list_create">
+            <button type="button" onclick=" location.href= 'room_edit.php?mode=create&id=0' ">
+                <p>新規作成</p>
+            </button>
+        </td>
+        </tr>
+        <?php foreach ($getRoomAll as $list) :?>
+            <tr class="dataerea">
+                <td class="id_data"><?=h($list['id'])?></td>
+                <td class="img_data"><img src="../img/<?=h($list['img'])?>" alt="" class="listimage"></td>
+                <td class="name_data"><?=h($list['name'])?></td>
+                <td class="created_data"><?=h($list['created_at'])?></td>
+                <td class="updated_data"><?=h($list['updated_at'])?></td>
+                <td class="edit_group">
+                    <p><button type="button" class="editButten" onclick=" location.href= 'room_edit.php?mode=edit&id=<?=$list['id']?>' ">編集</button></p>
+                    <p><button type="submit" name="delete" value="<?=$list['id']?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
                 </td>
             </tr>
-            <?php foreach ($room_list as $list) :?>
-                <tr class="dataerea">
-                    <td class="id_data"><?=$list['id']?></td>
-                    <td class="img_data"><img src="../img/<?=$list['img']?>" alt="" class="listimage"></td>
-                    <td class="name_data"><?=$list['name']?></td>
-                    <td class="created_data"><?=$list['created_at']?></td>
-                    <td class="updated_data"><?=$list['updated_at']?></td>
-                    <td class="edit_group">
-                        <p><button type="submit" name="edit" value="<?=$list['id']?>" class="editButten">編集</button></p>
-                        <p><button type="submit" name="delete" value="<?=$list['id']?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
-                    </td>
-                </tr>
-            <?php endforeach;?>
+        <?php endforeach;?>
+        </table>
     </form>
 </main>
-</table>
 
 <script>
     function btn_check() {
@@ -138,4 +127,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>

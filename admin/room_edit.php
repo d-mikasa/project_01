@@ -1,14 +1,6 @@
 <?php
 require_once('../class/Library.php');
 
-//画像保存先 ローカル環境
-const IMGS_PATH = '../img/';
-//画像保存先 本番環境
-const FULL_PATH = '/var/www/html/training/cicacu-mikasa/img';
-
-//最大表示領域
-const MAX_VIEW = 3;
-
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
@@ -19,18 +11,17 @@ if (empty($_SESSION['auth'])) {
 */
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
-    $a = new Room();
-    $edit_detail = $a->getDetail($_GET['id']);
+    $Room = new Room();
+    $edit_detail = $Room->getDetail($_GET['id']);
 
     //marge処理記載場所
-    if (!empty($_POST)) {
+    if (!empty($_POST['set_data'])) {
         $detail = $_POST['set_data']['room_detail'] + $edit_detail['detail'];
         $name = $_POST['set_data']['room_name'];
-    }else{
+    } else {
         $detail = $edit_detail['detail'];
         $name = $edit_detail['room']['name'];
     }
-
 
     //配列の個数を表示領域に設定
     $view = count($detail);
@@ -39,10 +30,11 @@ if ($_GET['mode'] == 'edit') {
     $view = 1;
 }
 
-
 //最大表示領域を超えていた場合、表示領域を上書き
-if ($view > MAX_VIEW) {
-    $view = MAX_VIEW;
+//データベースの値がMAXVIEW以上あった場合に、無理やり３つに変更する
+$Room = new Room();
+if ($view > $Room::MAX_VIEW) {
+    $view = $Room::MAX_VIEW;
 }
 
 //表示領域がなかった場合、１を代入
@@ -52,37 +44,18 @@ if ($view == 0) {
 
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
-    // 権限変更
-    exec('sudo chmod 777 ' . FULL_PATH);
 
-    if ($_FILES['userfile']['error'] == UPLOAD_ERR_OK) {
-        $name = $_FILES['userfile']['name'];
-        $name = mb_convert_encoding($name, 'cp932', 'utf8');
-        $temp = $_FILES['userfile']['tmp_name'];
-        $result = move_uploaded_file($temp, FULL_PATH . $name);
-        if ($result == true) {
-            $message = 'ファイルをアップロードしました';
-            $pdo = new Room;
-            $pdo->roomImgUpdate($name, $_GET['id']);
-        } else {
-            $message = 'ファイルの移動に失敗しました';
-        }
-    } elseif ($_FILES['userfile']['error'] == UPLOAD_ERR_NO_FILE) {
-        $message = 'ファイルがアップロードされませんでした';
-    } else {
-        $message = 'ファイルのアップロードに失敗しました';
-    }
-
-    // 元の状態に戻す
-    exec('sudo chmod 755 ' . IMGS_PATH);
+    $error = $Room->updateRoomImg($_GET['id']);
+}else{
+    $error ='';
 }
 
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php');?>
 <main>
-    <form action="room_conf.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post">
+    <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
 
         <!-- 部屋名を取得・表示する -->
         <table class="newcreate">
@@ -90,42 +63,28 @@ if (!empty($_FILES)) {
                 <th>部屋名</th>
             </tr>
             <tr>
-                <td><input type="text" name="plan[room_name][0]" value="<?= $name?>"></td>
+                <td><input type="text" name="set_data[room_name][0]" value="<?=$name?>"></td>
             </tr>
         </table>
 
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
             <tr class="roomedit_title">
-                <td>
-                    部屋[番号]
-                </td>
-                <td>
-                    人数
-                </td>
-                <td>
-                    料金
-                </td>
-                <td>
-                    コメント
-                </td>
+                <td>部屋[番号]</td>
+                <td>人数</td>
+                <td>料金</td>
+                <td>コメント</td>
             </tr>
-            <?php for ($i = 1; $i <= $view; $i++) : ?>
+
+            <?php for ($i = 1; $i <= $view; $i++) :?>
                 <tr>
-                    <td>部屋[<?= $i ?>]</td>
-                    <td>
-                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['capacity'] ?>">名様
-                    </td>
-
-                    <td>
-                        <input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]" value="<?php if (!empty($detail[$i - 1]['capacity'])) echo $detail[$i - 1]['price'] ?>">円
-                    </td>
-
-                    <td>
-                        <textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"> <?php if (!empty($detail[$i - 1]['remarks'])) echo $detail[$i - 1]['remarks'] ?> </textarea>
-                    </td>
+                    <td>部屋[<?=$i?>]</td>
+                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
+                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
+                    <td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"> <?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?> </textarea></td>
                 </tr>
-            <?php endfor; ?>
+            <?php endfor;?>
+
         </table>
         <div class="changebutton_group">
             <div id="add_plan">
@@ -142,22 +101,23 @@ if (!empty($_FILES)) {
     <div class="borderLine"></div>
 
     <!--編集を押した時のみ画像編集を表示する-->
-    <?php if ($_GET['mode'] === 'edit') : ?>
+    <?php if ($_GET['mode'] === 'edit') :?>
 
-        <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
+        <form action="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
-                <input type="file" name="userfile" id="sample1">
-                </tr>
+                <div><?=$error?></div>
+                <input type="file" name="room_img" id="sample1">
                 </table>
-                <p id="doneImage">
-                    <input type="submit" value="画像を更新" onclick="return btn_check()">
-                </p>
+                <p id="doneImage"><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
             </div>
         </form>
-    <?php endif; ?>
+
+    <?php endif;?>
 
 </main>
+<!-- フッター部分読み込み -->
+<?php require_once('parts/footer.parts.php');?>
 
 <script>
     ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
@@ -168,10 +128,10 @@ if (!empty($_FILES)) {
             return false;
         }
     }
-
-
+</script>
+<script>
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
-    const VIEW = "<?= MAX_VIEW ?>";
+    const VIEW = "<?=$Room::MAX_VIEW?>";
 
     function add_plan(id) {
         // テーブル取得
@@ -188,11 +148,13 @@ if (!empty($_FILES)) {
         // 行数取得
         var row_len = table.rows.length - 1;
 
+        console.log('row_count =' + row_len);
+
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="plan[room_detail][<?= $i - 1 ?>][price]">円</td>';
-        var remarks = '<td><textarea name="plan[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]">円</td>';
+        var remarks = '<td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;
@@ -201,60 +163,58 @@ if (!empty($_FILES)) {
         cell4.innerHTML = remarks;
 
         //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
-        }
-
         if (row_len == 1) {
             document.getElementById('del_plan').style.visibility = "hidden";
+            document.getElementById('add_plan').style.visibility = "visible";
+        } else if (row_len < VIEW) {
+            document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "visible";
         } else {
             document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "hidden";
         }
+
     }
 
 
     ////////////////////////////////*行を削除する処理*//////////////////////////////////
     function del_plan(obj) {
+
         var table = document.getElementById("table");
         // 0で先頭を削除。インデックスを指定する。
         var rows = table.deleteRow(-1);
         var row_len = table.rows.length - 1;
 
-        //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
-        }
+        console.log('row_count =' + row_len);
 
+        //ボタンの表示非表示を切り替える処理
         if (row_len == 1) {
             document.getElementById('del_plan').style.visibility = "hidden";
+            document.getElementById('add_plan').style.visibility = "visible";
+        } else if (row_len < VIEW) {
+            document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "visible";
         } else {
             document.getElementById('del_plan').style.visibility = "visible";
+            document.getElementById('add_plan').style.visibility = "hidden";
         }
     }
 
-    ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
-    window.onload = function() {
-        var table = document.getElementById("table");
-        var row_len = table.rows.length - 1;
+        ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
+        window.onload = function() {
+            var table = document.getElementById("table");
+            var row_len = table.rows.length - 1;
+            console.log('first_contact');
+            console.log('row_count =' + row_len);
 
-        //ボタンの表示非表示を切り替える処理
-        if (row_len >= VIEW) {
-            document.getElementById('add_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('add_plan').style.visibility = "visible";
+            //ボタンの表示非表示を切り替える処理
+            if (row_len == 1) {
+                console.log('MOST_MIN');
+                document.getElementById('del_plan').style.visibility = "hidden";
+            }
+            if (row_len == VIEW) {
+                console.log('MOST_MAX');
+                document.getElementById('add_plan').style.visibility = "hidden";
+            }
         }
-
-        if (row_len == 1) {
-            document.getElementById('del_plan').style.visibility = "hidden";
-        } else {
-            document.getElementById('del_plan').style.visibility = "visible";
-        }
-    }
 </script>
-
-<!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>

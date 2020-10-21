@@ -1,6 +1,7 @@
 <?php
 require_once('class/Library.php');
 $pdo = new rsvUpdate();
+
 $insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
 $total_price = $insert_date['total_price'];
