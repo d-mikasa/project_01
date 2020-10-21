@@ -6,7 +6,7 @@ if (empty($_SESSION['auth'])) {
 }
 
 ?>
- <!-- ヘッダー部分読み込み -->
+<!-- ヘッダー部分読み込み -->
     <?php require_once('parts/top.parts.php'); ?>
     <main>
 

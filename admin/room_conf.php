@@ -43,11 +43,11 @@ $room_detail = $_POST['set_data']['room_detail'];
             </tr>
         </table>
         <p><br></p>
-    <?php endfor; ?>
+    <?php endfor;?>
     <div class="confDone">
         <p><input type="submit" value="確認" class="DoneBtn"></p>
         <p><input type="submit" value="キャンセル" formaction="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" class="CancelBtn"></p>
     </div>
 </form>
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>

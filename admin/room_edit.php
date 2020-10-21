@@ -6,8 +6,6 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 
-
-
 /*
 編集ボタンからこのページに遷移してきた場合
 */
@@ -32,10 +30,8 @@ if ($_GET['mode'] == 'edit') {
     $view = 1;
 }
 
-
 //最大表示領域を超えていた場合、表示領域を上書き
 //データベースの値がMAXVIEW以上あった場合に、無理やり３つに変更する
-
 $Room = new Room();
 if ($view > $Room::MAX_VIEW) {
     $view = $Room::MAX_VIEW;
@@ -57,9 +53,9 @@ if (!empty($_FILES)) {
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php');?>
 <main>
-    <form action="room_conf.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post">
+    <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
 
         <!-- 部屋名を取得・表示する -->
         <table class="newcreate">
@@ -67,46 +63,28 @@ if (!empty($_FILES)) {
                 <th>部屋名</th>
             </tr>
             <tr>
-                <td>
-                    <input type="text" name="set_data[room_name][0]" value="<?= $name ?>">
-                </td>
+                <td><input type="text" name="set_data[room_name][0]" value="<?=$name?>"></td>
             </tr>
         </table>
 
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
             <tr class="roomedit_title">
-                <td>
-                    部屋[番号]
-                </td>
-                <td>
-                    人数
-                </td>
-                <td>
-                    料金
-                </td>
-                <td>
-                    コメント
-                </td>
+                <td>部屋[番号]</td>
+                <td>人数</td>
+                <td>料金</td>
+                <td>コメント</td>
             </tr>
-            <?php for ($i = 1; $i <= $view; $i++) : ?>
+
+            <?php for ($i = 1; $i <= $view; $i++) :?>
                 <tr>
-                    <td>
-                        部屋[<?= $i ?>]
-                    </td>
-                    <td>
-                        <input type="text" name="set_data[room_detail][<?= $i - 1 ?>][capacity]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : '' ?>">名様
-                    </td>
-
-                    <td>
-                        <input type="text" name="set_data[room_detail][<?= $i - 1 ?>][price]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : '' ?>">円
-                    </td>
-
-                    <td>
-                        <textarea name="set_data[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"> <?= !empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : '' ?> </textarea>
-                    </td>
+                    <td>部屋[<?=$i?>]</td>
+                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
+                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
+                    <td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"> <?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?> </textarea></td>
                 </tr>
-            <?php endfor; ?>
+            <?php endfor;?>
+
         </table>
         <div class="changebutton_group">
             <div id="add_plan">
@@ -123,24 +101,23 @@ if (!empty($_FILES)) {
     <div class="borderLine"></div>
 
     <!--編集を押した時のみ画像編集を表示する-->
-    <?php if ($_GET['mode'] === 'edit') : ?>
+    <?php if ($_GET['mode'] === 'edit') :?>
 
-        <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
+        <form action="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
                 <div><?=$error?></div>
                 <input type="file" name="room_img" id="sample1">
                 </table>
-                <p id="doneImage">
-                    <input type="submit" value="画像を更新" onclick="return btn_check()">
-                </p>
+                <p id="doneImage"><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
             </div>
         </form>
-    <?php endif; ?>
+
+    <?php endif;?>
 
 </main>
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>
 
 <script>
     ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
@@ -154,7 +131,7 @@ if (!empty($_FILES)) {
 </script>
 <script>
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
-    const VIEW = "<?= $Room::MAX_VIEW ?>";
+    const VIEW = "<?=$Room::MAX_VIEW?>";
 
     function add_plan(id) {
         // テーブル取得
@@ -175,11 +152,9 @@ if (!empty($_FILES)) {
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="set_data[room_detail][<?= $i - 1 ?>][price]">円</td>';
-        var remarks = '<td><textarea name="set_data[room_detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
-
-
+        var capacity = '<td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]">円</td>';
+        var remarks = '<td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;

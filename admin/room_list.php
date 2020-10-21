@@ -13,8 +13,8 @@ $getRoomAll = $Room->getRoomAll();
 押されたボタンの種類別に処理する
 */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $a = new Room();
-    $a->deleteDetail($_POST['delete']);
+    $Room = new Room();
+    $Room->deleteDetail($_POST['delete']);
     //重複削除が起きないようにリダイレクト
     header('Location: room_list.php');
 }
@@ -96,19 +96,19 @@ if (!empty($_GET['sort'])) {
             </button>
         </td>
         </tr>
-        <?php foreach ($getRoomAll as $list) : ?>
+        <?php foreach ($getRoomAll as $list) :?>
             <tr class="dataerea">
-                <td class="id_data"><?= h($list['id']) ?></td>
-                <td class="img_data"><img src="../img/<?= h($list['img']) ?>" alt="" class="listimage"></td>
-                <td class="name_data"><?= h($list['name']) ?></td>
-                <td class="created_data"><?= h($list['created_at']) ?></td>
-                <td class="updated_data"><?= h($list['updated_at']) ?></td>
+                <td class="id_data"><?=h($list['id'])?></td>
+                <td class="img_data"><img src="../img/<?=h($list['img'])?>" alt="" class="listimage"></td>
+                <td class="name_data"><?=h($list['name'])?></td>
+                <td class="created_data"><?=h($list['created_at'])?></td>
+                <td class="updated_data"><?=h($list['updated_at'])?></td>
                 <td class="edit_group">
-                    <p><button type="button" class="editButten" onclick=" location.href= 'room_edit.php?mode=edit&id=<?= $list['id'] ?>' ">編集</button></p>
-                    <p><button type="submit" name="delete" value="<?= $list['id'] ?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
+                    <p><button type="button" class="editButten" onclick=" location.href= 'room_edit.php?mode=edit&id=<?=$list['id']?>' ">編集</button></p>
+                    <p><button type="submit" name="delete" value="<?=$list['id']?>" onclick="return btn_check()" class="deleteButten">削除</button></p>
                 </td>
             </tr>
-        <?php endforeach; ?>
+        <?php endforeach;?>
         </table>
     </form>
 </main>
@@ -127,4 +127,4 @@ if (!empty($_GET['sort'])) {
 </script>
 
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>
