@@ -94,39 +94,6 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-<<<<<<< HEAD
-        //room_detailから、引数とroom_idが一致するものを全て削除する
-        $sql = 'DELETE FROM room_detail WHERE room_id = ?';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute([$id]);
-
-        /*
-        モード：新規作成の処理
-        */
-        if ($mode== 'create') {
-            //新規部屋情報の追加
-            $sql = 'INSERT INTO room(name) VALUES (?)';
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$room]);
-
-            //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
-            $sql = <<<EOD
-            SELECT  AUTO_INCREMENT
-            FROM  INFORMATION_SCHEMA.TABLES
-            WHERE TABLE_SCHEMA = 'd_mikasa'
-            AND   TABLE_NAME   = 'room'
-            EOD;
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute();
-            $result = $stmt->fetch();
-            $id = $result['AUTO_INCREMENT'] - 1;
-
-            //room_detailの数だけforでINSERTする
-            for ($i = 0; $i < count($set_data); $i++) {
-                $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
-                $stmt = $this->dbh->prepare($sql);
-                $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
-=======
         //空値にNULLを代入してあげないと、エラーが返ってきたので記載
         for ($i = 0; $i < count($set_data); $i++) {
             if ($set_data[$i]['capacity'] == '') {
@@ -137,7 +104,6 @@ class Room extends Model
             }
             if ($set_data[$i]['price'] == '') {
                 $set_data[$i]['price'] = null;
->>>>>>> 7e0f8fb447c1bb4ffd818e4e5da6b1d2a3f867d1
             }
         }
 
