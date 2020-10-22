@@ -10,3 +10,6 @@ require_once('Model.php');
 
 //////////////////////htmlspecialchars//////////////////////
 require_once('Hsc.php');
+
+//////////////////////htmlspecialchars//////////////////////
+require_once('Console_log.php');
