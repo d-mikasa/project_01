@@ -2,16 +2,8 @@
 function getPage()
 {
 
-    //URLのドメインより後ろを取得
-    // '/'までの文字数を取得
-    $str = strrpos($_SERVER['REQUEST_URI'], '/');
-
-    // '/'までの文字列を取得
-    $get_url = substr($_SERVER['REQUEST_URI'], $str + 1);
-
-    //.phpを文字列から削除
-    $str = strrpos($get_url, '.php');
-    $url = substr($get_url, 0, $str);
+//URLからファイル名を取得する
+    $url = basename($_SERVER['REQUEST_URI'],'.php');
 
     // ' _' から前の文字列を取得
     $str = strrpos($url, '_');

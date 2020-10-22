@@ -11,10 +11,6 @@ if (empty($_POST)) {
     header('Location: room_edit.php');
 }
 
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
-
 $update = new Room;
 $message = $update->roomUpdate($_GET['id'], $_POST['set_data']['room_detail'], $_POST['set_data']['room_name'], $_GET['mode']);
 
