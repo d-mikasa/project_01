@@ -1,5 +1,12 @@
 <?php
 require_once('class/Library.php');
+
+// POSTでcsrf_tokenの項目名でパラメーターが送信されていること且つ、
+// セッションに保存された値と一致する場合は正常なリクエストとして処理を行います
+if (isset($_POST["csrf_token"])&& $_POST["csrf_token"] !== $_SESSION['csrf_token']) {
+    header('Location: login.php');
+ }
+
 $pdo = new rsvUpdate();
 
 $insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);

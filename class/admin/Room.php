@@ -285,13 +285,13 @@ class Room extends Model
             exec('sudo chmod 755 ' . self::FULL_PATH);
         } catch (PDOException $e) { //DBの接続に失敗した場合
             $this->dbh->rollback();
-            $this->console_log($e);
+           console_log($e);
             $error = 'ファイルのアップロードに失敗しました';
             return $error;
         } catch (Exception $e) { // ファイル送信時のエラー
             // 処理の巻き戻し
             $this->dbh->rollback();
-            $this->console_log($e);
+            console_log($e);
             $error = 'ファイルのアップロードに失敗しました';
             return $error;
         }
@@ -303,10 +303,10 @@ class Room extends Model
 
 
     //コンソールログに表示する用のメソッド
-    function console_log($data)
-    {
-        echo '<script>';
-        echo 'console.log(' . json_encode($data) . ')';
-        echo '</script>';
-    }
+    // function console_log($data)
+    // {
+    //     echo '<script>';
+    //     echo 'console.log(' . json_encode($data) . ')';
+    //     echo '</script>';
+    // }
 }

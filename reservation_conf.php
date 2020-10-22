@@ -2,6 +2,11 @@
 require_once('class/Library.php');
 $pdo = new rsvUpdate();
 
+$toke_byte = openssl_random_pseudo_bytes(16);
+$csrf_token = bin2hex($toke_byte);
+// 生成したトークンをセッションに保存します
+$_SESSION['csrf_token'] = $csrf_token;
+
 //プルダウンの内容を取得する
 $pull_down_list = $pdo->room();
 
@@ -66,10 +71,12 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         if ($reservation_check != 'not reservation room') {
             foreach ($reservation_check as $value) {
                 $ch_days = explode(',', $value['date']);
+                console_log($ch_days);
                 //日付が予約済みかチェックする
                 for ($i = 0; $i < count($days); $i++) {
                     for ($k = 0; $k < count($ch_days); $k++) {
                         if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
+
                             $error['ather'] = 'すでに予約済みの日程が含まれます';
                         }
                     }
@@ -89,6 +96,8 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
             }
         }
     }
+
+    console_log($reservation_check);
 ?>
 <!doctype html>
 <html lang="ja">
@@ -114,6 +123,9 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         -->
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
+
+            <!--実際に送信する情報群-->
+            <input type="hidden" name="csrf_token" value="<?=$csrf_token?>">
                 <!--実際に送信する情報群-->
                 <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>">
                 <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>">

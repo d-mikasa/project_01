@@ -20,32 +20,32 @@ class rsvUpdate extends Model
     {
         try {
             parent::connect();
-            $sql = <<<EOD
-            SELECT
-            reservation.id,
-             reservation.user_id,
-            reservation.room_id,
-            reservation.room_detail_id,
-            reservation.room_detail_name,
-            reservation.number,
-            reservation.total_price,
-            reservation.status,
-            reservation.created_at,
-            reservation.updated_at,
-            reservation.delete_flg,
-            reservation_detail.price AS "reservation_price",
-            GROUP_CONCAT(reservation_detail.date) AS "date",
-            room.name AS "room_name",
-            room_detail.capacity,
-            room_detail.price,
-            room_detail.name
-            FROM reservation
-            INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id
-            INNER JOIN room ON reservation.room_id = room.id
-            INNER JOIN room_detail ON reservation.room_detail_id = room_detail.id
-            WHERE  reservation.room_id = ?
-            GROUP BY reservation.id
-            EOD;
+            $sql =
+            'SELECT'.
+            ' reservation.id,'.
+            ' reservation.user_id,'.
+            ' reservation.room_id,'.
+            ' reservation.room_detail_id,'.
+            ' reservation.room_detail_name,'.
+            ' reservation.number,'.
+            ' reservation.total_price,'.
+            ' reservation.status,'.
+            ' reservation.created_at,'.
+            ' reservation.updated_at,'.
+            ' reservation.delete_flg,'.
+            ' reservation_detail.price AS "reservation_price",'.
+            ' GROUP_CONCAT(reservation_detail.date) AS "date",'.
+            ' room.name AS "room_name",'.
+            ' room_detail.capacity,'.
+            ' room_detail.price,'.
+            ' room_detail.name'.
+            ' FROM reservation'.
+            ' INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id'.
+            ' INNER JOIN room ON reservation.room_id = room.id'.
+            ' INNER JOIN room_detail ON reservation.room_detail_id = room_detail.id'.
+            ' WHERE  reservation.room_detail_id = ?'.
+            ' GROUP BY reservation.id';
+
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
             $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
