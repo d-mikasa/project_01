@@ -30,7 +30,11 @@ class Room extends Model
         parent::connect();
 
         //roomテーブルの中から、idが一致するものを削除する
-        $sql = 'DELETE FROM room WHERE id = ?';
+        // $sql = 'DELETE FROM room WHERE id = ?';
+        // $stmt = $this->dbh->prepare($sql);
+        // $stmt->execute([$id]);
+
+        $sql = 'UPDATE room SET delete_flg = TRUE WHERE id = ?';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
 
@@ -62,7 +66,7 @@ class Room extends Model
         $detail->execute([$id]);
         $result['detail'] = $detail->fetchAll(PDO::FETCH_ASSOC);
 
-        $sql = 'SELECT name FROM room WHERE id = ?';
+        $sql = 'SELECT name FROM room WHERE id = ? AND delete_flg = FALSE';
         $detail = $this->dbh->prepare($sql);
         $detail->execute([$id]);
         $result['room'] = $detail->fetch(PDO::FETCH_ASSOC);
@@ -93,18 +97,6 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-        //空値にNULLを代入してあげないと、エラーが返ってきたので記載
-        // for ($i = 0; $i < count($set_data); $i++) {
-        //     if ($set_data[$i]['capacity'] == '') {
-        //         $set_data[$i]['capacity'] = null;
-        //     }
-        //     if ($set_data[$i]['remarks'] == '') {
-        //         $set_data[$i]['remarks'] = null;
-        //     }
-        //     if ($set_data[$i]['price'] == '') {
-        //         $set_data[$i]['price'] = null;
-        //     }
-        // }
 
         try {
             //トランザクション開始
@@ -126,10 +118,11 @@ class Room extends Model
                 $stmt->execute();
 
                 //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
-                $sql = 'SELECT AUTO_INCREMENT';
-                $sql .= ' FROM INFORMATION_SCHEMA.TABLES';
-                $sql .= ' WHERE TABLE_SCHEMA = \'d_mikasa\'';
-                $sql .= ' AND TABLE_NAME = \'room\'';
+                $sql =
+                'SELECT AUTO_INCREMENT'
+                .' FROM INFORMATION_SCHEMA.TABLES'
+                . ' WHERE TABLE_SCHEMA = \'d_mikasa\''
+                . ' AND TABLE_NAME = \'room\'';
                 $stmt = $this->dbh->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetch();
@@ -201,7 +194,7 @@ class Room extends Model
         parent::connect();
 
         //roomテーブルの情報を取得する
-        $sql = 'SELECT * FROM room';
+        $sql = 'SELECT * FROM room WHERE delete_flg = FALSE';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll();
@@ -226,7 +219,7 @@ class Room extends Model
         //roomテーブルの情報を取得する
         switch ($sort) {
             case 'desc': //降順（大きいもん順）
-                $sql = 'SELECT * FROM room ORDER BY ' . $col . ' DESC';
+                $sql = 'SELECT * FROM room WHERE delete_flg = FALSE ORDER BY ' . $col . ' DESC';
                 $stmt = $this->dbh->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll();
@@ -234,7 +227,7 @@ class Room extends Model
                 break;
 
             default: //昇順（小さいもん順）
-                $sql = 'SELECT * FROM room ORDER BY ' . $col . '  IS NULL ASC, ' . $col . ' ASC';
+                $sql = 'SELECT * FROM room WHERE delete_flg = FALSE ORDER BY ' . $col . '  IS NULL ASC, ' . $col . ' ASC ';
                 $stmt = $this->dbh->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll();
