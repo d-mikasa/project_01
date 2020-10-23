@@ -81,7 +81,7 @@ if (!empty($_FILES)) {
                     <td>部屋[<?=$i?>]</td>
                     <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
                     <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
-                    <td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"> <?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?> </textarea></td>
+                    <td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"><?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?></textarea></td>
                 </tr>
             <?php endfor;?>
 

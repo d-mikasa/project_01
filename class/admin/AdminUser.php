@@ -16,7 +16,7 @@ class AdminUser extends Model
         if ($result['login_pass'] === $pass) {
             $_SESSION['admin_name'] = $result['name'];
             $_SESSION['auth'] = 1;
-            header('Location: room_top.php');
+            header('Location: top.php');
             exit;
         }
 

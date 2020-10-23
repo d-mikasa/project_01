@@ -14,7 +14,7 @@ $getRoomAll = $Room->getRoomAll();
 */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Room = new Room();
-    $Room->deleteDetail($_POST['delete']);
+    $Room->deleteRoom($_POST['delete']);
     //重複削除が起きないようにリダイレクト
     header('Location: room_list.php');
 }

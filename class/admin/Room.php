@@ -24,7 +24,7 @@ class Room extends Model
      *@return なし
      */
 
-    public function deleteDetail($id)
+    public function deleteRoom($id)
     {
         //connectメソッドにアクセス
         parent::connect();
@@ -94,17 +94,17 @@ class Room extends Model
         parent::connect();
 
         //空値にNULLを代入してあげないと、エラーが返ってきたので記載
-        for ($i = 0; $i < count($set_data); $i++) {
-            if ($set_data[$i]['capacity'] == '') {
-                $set_data[$i]['capacity'] = null;
-            }
-            if ($set_data[$i]['remarks'] == '') {
-                $set_data[$i]['remarks'] = null;
-            }
-            if ($set_data[$i]['price'] == '') {
-                $set_data[$i]['price'] = null;
-            }
-        }
+        // for ($i = 0; $i < count($set_data); $i++) {
+        //     if ($set_data[$i]['capacity'] == '') {
+        //         $set_data[$i]['capacity'] = null;
+        //     }
+        //     if ($set_data[$i]['remarks'] == '') {
+        //         $set_data[$i]['remarks'] = null;
+        //     }
+        //     if ($set_data[$i]['price'] == '') {
+        //         $set_data[$i]['price'] = null;
+        //     }
+        // }
 
         try {
             //トランザクション開始
@@ -121,7 +121,9 @@ class Room extends Model
                 //新規部屋情報の追加
                 $sql = 'INSERT INTO room(name) VALUES (?)';
                 $stmt = $this->dbh->prepare($sql);
-                $stmt->execute([$room]);
+                $stmt->bindValue(1, $room=='' ? NULL : $room, ($room=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+                $stmt->execute();
 
                 //Auto_incrementの値を取得し、新規追加されたであろうid(room_id)の値を取得
                 $sql = 'SELECT AUTO_INCREMENT';
@@ -137,10 +139,17 @@ class Room extends Model
                 for ($i = 0; $i < count($set_data); $i++) {
                     $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
                     $stmt = $this->dbh->prepare($sql);
-                    $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
+
+                    $stmt->bindValue(1, $id=='' ? NULL : $id, ($id=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(2, $set_data[$i]['capacity']=='' ? NULL : $set_data[$i]['capacity'], ($set_data[$i]['capacity']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(3, $set_data[$i]['remarks']=='' ? NULL : $set_data[$i]['remarks'], ($set_data[$i]['remarks']=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindValue(4, $set_data[$i]['price']=='' ? NULL : $set_data[$i]['price'], ($set_data[$i]['price']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+
+                    $stmt->execute();
+
                 }
                 //成功した場合はメッセージにその旨を代入
-                $message = '内容を新規作成しました';
+                $message = '内容を新規作成に成功しました。';
             }
 
             /*--------モード：編集の処理--------*/
@@ -168,7 +177,8 @@ class Room extends Model
             } catch (PDOException $e) {//PDOエラーの場合
                 //処理をロールバック
                 $this->dbh->rollback();
-                $message = '処理に失敗しました';
+                $message = $e;
+                console_log($e);
                 return $message;
             }
           //コミットして代入されたメッセージを送信
@@ -284,7 +294,7 @@ class Room extends Model
             exec('sudo chmod 755 ' . self::FULL_PATH);
         } catch (PDOException $e) { //DBの接続に失敗した場合
             $this->dbh->rollback();
-           console_log($e);
+            console_log($e);
             $error = 'ファイルのアップロードに失敗しました';
             return $error;
         } catch (Exception $e) { // ファイル送信時のエラー
@@ -300,12 +310,14 @@ class Room extends Model
     }
 
 
+    function console_log($data)
+    {
+        echo '<script>';
+        echo 'console.log(' . json_encode($data) . ')';
+        echo '</script>';
+    }
 
-    //コンソールログに表示する用のメソッド
-    // function console_log($data)
-    // {
-    //     echo '<script>';
-    //     echo 'console.log(' . json_encode($data) . ')';
-    //     echo '</script>';
-    // }
+
+
+
 }
