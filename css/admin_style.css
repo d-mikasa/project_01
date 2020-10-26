@@ -21,11 +21,15 @@ h2 {
     text-align: center;
 }
 
+main{
+    width: 1300px;
+}
+
 /*-------------------------
     header
 -------------------------*/
 .topContent {
-    margin: 0 100px 0 100px;
+   margin: auto;
 }
 
 .loginName {
@@ -41,9 +45,10 @@ h2 {
 }
 
 .topNav>a {
-    width: 25rem;
-    height: 50px;
-    border: 3px solid white;
+    width: 157px;
+    height: 40px;
+    font-size: 12px;
+    border: 1px solid white;
     background-color: black;
     color: white;
     text-decoration: none;
@@ -80,12 +85,12 @@ room_list.php
 }
 
 .table_name {
-    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, .5);
-    color: white;
-    font-size: 14px;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
     text-align: center;
-    height: 70px;
-    background-color: #8BC34A;
+    height: 40px;
+
 }
 
 table.roomlist_table .dataerea td {
@@ -112,12 +117,15 @@ img.listimage {
 
 /*----------ページ表示ボタンの設定------------*/
 .title_btn {
-    height: 60px;
-    width: 260px;
+    height: 40px;
     background-color: white;
-    color: black;
-    margin: 10px 0px 15px 0px;
-    font-size: 20px;
+    color: grey;
+    margin: 10px 0px 15px 40px;
+    border-radius: 5px 5px 5px 5px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    box-shadow: 3px 3px 4px 0 rgba(0, 0, 0, .5);
 }
 
 /*--------------編集、削除ボタン----------------*/
@@ -127,30 +135,9 @@ img.listimage {
     text-align: center;
 }
 
-.edit_group>p>button {
-    display: inline-block;
-    height: 40px;
-    width: 70px;
-    outline: none;
-    border: none;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    color: white;
-}
-
-.deleteButten {
-    background-color: #f44336;
-}
-
-.editButten {
-    background-color: #607D8B;
-}
-
 /*--------------新規作成ボタン----------------*/
-.list_create>button {
-    height: 50px;
-    width: 100px;
-    text-align: center;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .12), 0 2px 2px 0 rgba(0, 0, 0, .24);
+.list_create>button{
+    height: 30px;
 }
 
 #up {
@@ -177,8 +164,9 @@ img.listimage {
     編集画面CSS
 -------------------------*/
 .newcreate {
+    margin: auto;
     border-collapse: collapse;
-    width: 100%;
+    width: 700px;
     margin-bottom: 40px;
 }
 
@@ -188,10 +176,7 @@ td {
 }
 
 .newcreate th {
-    width: 30%;
     height: 40px;
-    background-color: #8BC34A;
-    color: white;
 }
 
 .newcreate td {
@@ -201,19 +186,16 @@ td {
 }
 
 .roomedit_table {
+    margin: auto;
     border-collapse: collapse;
-    width: 100%;
+    width: 700px;
     margin-bottom: 20px;
 }
 
 .roomedit_title {
-    box-shadow: 0 3px 7px 0 rgba(0, 0, 0, .5);
-    color: white;
     font-size: 14px;
     text-align: center;
-    height: 70px;
-    background-color: #8BC34A;
-
+    height: 40px;
 }
 
 .roomedit_table td {
@@ -227,47 +209,11 @@ td {
     justify-content: space-evenly;
 }
 
-#add_plan>button {
-    background-color: #607D8B;
-    color: white;
-    height: 60px;
-    width: 400px;
-    outline: none;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    border: none;
-    text-align: center;
-    border-radius: 10px;
-}
-
-#del_plan>button {
-    background-color: white;
-    color: #607D8B;
-    height: 60px;
-    width: 400px;
-    outline: none;
-    border: 6px solid #607D8B;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    text-align: center;
-    border-radius: 10px;
-}
-
 .doneButton {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 60px;
-}
-
-.doneButton>input {
-    background-color: #f44336;
-    color: white;
-    height: 60px;
-    width: 400px;
-    outline: none;
-    border: none;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    text-align: center;
-    border-radius: 10px;
 }
 
 .borderLine {
@@ -278,21 +224,10 @@ td {
     text-align: center;
 }
 
-#doneImage>input {
-    background-color: #689F38;
-    color: white;
-    height: 60px;
-    width: 400px;
-    outline: none;
-    border: none;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    text-align: center;
-    border-radius: 10px;
-}
 
 #confForm>.roomedit_table {
     border-collapse: collapse;
-    width: 100%;
+    width: 700px;
 }
 
 #confForm>.roomedit_table>td,
@@ -308,8 +243,9 @@ th {
 }
 
 .conf_newroom {
-    width: 100%;
-    margin-bottom: 40px;
+    width: 700px;
+    margin-bottom: 60px;
+    margin: auto;
 }
 
 .conf_newroom td {
@@ -320,25 +256,6 @@ th {
     margin-top: -20px;
     display: flex;
     justify-content: space-evenly;
-}
-
-.confDone>p>input {
-    display: inline-block;
-    height: 40px;
-    width: 200px;
-    outline: none;
-    border: none;
-    box-shadow: 3px 3px 7px 0 rgba(0, 0, 0, .5);
-    color: white;
-    text-align: center;
-}
-
-.CancelBtn {
-    background-color: #f44336;
-}
-
-.DoneBtn {
-    background-color: #607D8B;
 }
 
 .end{

@@ -80,7 +80,7 @@ if (!empty($_GET['sort'])) {
     <form action="" name='btn_form' method="post">
         <td class="list_create">
             <button type="button" onclick=" location.href= 'room_edit.php?mode=create&id=0' ">
-                <p>新規作成</p>
+            新規作成
             </button>
         </td>
         </tr>
