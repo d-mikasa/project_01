@@ -29,11 +29,6 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
-        //roomテーブルの中から、idが一致するものを削除する
-        // $sql = 'DELETE FROM room WHERE id = ?';
-        // $stmt = $this->dbh->prepare($sql);
-        // $stmt->execute([$id]);
-
         $sql = 'UPDATE room SET delete_flg = TRUE WHERE id = ?';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
@@ -52,10 +47,10 @@ class Room extends Model
      *room_idが引数のidと一致するroom_detailを全て取得する
      *
      *@param $id roomテーブルのid
-     *@return $result idが一致するroom_detailを全て
+     *@return $result idが一致するroomの名前とroom_detailを全て
      */
 
-    public function getDetail($id)
+    public function getRoom($id)
     {
         //connectメソッドにアクセス
         parent::connect();
@@ -88,7 +83,7 @@ class Room extends Model
      *@return $message 成功したか失敗したかを返す
      */
 
-    public function updateRoom($id, $set_data , $mode)
+    public function updateRoom($id, $set_data, $mode)
     {
         /*
         room_detailの初期化処理
@@ -170,8 +165,8 @@ class Room extends Model
                     $stmt->bindValue(2, $detail[$i]['capacity']=='' ? NULL : $detail[$i]['capacity'], ($detail[$i]['capacity']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
                     $stmt->bindValue(3, $detail[$i]['remarks']=='' ? NULL : $detail[$i]['remarks'], ($detail[$i]['remarks']=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
                     $stmt->bindValue(4, $detail[$i]['price']=='' ? NULL : $detail[$i]['price'], ($detail[$i]['price']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
-                    $stmt->execute();
 
+                    $stmt->execute();
                 }
                 //成功した場合はメッセージにその旨を代入
                 $this->dbh->commit();
@@ -184,33 +179,16 @@ class Room extends Model
                 console_log($e);
                 return $message;
             }
-          //コミットして代入されたメッセージを送信
-        $this->dbh->commit();
-        return $message;
     }
 
 
     ///////////////////////////////////////////////////////////////////////////
     /**
-     *roomテーブルの情報を全て取得する
+     *roomの情報をソートして表示する
      *
      *@param null
      *@return roomテーブルの全カラム
      */
-
-    public function getRoomAll()
-    {
-        //connectメソッドにアクセス
-        parent::connect();
-
-        //roomテーブルの情報を取得する
-        $sql = 'SELECT * FROM room WHERE delete_flg = FALSE';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll();
-        return $result;
-    }
-
 
     /**
      *リストに表示する部屋をソートする
@@ -222,7 +200,7 @@ class Room extends Model
      *@return $result 並び替え後の配列(roomテーブル)
      */
 
-    public function sortRoom($sort, $col)
+    public function sortRoomList($sort = 'ASC', $col = 'ID')
     {
         parent::connect();
 
@@ -239,7 +217,6 @@ class Room extends Model
                 $stmt->execute();
                 $result = $stmt->fetchAll();
                 return $result;
-
     }
 
 
@@ -309,14 +286,12 @@ class Room extends Model
     }
 
 
+    //デバッグコンソールに情報を表示するためのもの。デバッグ用
     function console_log($data)
     {
         echo '<script>';
         echo 'console.log(' . json_encode($data) . ')';
         echo '</script>';
     }
-
-
-
 
 }

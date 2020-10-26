@@ -1,7 +1,7 @@
 <?php
 require_once('class/Library.php');
 $Room = new Room;
-$room = $Room->getRoomAll();
+$sortRoomList = $Room->sortRoomList();
 
 ?>
 <!doctype html>
@@ -234,7 +234,7 @@ $(function() {
             </div>
 
 
-            <?php foreach($room as $room_value):?>
+            <?php foreach($sortRoomList as $room_value):?>
                 <div class="roomA">
                     <?php if(empty($room_value['img'])):?>
                     <img src="<?='./img/noimage.jpg'?>">
@@ -244,8 +244,8 @@ $(function() {
                     <div class="roomA-text">
                         <h3><?=$room_value['name']?></h3>
                         <p>
-                            <?php $detail = $Room->getDetail($room_value['id']) ?>
-                            <?php foreach($detail as $value):?>
+                            <?php $getRoom = $Room->getRoom($room_value['id']) ?>
+                            <?php foreach($getRoom['detail'] as $value):?>
                                 <?=!empty($value['capacity']) ? $value['capacity'] . '名様：' : ''?>
                                 <?=!empty($value['price']) ? '¥' . number_format($value['price']) : ''?>
                                 <?=!empty($value['remarks']) ? '(' . $value['remarks'] . ')' : ''?>

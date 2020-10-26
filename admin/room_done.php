@@ -12,7 +12,7 @@ if (empty($_POST['set_data'])) {
 }
 
 $Room = new Room;
-$message = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode'] , $_POST['set_data']);
+$message = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode']);
 
 ?>
 

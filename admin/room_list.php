@@ -8,7 +8,7 @@ if (empty($_SESSION['auth'])) {
 }
 //roomテーブルの情報を全て取得
 $Room = new Room;
-$getRoomAll = $Room->getRoomAll();
+$sortRoomList = $Room->sortRoomList();
 
 /*
 押されたボタンの種類別に処理する
@@ -29,7 +29,7 @@ if (!empty($_GET['sort'])) {
             $content = substr($_GET['sort'], $str + 1);
             $sort_order = substr($_GET['sort'],0,$str);
 
-            $getRoomAll = $Room->sortRoom($sort_order, $content);
+            $sortRoomList = $Room->sortRoomList($sort_order, $content);
 
 }
 ?>
@@ -84,7 +84,7 @@ if (!empty($_GET['sort'])) {
             </button>
         </td>
         </tr>
-        <?php foreach ($getRoomAll as $list) :?>
+        <?php foreach ($sortRoomList as $list) :?>
             <tr class="dataerea">
                 <td class="id_data"><?=h($list['id'])?></td>
                 <td class="img_data"><img src="../img/<?=h($list['img'])?>" alt="" class="listimage"></td>

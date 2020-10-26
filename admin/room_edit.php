@@ -12,15 +12,15 @@ if (empty($_SESSION['auth'])) {
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
     $Room = new Room();
-    $edit_detail = $Room->getDetail($_GET['id']);
+    $getRoom = $Room->getRoom($_GET['id']);
 
     //marge処理記載場所
     if (!empty($_POST['set_data'])) {
-        $detail = $_POST['set_data']['detail'] + $edit_detail['detail'];
-        $name = $_POST['set_data']['name'] + $edit_detail['room']['name'];
+        $detail = $_POST['set_data']['detail'] + $getRoom['detail'];
+        $name = $_POST['set_data']['name'] + $getRoom['room']['name'];
     } else {
-        $detail = $edit_detail['detail'];
-        $name = $edit_detail['room']['name'];
+        $detail = $getRoom['detail'];
+        $name = $getRoom['room']['name'];
     }
 
     //配列の個数を表示領域に設定
@@ -62,7 +62,7 @@ if (!empty($_FILES)) {
                 <th>部屋名</th>
             </tr>
             <tr>
-                <td><input type="text" name="set_data[name][0]" value="<?=$name?>"></td>
+                <td><input type="text" name="set_data[name][0]" value="<?=!empty($name) ? $name : ''?>"></td>
             </tr>
         </table>
 
