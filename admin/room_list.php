@@ -4,6 +4,7 @@ require_once('../class/Library.php');
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
+    exit();
 }
 //roomテーブルの情報を全て取得
 $Room = new Room;
@@ -21,28 +22,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if (!empty($_GET['sort'])) {
 
-    switch (key($_GET)) {
-
-        case strpos($_GET['sort'], 'asc') !== false: //sort_upが押された場合
-            //_までの文字数カウント
+            //-までの文字数カウント
             $str = strrpos($_GET['sort'], '-');
 
-            //後半部分格納
+
             $content = substr($_GET['sort'], $str + 1);
+            $sort_order = substr($_GET['sort'],0,$str);
 
-            $getRoomAll = $Room->sortRoom('asc', $content);
-            break;
+            $getRoomAll = $Room->sortRoom($sort_order, $content);
 
-        case strpos($_GET['sort'], 'desc') !== false: //sort_downが押された場合
-            //_までの文字数カウント
-            $str = strrpos($_GET['sort'], '-');
-
-            //後半部分格納
-            $content = substr($_GET['sort'], $str + 1);
-
-            $getRoomAll = $Room->sortRoom('desc', $content);
-            break;
-    }
 }
 ?>
 

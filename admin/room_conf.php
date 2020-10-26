@@ -6,15 +6,15 @@ if (empty($_SESSION['auth'])) {
     header('Location: login.php');
 }
 
-$room_name = $_POST['set_data']['room_name'][0];
-$room_detail = $_POST['set_data']['room_detail'];
+$room_name = $_POST['set_data']['name'][0];
+$room_detail = $_POST['set_data']['detail'];
 ?>
 
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php');?>
 
 <form action="room_done.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" id="confForm">
-    <input type="hidden" name="set_data[room_name]" value="<?=$room_name?>">
+    <input type="hidden" name="set_data[name]" value="<?=$room_name?>">
 
     <table class="conf_newroom">
         <tr>
@@ -22,10 +22,10 @@ $room_detail = $_POST['set_data']['room_detail'];
             <td><?=$room_name?></td>
         </tr>
     </table>
-    <?php for ($i = 0; $i < count($room_detail); $i++) : ?>
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][capacity]" value="<?=$room_detail[$i]['capacity']?>">
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][price]" value="<?=$room_detail[$i]['price']?>">
-        <input type="hidden" name="set_data[room_detail][<?=$i?>][remarks]" value="<?=$room_detail[$i]['remarks']?>">
+    <?php for ($i = 0; $i < count($room_detail); $i++) :?>
+        <input type="hidden" name="set_data[detail][<?=$i?>][capacity]" value="<?=$room_detail[$i]['capacity']?>">
+        <input type="hidden" name="set_data[detail][<?=$i?>][price]" value="<?=$room_detail[$i]['price']?>">
+        <input type="hidden" name="set_data[detail][<?=$i?>][remarks]" value="<?=$room_detail[$i]['remarks']?>">
 
         <table class="roomedit_table">
             <tr>
@@ -42,7 +42,6 @@ $room_detail = $_POST['set_data']['room_detail'];
                 <td class="confCome_detail"><?=$room_detail[$i]['remarks']?></td>
             </tr>
         </table>
-        <p><br></p>
     <?php endfor;?>
     <div class="confDone">
         <p><input type="submit" value="確認" class="DoneBtn"></p>

@@ -16,8 +16,8 @@ if ($_GET['mode'] == 'edit') {
 
     //marge処理記載場所
     if (!empty($_POST['set_data'])) {
-        $detail = $_POST['set_data']['room_detail'] + $edit_detail['detail'];
-        $name = $_POST['set_data']['room_name'];
+        $detail = $_POST['set_data']['detail'] + $edit_detail['detail'];
+        $name = $_POST['set_data']['name'] + $edit_detail['room']['name'];
     } else {
         $detail = $edit_detail['detail'];
         $name = $edit_detail['room']['name'];
@@ -44,7 +44,6 @@ if ($view == 0) {
 
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
-
     $error = $Room->updateRoomImg($_GET['id']);
 }else{
     $error ='';
@@ -63,7 +62,7 @@ if (!empty($_FILES)) {
                 <th>部屋名</th>
             </tr>
             <tr>
-                <td><input type="text" name="set_data[room_name][0]" value="<?=$name?>"></td>
+                <td><input type="text" name="set_data[name][0]" value="<?=$name?>"></td>
             </tr>
         </table>
 
@@ -79,9 +78,9 @@ if (!empty($_FILES)) {
             <?php for ($i = 1; $i <= $view; $i++) :?>
                 <tr>
                     <td>部屋[<?=$i?>]</td>
-                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
-                    <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
-                    <td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"><?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?></textarea></td>
+                    <td><input type="text" name="set_data[detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
+                    <td><input type="text" name="set_data[detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
+                    <td><textarea name="set_data[detail][<?=$i - 1?>][remarks]" cols="30" rows="10"><?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?></textarea></td>
                 </tr>
             <?php endfor;?>
 
@@ -152,9 +151,9 @@ if (!empty($_FILES)) {
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="set_data[room_detail][<?=$i - 1?>][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="set_data[room_detail][<?=$i - 1?>][price]">円</td>';
-        var remarks = '<td><textarea name="set_data[room_detail][<?=$i - 1?>][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="set_data[detail][<?=$i - 1?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="set_data[detail][<?=$i - 1?>][price]">円</td>';
+        var remarks = '<td><textarea name="set_data[detail][<?=$i - 1?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;

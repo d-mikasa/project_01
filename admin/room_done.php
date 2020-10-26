@@ -7,12 +7,12 @@ if (empty($_SESSION['auth'])) {
 }
 
 //EDITからURL直打ちで来られた時の対処
-if (empty($_POST)) {
+if (empty($_POST['set_data'])) {
     header('Location: room_edit.php');
 }
 
-$update = new Room;
-$message = $update->roomUpdate($_GET['id'], $_POST['set_data']['room_detail'], $_POST['set_data']['room_name'], $_GET['mode']);
+$Room = new Room;
+$message = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode'] , $_POST['set_data']);
 
 ?>
 

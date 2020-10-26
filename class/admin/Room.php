@@ -84,12 +84,11 @@ class Room extends Model
      *
      *@param $id 検索するroomのid
      *@param $set_data 追加する部屋の詳細情報を多次元配列に格納している
-     *@param $room 更新しようとしている部屋の名前
      *@param $mode 編集なのか新規作成なのかのフラグ
      *@return $message 成功したか失敗したかを返す
      */
 
-    public function roomUpdate($id, $set_data, $room = null, $mode)
+    public function updateRoom($id, $set_data , $mode)
     {
         /*
         room_detailの初期化処理
@@ -97,6 +96,8 @@ class Room extends Model
         //connectメソッドにアクセス
         parent::connect();
 
+        $name = $set_data['name'];
+        $detail = $set_data['detail'];
 
         try {
             //トランザクション開始
@@ -113,7 +114,7 @@ class Room extends Model
                 //新規部屋情報の追加
                 $sql = 'INSERT INTO room(name) VALUES (?)';
                 $stmt = $this->dbh->prepare($sql);
-                $stmt->bindValue(1, $room=='' ? NULL : $room, ($room=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindValue(1, $name=='' ? NULL : $name, ($name=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
 
                 $stmt->execute();
 
@@ -129,20 +130,20 @@ class Room extends Model
                 $id = $result['AUTO_INCREMENT'] - 1;
 
                 //room_detailの数だけforでINSERTする
-                for ($i = 0; $i < count($set_data); $i++) {
+                for ($i = 0; $i < count($detail); $i++) {
                     $sql = 'INSERT INTO room_detail(room_id,capacity,remarks,price) VALUES (?,?,?,?)';
                     $stmt = $this->dbh->prepare($sql);
 
                     $stmt->bindValue(1, $id=='' ? NULL : $id, ($id=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
-                    $stmt->bindValue(2, $set_data[$i]['capacity']=='' ? NULL : $set_data[$i]['capacity'], ($set_data[$i]['capacity']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
-                    $stmt->bindValue(3, $set_data[$i]['remarks']=='' ? NULL : $set_data[$i]['remarks'], ($set_data[$i]['remarks']=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
-                    $stmt->bindValue(4, $set_data[$i]['price']=='' ? NULL : $set_data[$i]['price'], ($set_data[$i]['price']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(2, $detail[$i]['capacity']=='' ? NULL : $detail[$i]['capacity'], ($detail[$i]['capacity']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(3, $detail[$i]['remarks']=='' ? NULL : $detail[$i]['remarks'], ($detail[$i]['remarks']=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindValue(4, $detail[$i]['price']=='' ? NULL : $detail[$i]['price'], ($detail[$i]['price']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
 
                     $stmt->execute();
-
                 }
                 //成功した場合はメッセージにその旨を代入
-                $message = '内容を新規作成に成功しました。';
+                $this->dbh->commit();
+                return '内容を新規作成に成功しました。';
             }
 
             /*--------モード：編集の処理--------*/
@@ -156,16 +157,25 @@ class Room extends Model
                 //ルーム名の更新
                 $sql = 'UPDATE room SET name = ? WHERE id = ?';
                 $stmt = $this->dbh->prepare($sql);
-                $stmt->execute([$room, $id]);
+                $stmt->bindValue(1, $name=='' ? NULL : $name, ($name=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindValue(2, $id,PDO::PARAM_INT);
+                $stmt->execute();
 
                 //room_detailの数だけforでINSERTする
-                for ($i = 0; $i < count($set_data); $i++) {
+                for ($i = 0; $i < count($detail); $i++) {
                     $sql = 'INSERT INTO room_detail(room_id, capacity, remarks, price) VALUES (?,?,?,?)';
                     $stmt = $this->dbh->prepare($sql);
-                    $stmt->execute([$id, $set_data[$i]['capacity'], $set_data[$i]['remarks'], $set_data[$i]['price']]);
+
+                    $stmt->bindValue(1, $id=='' ? NULL : $id, ($id=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(2, $detail[$i]['capacity']=='' ? NULL : $detail[$i]['capacity'], ($detail[$i]['capacity']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindValue(3, $detail[$i]['remarks']=='' ? NULL : $detail[$i]['remarks'], ($detail[$i]['remarks']=='') ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindValue(4, $detail[$i]['price']=='' ? NULL : $detail[$i]['price'], ($detail[$i]['price']=='') ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->execute();
+
                 }
                 //成功した場合はメッセージにその旨を代入
-                $message = '内容の更新に成功しました';
+                $this->dbh->commit();
+                return '内容の更新に成功しました';
             }
             } catch (PDOException $e) {//PDOエラーの場合
                 //処理をロールバック
@@ -216,24 +226,20 @@ class Room extends Model
     {
         parent::connect();
 
-        //roomテーブルの情報を取得する
-        switch ($sort) {
-            case 'desc': //降順（大きいもん順）
-                $sql = 'SELECT * FROM room WHERE delete_flg = FALSE ORDER BY ' . $col . ' DESC';
+                $sql =
+                'SELECT * '.
+                'FROM room '.
+                'WHERE delete_flg = FALSE '.
+                'ORDER BY '.
+                'CASE WHEN ' . $col . ' IS NULL then "2" '.
+                'WHEN  ' . $col . '  = \'\' THEN \'1\' '.
+                'ELSE \'0\' '.
+                'END,  ' . $col . '  ' . $sort;
                 $stmt = $this->dbh->prepare($sql);
                 $stmt->execute();
                 $result = $stmt->fetchAll();
                 return $result;
-                break;
 
-            default: //昇順（小さいもん順）
-                $sql = 'SELECT * FROM room WHERE delete_flg = FALSE ORDER BY ' . $col . '  IS NULL ASC, ' . $col . ' ASC ';
-                $stmt = $this->dbh->prepare($sql);
-                $stmt->execute();
-                $result = $stmt->fetchAll();
-                return $result;
-                break;
-        }
     }
 
 
