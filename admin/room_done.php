@@ -4,11 +4,13 @@ require_once('../class/Library.php');
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
+    exit();
 }
 
 //EDITからURL直打ちで来られた時の対処
 if (empty($_POST['set_data'])) {
     header('Location: room_edit.php');
+    exit();
 }
 
 $Room = new Room;

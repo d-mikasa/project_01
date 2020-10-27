@@ -22,7 +22,7 @@ h2 {
 }
 
 main{
-    width: 1300px;
+    width: 1200px;
 }
 
 /*-------------------------
@@ -166,7 +166,7 @@ img.listimage {
 .newcreate {
     margin: auto;
     border-collapse: collapse;
-    width: 700px;
+    width: 1000px;
     margin-bottom: 40px;
 }
 
@@ -177,19 +177,21 @@ td {
 
 .newcreate th {
     height: 40px;
+    font-weight: bold;
 }
 
 .newcreate td {
-    width: 70%;
     text-align: center;
     height: 30px;
+    font-weight: bold;
 }
 
 .roomedit_table {
     margin: auto;
     border-collapse: collapse;
-    width: 700px;
+    width: 1000px;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 .roomedit_title {
@@ -224,10 +226,9 @@ td {
     text-align: center;
 }
 
-
 #confForm>.roomedit_table {
     border-collapse: collapse;
-    width: 700px;
+    width: 1000px;
 }
 
 #confForm>.roomedit_table>td,
@@ -243,13 +244,13 @@ th {
 }
 
 .conf_newroom {
-    width: 700px;
+    width: 1000px;
     margin-bottom: 60px;
     margin: auto;
 }
 
-.conf_newroom td {
-    width: 68%;
+.conf_newroom th {
+    width: 278px;
 }
 
 .confDone {

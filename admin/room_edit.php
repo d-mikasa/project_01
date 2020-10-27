@@ -4,6 +4,7 @@ require_once('../class/Library.php');
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
+    exit();
 }
 
 /*
@@ -48,7 +49,6 @@ if (!empty($_FILES)) {
 }else{
     $error ='';
 }
-
 ?>
 
 <!-- ヘッダー部分読み込み -->
@@ -58,7 +58,6 @@ if (!empty($_FILES)) {
 
         <!-- 部屋名を取得・表示する -->
         <table class="newcreate">
-
                 <tr>
                     <td>部屋名</td>
                     <td><input type="text" name="set_data[name][0]" value="<?=!empty($name) ? $name : ''?>"></td>

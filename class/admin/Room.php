@@ -136,9 +136,10 @@ class Room extends Model
 
                     $stmt->execute();
                 }
+
                 //成功した場合はメッセージにその旨を代入
                 $this->dbh->commit();
-                return '内容を新規作成に成功しました。';
+                return '新規作成に成功しました。';
             }
 
             /*--------モード：編集の処理--------*/
@@ -168,10 +169,12 @@ class Room extends Model
 
                     $stmt->execute();
                 }
+
                 //成功した場合はメッセージにその旨を代入
                 $this->dbh->commit();
-                return '内容の更新に成功しました';
+                return '更新に成功しました';
             }
+
             } catch (PDOException $e) {//PDOエラーの場合
                 //処理をロールバック
                 $this->dbh->rollback();
@@ -249,18 +252,22 @@ class Room extends Model
                 $name = mb_convert_encoding($name, 'cp932', 'utf8');
                 $temp = $_FILES['room_img']['tmp_name'];
                 $result = move_uploaded_file($temp, self::FULL_PATH . $name);
+
                 if ($result == true) {
                     //データベースのやりとり
                     //roomテーブルのimgに画像名（拡張子付き）をUPDATE
                     $sql = 'UPDATE room SET img = ? ,updated_at = CURRENT_TIMESTAMP(6) WHERE id = ?';
                     $stmt = $this->dbh->prepare($sql);
                     $stmt->execute([$name, $id]);
+
                 } else {
                     //move_uploaded_fileが失敗していた（ファイル移動に失敗）場合
                     throw new Exception('ファイルの移動に失敗しました');
                 }
+
             } elseif ($_FILES['room_img']['error'] == UPLOAD_ERR_NO_FILE) {
                 throw new Exception('ファイルがアップロードされませんでした');
+
             } else {
                 //$_FILES['room_img']['error'] によくわからない値が入ってしまっていた場合
                 throw new Exception('なぜか失敗しました');
@@ -268,6 +275,7 @@ class Room extends Model
 
             // 元の状態に戻す
             exec('sudo chmod 755 ' . self::FULL_PATH);
+
         } catch (PDOException $e) { //DBの接続に失敗した場合
             $this->dbh->rollback();
             console_log($e);

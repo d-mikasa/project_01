@@ -25,7 +25,6 @@ if (!empty($_GET['sort'])) {
             //-までの文字数カウント
             $str = strrpos($_GET['sort'], '-');
 
-
             $content = substr($_GET['sort'], $str + 1);
             $sort_order = substr($_GET['sort'],0,$str);
 

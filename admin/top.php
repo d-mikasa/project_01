@@ -3,6 +3,7 @@ require_once('../class/Library.php');
 
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
+    exit();
 }
 
 ?>

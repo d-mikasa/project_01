@@ -4,6 +4,7 @@ require_once('../class/Library.php');
 //リダイレクト処理
 if (empty($_SESSION['auth'])) {
     header('Location: login.php');
+    exit();
 }
 
 $room_name = $_POST['set_data']['name'][0];
