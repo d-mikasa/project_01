@@ -13,17 +13,11 @@ if (empty($_SESSION['auth'])) {
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
     $Room = new Room();
-    $getRoom = $Room->getRoom($_GET['id']);
+    $room_info = $Room->getgetRoom($_GET['id']);
 
-    //marge処理記載場所
-    if (!empty($_POST['set_data'])) {
-        $detail = $_POST['set_data']['detail'] + $getRoom['detail'];
-        $name = $_POST['set_data']['name'] + $getRoom['room']['name'];
-    } else {
-        $detail = $getRoom['detail'];
-        $name = $getRoom['room']['name'];
-    }
-
+    $tmp = $_POST + $room_info;
+    $name = $tmp['set_data']['name'];
+    $detail = $tmp['set_data']['detail'];
     //配列の個数を表示領域に設定
     $view = count($detail);
 } else {
@@ -47,21 +41,21 @@ if ($view == 0) {
 if (!empty($_FILES)) {
     $error = $Room->updateRoomImg($_GET['id']);
 } else {
-    $error ='';
+    $error = '';
 }
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php');?>
+<?php require_once('parts/top.parts.php'); ?>
 <main>
-    <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
+    <form action="room_conf.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post">
 
         <!-- 部屋名を取得・表示する -->
         <table class="newcreate">
-                <tr>
-                    <td>部屋名</td>
-                    <td><input type="text" name="set_data[name][0]" value="<?=!empty($name) ? $name : ''?>"></td>
-                </tr>
+            <tr>
+                <td>部屋名</td>
+                <td><input type="text" name="set_data[name][0]" value="<?= !empty($name) ? $name : '' ?>"></td>
+            </tr>
         </table>
 
         <!--テーブルの表示-->
@@ -73,14 +67,14 @@ if (!empty($_FILES)) {
                 <td>コメント</td>
             </tr>
 
-            <?php for ($i = 1; $i <= $view; $i++) :?>
+            <?php for ($i = 1; $i <= $view; $i++) : ?>
                 <tr>
-                    <td>部屋[<?=$i?>]</td>
-                    <td><input type="text" name="set_data[detail][<?=$i - 1?>][capacity]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : ''?>">名様</td>
-                    <td><input type="text" name="set_data[detail][<?=$i - 1?>][price]" value="<?=!empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : ''?>">円</td>
-                    <td><textarea name="set_data[detail][<?=$i - 1?>][remarks]" cols="30" rows="10"><?=!empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : ''?></textarea></td>
+                    <td>部屋[<?= $i ?>]</td>
+                    <td><input type="text" name="set_data[detail][<?= $i - 1 ?>][capacity]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['capacity'] : '' ?>">名様</td>
+                    <td><input type="text" name="set_data[detail][<?= $i - 1 ?>][price]" value="<?= !empty($detail[$i - 1]['capacity']) ? $detail[$i - 1]['price'] : '' ?>">円</td>
+                    <td><textarea name="set_data[detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"><?= !empty($detail[$i - 1]['remarks']) ? $detail[$i - 1]['remarks'] : '' ?></textarea></td>
                 </tr>
-            <?php endfor;?>
+            <?php endfor; ?>
 
         </table>
         <div class="changebutton_group">
@@ -98,23 +92,23 @@ if (!empty($_FILES)) {
     <div class="borderLine"></div>
 
     <!--編集を押した時のみ画像編集を表示する-->
-    <?php if ($_GET['mode'] === 'edit') :?>
+    <?php if ($_GET['mode'] === 'edit') : ?>
 
-        <form action="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" enctype="multipart/form-data">
+        <form action="room_edit.php?mode=<?= $_GET['mode'] ?>&id=<?= $_GET['id'] ?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
-                <div><?=$error?></div>
+                <div><?= $error ?></div>
                 <input type="file" name="room_img" id="sample1">
                 </table>
                 <p id="doneImage"><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
             </div>
         </form>
 
-    <?php endif;?>
+    <?php endif; ?>
 
 </main>
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php');?>
+<?php require_once('parts/footer.parts.php'); ?>
 
 <script>
     ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
@@ -128,7 +122,7 @@ if (!empty($_FILES)) {
 </script>
 <script>
     ////////////////////////////////*行を追加する処理*//////////////////////////////////
-    const VIEW = "<?=$Room::MAX_VIEW?>";
+    const VIEW = "<?= $Room::MAX_VIEW ?>";
 
     function add_plan(id) {
         // テーブル取得
@@ -149,9 +143,9 @@ if (!empty($_FILES)) {
 
         // パーツのHTML
         var room = '<th>部屋[' + row_len + ']</th>';
-        var capacity = '<td><input type="text" name="set_data[detail][<?=$i - 1?>][capacity]">名様</td>';
-        var price = ' <td><input type="text" name="set_data[detail][<?=$i - 1?>][price]">円</td>';
-        var remarks = '<td><textarea name="set_data[detail][<?=$i - 1?>][remarks]" cols="30" rows="10"></textarea></td>';
+        var capacity = '<td><input type="text" name="set_data[detail][<?= $i - 1 ?>][capacity]">名様</td>';
+        var price = ' <td><input type="text" name="set_data[detail][<?= $i - 1 ?>][price]">円</td>';
+        var remarks = '<td><textarea name="set_data[detail][<?= $i - 1 ?>][remarks]" cols="30" rows="10"></textarea></td>';
 
         // セルの内容入力
         cell1.innerHTML = room;
@@ -197,21 +191,21 @@ if (!empty($_FILES)) {
         }
     }
 
-        ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
-        window.onload = function() {
-            var table = document.getElementById("table");
-            var row_len = table.rows.length - 1;
-            console.log('first_contact');
-            console.log('row_count =' + row_len);
+    ////////////////////////////////*ページに初めて飛んできたときのボタンの有無*//////////////////////////////////
+    window.onload = function() {
+        var table = document.getElementById("table");
+        var row_len = table.rows.length - 1;
+        console.log('first_contact');
+        console.log('row_count =' + row_len);
 
-            //ボタンの表示非表示を切り替える処理
-            if (row_len == 1) {
-                console.log('MOST_MIN');
-                document.getElementById('del_plan').style.visibility = "hidden";
-            }
-            if (row_len == VIEW) {
-                console.log('MOST_MAX');
-                document.getElementById('add_plan').style.visibility = "hidden";
-            }
+        //ボタンの表示非表示を切り替える処理
+        if (row_len == 1) {
+            console.log('MOST_MIN');
+            document.getElementById('del_plan').style.visibility = "hidden";
         }
+        if (row_len == VIEW) {
+            console.log('MOST_MAX');
+            document.getElementById('add_plan').style.visibility = "hidden";
+        }
+    }
 </script>

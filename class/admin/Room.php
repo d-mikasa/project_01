@@ -36,6 +36,8 @@ class Room extends Model
 			$stmt = $this->dbh->prepare($sql);
 			$stmt->execute([$id]);
 
+			$count = $stmt->rowCount();
+
 			//room_detailの中からroom_id(roomテーブルのidカラム)が一致するものを削除する
 			$sql = 'DELETE FROM room_detail WHERE room_id = ?';
 			$stmt = $this->dbh->prepare($sql);
@@ -47,6 +49,13 @@ class Room extends Model
 
 		//成功した場合はメッセージにその旨を代入
 		$this->dbh->commit();
+
+		if($count ==1){
+			$message = '削除に成功しました';
+		}else{
+			$message = '削除に失敗しました';
+		}
+		return $message;
 	}
 
 
@@ -75,6 +84,25 @@ class Room extends Model
 		$detail = $this->dbh->prepare($sql);
 		$detail->execute([$id]);
 		$result['room'] = $detail->fetch(PDO::FETCH_ASSOC);
+		return $result;
+	}
+
+	public function getgetRoom($id)
+	{
+		//connectメソッドにアクセス
+		parent::connect();
+		$sql = 'SELECT name FROM room WHERE id = ? AND delete_flg = FALSE';
+		$detail = $this->dbh->prepare($sql);
+		$detail->execute([$id]);
+		$result['set_data']['name'] = $detail->fetch(PDO::FETCH_COLUMN);
+
+
+		$sql = 'SELECT capacity,price,remarks FROM room_detail WHERE room_id = ?';
+		$detail = $this->dbh->prepare($sql);
+		$detail->execute([$id]);
+		$result['set_data']['detail'] = $detail->fetchAll(PDO::FETCH_ASSOC);
+
+
 		return $result;
 	}
 
@@ -300,21 +328,6 @@ class Room extends Model
 		$this->dbh->commit();
 
 		return  'ファイルのアップロードに成功しました';
-	}
-
-
-	function deleteMessage()
-	{
-		//connectメソッドにアクセス
-		try {
-			parent::connect();
-			$sql = 'select row_count()';
-			$stmt = $this->dbh->prepare($sql);
-			$stmt->execute();
-			return $stmt->fetch();
-		} catch (PDOException $e) {
-			return 'not change';
-		}
 	}
 
 	//デバッグコンソールに情報を表示するためのもの。デバッグ用
