@@ -8,7 +8,7 @@ if (empty($_SESSION['auth'])) {
 }
 //roomテーブルの情報を全て取得
 $Room = new Room;
-$sortRoomList = $Room->sortRoomList();
+
 
 /*
 押されたボタンの種類別に処理する
@@ -22,14 +22,15 @@ if (!empty($_POST['delete'])) {
 }
 
 if (!empty($_GET['sort'])) {
-
     //-までの文字数カウント
     $str = strrpos($_GET['sort'], '-');
     $content = substr($_GET['sort'], $str + 1);
-    $sort_order = substr($_GET['sort'],0,$str);
-    $sortRoomList = $Room->sortRoomList($sort_order, $content);
-
+    $sort_order = substr($_GET['sort'], 0, $str);
 }
+
+//GETの変数がなかったら引数を指定しないでメソッドを呼び出す
+$sortRoomList = (isset($content) && isset($sort_order)) ? $Room->sortRoomList($sort_order, $content) : $Room->sortRoomList();
+
 ?>
 
 <!-- ヘッダー部分読み込み -->
