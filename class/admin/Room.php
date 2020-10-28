@@ -240,7 +240,7 @@ class Room extends Model
 	 *@return $result 並び替え後の配列(roomテーブル)
 	 */
 
-	public function sortRoomList($sort = 'ASC', $col = 'ID')
+	public function sortRoomList($sort , $col)
 	{
 		parent::connect();
 

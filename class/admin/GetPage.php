@@ -32,7 +32,7 @@ function getPage()
         'edit' => '編集',
         'create' => '作成'
     );
-    
+
     $disp_page = $genre[$content['0']] . (isset($_GET['mode']) ? $get_para[$_GET['mode']] : '') . (isset($content['1']) ? $name[$content['1']] : '');
 
     echo '<button class = "title_btn" disabled>' . $disp_page . '</button>';

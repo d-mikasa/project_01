@@ -17,28 +17,33 @@ if (!empty($_POST['delete'])) {
     $Room = new Room();
     $error_delete = $Room->deleteRoom($_POST['delete']);
     //重複削除が起きないようにリダイレクト
-}else{
+} else {
     $error_delete = '';
 }
 
+//ソート機能の値を設定する
 if (!empty($_GET['sort'])) {
     //-までの文字数カウント
     $str = strrpos($_GET['sort'], '-');
     $content = substr($_GET['sort'], $str + 1);
     $sort_order = substr($_GET['sort'], 0, $str);
+} else {
+    //初回訪問の時は初期化
+    $content = 'ID';
+    $sort_order = 'ASC';
 }
 
-//GETの変数がなかったら引数を指定しないでメソッドを呼び出す
-$sortRoomList = (isset($content) && isset($sort_order)) ? $Room->sortRoomList($sort_order, $content) : $Room->sortRoomList();
+//ソートのメソッドを呼び出して格納
+$sortRoomList = $Room->sortRoomList($sort_order, $content);
 
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
+<?php require_once('parts/top.parts.php');?>
 
 <main>
 
-<?=$error_delete?>
+    <?=$error_delete?>
 
     <!--
     並び替えのボタン群
@@ -81,7 +86,7 @@ $sortRoomList = (isset($content) && isset($sort_order)) ? $Room->sortRoomList($s
     <form action="" name='btn_form' method="post">
         <td class="list_create">
             <button type="button" onclick=" location.href= 'room_edit.php?mode=create&id=0' ">
-            新規作成
+                新規作成
             </button>
         </td>
         </tr>
