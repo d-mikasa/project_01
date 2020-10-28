@@ -1,40 +1,23 @@
 <?php
 require_once('class/Library.php');
-$pdo = new rsvUpdate();
+$rsv = new rsv();
 
-$pull_down_list = $pdo->room();
+$pull_down_list = $rsv->room();
 
 if ($_SESSION['user_auth'] == false) {
     header('Location: login.php');
+    exit();
 }
 ?>
 
 <!doctype html>
 <html lang="ja">
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <title>CICACU</title>
-
-    <meta name="description" content="CICACU(シカク)">
-    <meta name="keywords" content="CICACU,cafe饗茶庵,鹿沼,ゲストハウス,民宿">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/reservation.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-    <!--Googleフォント-->
-    <!--font-family: 'Prompt', sans-serif;-->
-    <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
-</head>
+<?php require_once('rsv_parts/head_info.php');?>
 
 <body class="background_reservation">
     <?= getNav('reservation'); ?>
     <main class="reservation_main">
-
 
         <form action="reservation_conf.php" method="post">
             <div class="titles">情報入力欄</div>
@@ -57,9 +40,7 @@ if ($_SESSION['user_auth'] == false) {
 
                 <tr class="reservation_check_in">
                     <th>チェックイン</th>
-                    <td>
-                        <input type="date" name="check_in">
-                    </td>
+                    <td><input type="date" name="check_in"></td>
                 </tr>
 
                 <!-- dammy error message -->
@@ -69,9 +50,7 @@ if ($_SESSION['user_auth'] == false) {
 
                 <tr class="reservation_check_out">
                     <th>チェックアウト</th>
-                    <td>
-                        <input type="date" name="check_out">
-                    </td>
+                    <td><input type="date" name="check_out"></td>
                 </tr>
 
                 <!-- dammy error message -->
@@ -81,14 +60,12 @@ if ($_SESSION['user_auth'] == false) {
 
                 <tr class="reservation_capacity">
                     <th>宿泊人数</th>
-                    <td>
-                        <input type="number" name="capacity" min="1" value = "1">
-                    </td>
+                    <td><input type="number" name="capacity" min="1" value = "1"></td>
                 </tr>
 
                 <!-- dammy error message -->
                 <tr class="room_name_error">
-                <td colspan="2"  class="error"> </td>
+                <td colspan="2"  class="error"></td>
                 </tr>
 
                 <tr class="reservation_payment">
@@ -99,17 +76,13 @@ if ($_SESSION['user_auth'] == false) {
                         <div><input type="radio" name="peyment" value="3">クレジットカード（現地支払い）</div>
                     </td>
                 </tr>
-
-
-
             </table>
 
         <!-- dammy error message -->
-                <div class="date_error"> </div>
+                <div class="date_error"></div>
 
             <p class="submit_form"><button type="submit" value="予約">予約</button></p>
         </form>
-
     </main>
 </body>
 

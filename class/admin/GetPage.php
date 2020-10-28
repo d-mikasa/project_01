@@ -1,47 +1,39 @@
 <?php
 function getPage()
 {
-//URIを取得する（hoge_hoge.php)
+    //URIを取得する（hoge_hoge.php)
     $url = basename($_SERVER['REQUEST_URI']);
 
     // ' 拡張子' （＋GETの値）から前の文字列を取得
     $str = strrpos($url, '.php');
     $temp = substr($url, 0, $str);
 
-    //配列内に_区切りで格納（最大要素数２つ）
-    $content =  explode("_", $temp,2);
+    //URIを分割して格納。content['1']は、_が存在しなかった場合作成しない。
+    $hoge  = strrpos($temp, '_');
+    $content['0'] = strstr($temp, '_') ? substr($temp, 0, $hoge) : substr($temp, -$hoge);
+    strstr($temp, '_') ? $content['1'] = substr($temp, $hoge - strlen($temp) + 1) : '';
 
-    //urlの内容
-    $name['room'] = '部屋';
-    $name['top'] = 'トップページ';
-    $name['list'] = '一覧';
-    $name['conf'] = '確認画面';
-    $name['done'] = '完了画面';
+    //ジャンルを格納
+    $genre = array(
+        'room' => '部屋',
+        'top' => 'トップページ'
+    );
+
+    //内容を格納
+    $name = array(
+        'list' => '一覧',
+        'conf' => '確認画面',
+        'done' => '完了画面',
+        'edit' => '画面'
+    );
 
     //新規作成か編集かを判断する
-    if (!empty($_GET['mode'])) {
-        switch ($_GET['mode']) {
-            case 'edit':
-                $name['edit'] = '編集';
-                break;
-            case 'create':
-                $name['edit'] = '新規作成';
-                break;
-            default:
-                $name['edit'] = '編集';
-                break;
-        }
-    } else {
-        $name['edit'] = '編集';
-    }
-
-    //top.phpがあるため、forでreplaceする
-for ($i = 0; $i <  count($content); $i++) {
-    $disp_page[$i] =  str_replace($content[$i],$name[$content[$i]],$content[$i]);
-}
-
-    //配列の結合
-    $disp_page =  implode("", $disp_page);
+    $get_para = array(
+        'edit' => '編集',
+        'create' => '作成'
+    );
+    
+    $disp_page = $genre[$content['0']] . (isset($_GET['mode']) ? $get_para[$_GET['mode']] : '') . (isset($content['1']) ? $name[$content['1']] : '');
 
     echo '<button class = "title_btn" disabled>' . $disp_page . '</button>';
 }

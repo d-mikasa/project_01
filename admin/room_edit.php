@@ -46,7 +46,7 @@ if ($view == 0) {
 ///////////////////*画像ファイルを処理する*/////////////////////////
 if (!empty($_FILES)) {
     $error = $Room->updateRoomImg($_GET['id']);
-}else{
+} else {
     $error ='';
 }
 ?>

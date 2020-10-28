@@ -20,8 +20,6 @@ require_once('admin/AdminUser.php');
 require_once('admin/Room.php');
 require_once('admin/GetPage.php');
 
-
-
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('UserLogin.php');
 require_once('Rsv.php');

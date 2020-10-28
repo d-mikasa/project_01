@@ -10,25 +10,38 @@ if (empty($_SESSION['auth'])) {
 $Room = new Room;
 $sortRoomList = $Room->sortRoomList();
 
+$delete_flg = $Room->deleteMessage();
+
+$error_delete = '';
+if ($delete_flg == 'not change') {
+    if ($delete_flg == 1) {
+        $error_delete = '削除に失敗しました。';
+    }
+}
+
+echo '<pre>';
+print_r($delete_flg);
+echo '</pre>';
+
 /*
 押されたボタンの種類別に処理する
 */
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Room = new Room();
-    $Room->deleteRoom($_POST['delete']);
+    $error_delete = $Room->deleteRoom($_POST['delete']);
     //重複削除が起きないようにリダイレクト
+
     header('Location: room_list.php');
+    exit();
 }
 
 if (!empty($_GET['sort'])) {
 
-            //-までの文字数カウント
-            $str = strrpos($_GET['sort'], '-');
-
-            $content = substr($_GET['sort'], $str + 1);
-            $sort_order = substr($_GET['sort'],0,$str);
-
-            $sortRoomList = $Room->sortRoomList($sort_order, $content);
+    //-までの文字数カウント
+    $str = strrpos($_GET['sort'], '-');
+    $content = substr($_GET['sort'], $str + 1);
+    $sort_order = substr($_GET['sort'],0,$str);
+    $sortRoomList = $Room->sortRoomList($sort_order, $content);
 
 }
 ?>
@@ -37,6 +50,8 @@ if (!empty($_GET['sort'])) {
 <?php require_once('parts/top.parts.php'); ?>
 
 <main>
+
+<?=$error_delete?>
 
     <!--
     並び替えのボタン群

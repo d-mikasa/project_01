@@ -5,9 +5,10 @@ require_once('class/Library.php');
 // セッションに保存された値と一致する場合は正常なリクエストとして処理を行います
 if (isset($_POST["csrf_token"])&& $_POST["csrf_token"] !== $_SESSION['csrf_token']) {
     header('Location: login.php');
+    exit();
  }
 
-$pdo = new rsvUpdate();
+$pdo = new rsv();
 
 $insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
@@ -69,13 +70,8 @@ if (mb_send_mail($to, $title, $message, $header)) {
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/reservation.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
-</head>
+
+<?php require_once('rsv_parts/head_info.php');?>
 
 <body>
 <?= getNav('done') ?>

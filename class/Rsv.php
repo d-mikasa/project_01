@@ -1,6 +1,6 @@
 <?php
 
-class rsvUpdate extends Model
+class rsv extends Model
 {
     public function room() //プルダウンリストに表示する部屋を検索する
     {

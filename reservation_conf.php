@@ -1,20 +1,21 @@
 <?php
 require_once('class/Library.php');
-$pdo = new rsvUpdate();
+$rsv = new rsv();
 
+//トークンの生成
 $toke_byte = openssl_random_pseudo_bytes(16);
 $csrf_token = bin2hex($toke_byte);
 // 生成したトークンをセッションに保存します
 $_SESSION['csrf_token'] = $csrf_token;
 
 //プルダウンの内容を取得する
-$pull_down_list = $pdo->room();
+$pull_down_list = $rsv->room();
 
 //予約状況を確認するための配列を取得する
-$reservation_check = $pdo->reservation_check($_POST['detail_id']);
+$reservation_check = $rsv->reservation_check($_POST['detail_id']);
 
 //選択した部屋の内容を取得する
-$room_detail = $pdo->room_detail($_POST['detail_id']);
+$room_detail = $rsv->room_detail($_POST['detail_id']);
 
 //エラー内容変数の初期化
 $error = [];
@@ -85,6 +86,10 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         }
     }
 }
+
+console_log($_POST);
+
+
     //宿泊人数のバリデーション
     if (empty($_POST['capacity'])) {
         $error['capacity'] = '宿泊人数が空欄です';
@@ -96,25 +101,12 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
             }
         }
     }
-
     console_log($reservation_check);
 ?>
 <!doctype html>
 <html lang="ja">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>CICACU</title>
-    <meta name="description" content="CICACU(シカク)">
-    <meta name="keywords" content="CICACU,cafe饗茶庵,鹿沼,ゲストハウス,民宿">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <!--スマホ用に見れるように-->
-    <meta name="robots" content="noindex,nofollow,noarchive">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.0/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="./css/reservation.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-</head>
+<?php require_once('rsv_parts/head_info.php');?>
 
 <body class="background_conf"> <?php if (empty($error)) : ?>
     <?= getNav('conf') ?>
@@ -124,18 +116,18 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
 
-            <!--実際に送信する情報群-->
-            <input type="hidden" name="csrf_token" value="<?=$csrf_token?>">
+                <!--トークンを送信-->
+                <input type="hidden" name="csrf_token" value="<?=$csrf_token?>">
                 <!--実際に送信する情報群-->
-                <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>">
-                <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>">
-                <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>">
-                <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>">
-                <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>">
-                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>">
-                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>">
-                <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>">
-                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>">
+                <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>"><!-- 部屋番号 -->
 
                 <div class="titles">ご予約内容確認</div>
                 <table class = "conf_check_table">
