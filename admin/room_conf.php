@@ -24,9 +24,6 @@ $room_detail = $_POST['set_data']['detail'];
         </tr>
     </table>
 
-
-
-
 <?php foreach($room_detail as $key => $value):?>
         <input type="hidden" name="set_data[detail][<?=$key?>][capacity]" value="<?=$value['capacity']?>">
         <input type="hidden" name="set_data[detail][<?=$key?>][price]" value="<?=$value['price']?>">

@@ -14,12 +14,12 @@ if (empty($_POST['set_data'])) {
 }
 
 $Room = new Room;
-$message = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode']);
+$updateRoom = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode']);
 
 ?>
 
 <!-- ヘッダー部分読み込み -->
-<?php require_once('parts/top.parts.php'); ?>
-<div class="end"><?=$message?></div>
+<?php require_once('parts/top.parts.php');?>
+<div class="end"><?=$updateRoom?></div>
 <!-- フッター部分読み込み -->
-<?php require_once('parts/footer.parts.php'); ?>
+<?php require_once('parts/footer.parts.php');?>

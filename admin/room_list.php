@@ -9,16 +9,15 @@ if (empty($_SESSION['auth'])) {
 //roomテーブルの情報を全て取得
 $Room = new Room;
 
-
 /*
 押されたボタンの種類別に処理する
 */
 if (!empty($_POST['delete'])) {
     $Room = new Room();
-    $error_delete = $Room->deleteRoom($_POST['delete']);
+    $deleteRoom = $Room->deleteRoom($_POST['delete']);
     //重複削除が起きないようにリダイレクト
 } else {
-    $error_delete = '';
+    $deleteRoom = '';
 }
 
 //ソート機能の値を設定する
@@ -42,9 +41,7 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
 <?php require_once('parts/top.parts.php');?>
 
 <main>
-
-    <?=$error_delete?>
-
+    <?=$deleteRoom?>
     <!--
     並び替えのボタン群
     -->
@@ -78,7 +75,6 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
                     <button type="submit" value="desc-updated_at" name="sort" id="down">▼</button>
                 </td>
     </form>
-
 
     <!--
         リスト・新規作成ボタン・削除ボタン・編集ボタン

@@ -36,6 +36,7 @@ class Room extends Model
 			$stmt = $this->dbh->prepare($sql);
 			$stmt->execute([$id]);
 
+            //SQLにて操作されたカラム数を取得する
 			$count = $stmt->rowCount();
 
 			//room_detailの中からroom_id(roomテーブルのidカラム)が一致するものを削除する
@@ -87,7 +88,7 @@ class Room extends Model
 		return $result;
 	}
 
-	public function getgetRoom($id)
+	public function getRoomEditMerge($id)
 	{
 		//connectメソッドにアクセス
 		parent::connect();
@@ -215,9 +216,7 @@ class Room extends Model
 		} catch (PDOException $e) { //PDOエラーの場合
 			//処理をロールバック
 			$this->dbh->rollback();
-			$message = 'サーバーとの接続に失敗しました。';
-			console_log($e);
-			return $message;
+			return 'サーバーとの接続に失敗しました。';
 		}
 	}
 
@@ -246,17 +245,18 @@ class Room extends Model
 
 		$sql =
 			'SELECT ' .
-			'* ' .
+                '* ' .
 			'FROM ' .
-			'room ' .
+                'room ' .
 			'WHERE ' .
-			'delete_flg = FALSE ' .
-			'ORDER BY CASE ' .
-			'WHEN ' . $col . ' IS NULL ' .
-			'THEN "2" ' .
-			'WHEN ' . $col . ' = \'\' ' .
-			'THEN \'1\' ' .
-			'ELSE \' 0\' ' .
+                'delete_flg = FALSE ' .
+            'ORDER BY ' .
+            'CASE ' .
+                'WHEN ' . $col . ' IS NULL ' .
+                    'THEN "2" ' .
+                'WHEN ' . $col . ' = \'\' ' .
+                    'THEN \'1\' ' .
+            'ELSE \' 0\' ' .
 			'END, ' .
 			$col . ' ' . $sort;
 
@@ -317,12 +317,10 @@ class Room extends Model
 			exec('sudo chmod 755 ' . self::FULL_PATH);
 		} catch (PDOException $e) { //DBの接続に失敗した場合
 			$this->dbh->rollback();
-			console_log($e);
 			return 'ファイルのアップロードに失敗しました';
 		} catch (Exception $e) { // ファイル送信時のエラー
 			// 処理の巻き戻し
 			$this->dbh->rollback();
-			console_log($e);
 			return 'ファイルのアップロードに失敗しました';
 		}
 		$this->dbh->commit();

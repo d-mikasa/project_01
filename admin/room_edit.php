@@ -13,9 +13,9 @@ if (empty($_SESSION['auth'])) {
 if ($_GET['mode'] == 'edit') {
     //配列に値をいれる
     $Room = new Room();
-    $room_info = $Room->getgetRoom($_GET['id']);
+    $grem = $Room->getRoomEditMerge($_GET['id']);
 
-    $tmp = $_POST + $room_info;
+    $tmp = $_POST + $grem;
     $name = $tmp['set_data']['name'];
     $detail = $tmp['set_data']['detail'];
     //配列の個数を表示領域に設定
@@ -103,7 +103,6 @@ if (!empty($_FILES)) {
                 <p id="doneImage"><input type="submit" value="画像を更新" onclick="return btn_check()"></p>
             </div>
         </form>
-
     <?php endif; ?>
 
 </main>
