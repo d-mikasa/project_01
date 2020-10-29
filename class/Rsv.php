@@ -1,13 +1,12 @@
 <?php
-
-class rsv extends Model
+class Rsv extends Model
 {
-    public function room() //プルダウンリストに表示する部屋を検索する
+    public function getPullDownList() //プルダウンリストに表示する部屋を検索する
     {
         parent::connect();
         $sql = 'SELECT room_detail.id, room.name, room_detail.capacity, room_detail.price, room_detail.remarks FROM room_detail JOIN room ON room_detail.room_id = room.id';
         $stmt = $this->dbh->prepare($sql);
-        $stmt->execute([]);
+        $stmt->execute();
         $result = $stmt->fetchAll();
 
         if (empty($result)) {
@@ -21,30 +20,33 @@ class rsv extends Model
         try {
             parent::connect();
             $sql =
-            'SELECT'.
-            ' reservation.id,'.
-            ' reservation.user_id,'.
-            ' reservation.room_id,'.
-            ' reservation.room_detail_id,'.
-            ' reservation.room_detail_name,'.
-            ' reservation.number,'.
-            ' reservation.total_price,'.
-            ' reservation.status,'.
-            ' reservation.created_at,'.
-            ' reservation.updated_at,'.
-            ' reservation.delete_flg,'.
-            ' reservation_detail.price AS "reservation_price",'.
-            ' GROUP_CONCAT(reservation_detail.date) AS "date",'.
-            ' room.name AS "room_name",'.
-            ' room_detail.capacity,'.
-            ' room_detail.price,'.
-            ' room_detail.name'.
-            ' FROM reservation'.
-            ' INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id'.
-            ' INNER JOIN room ON reservation.room_id = room.id'.
-            ' INNER JOIN room_detail ON reservation.room_detail_id = room_detail.id'.
-            ' WHERE  reservation.room_detail_id = ?'.
-            ' GROUP BY reservation.id';
+                'SELECT' .
+                ' reservation.id,' .
+                ' reservation.user_id,' .
+                ' reservation.room_id,' .
+                ' reservation.room_detail_id,' .
+                ' reservation.room_detail_name,' .
+                ' reservation.number,' .
+                ' reservation.total_price,' .
+                ' reservation.status,' .
+                ' reservation.created_at,' .
+                ' reservation.updated_at,' .
+                ' reservation.delete_flg,' .
+                ' reservation_detail.price AS "reservation_price",' .
+                ' GROUP_CONCAT(reservation_detail.date) AS "date",' .
+                ' room.name AS "room_name",' .
+                ' room_detail.capacity,' .
+                ' room_detail.price,' .
+                ' room_detail.name' .
+                ' FROM' .
+                ' reservation' .
+                ' INNER JOIN reservation_detail ON reservation.id = reservation_detail.reservation_id' .
+                ' INNER JOIN room ON reservation.room_id = room.id' .
+                ' INNER JOIN room_detail ON reservation.room_detail_id = room_detail.id' .
+                ' WHERE' .
+                ' reservation.room_detail_id = ?' .
+                ' GROUP BY' .
+                ' reservation.id';
 
             $stmt = $this->dbh->prepare($sql);
             $stmt->execute([$id]);
@@ -62,7 +64,7 @@ class rsv extends Model
     }
 
 
-    public function room_detail($id)//選択した部屋の情報を取得
+    public function room_detail($id) //選択した部屋の情報を取得
     {
         try {
             parent::connect();
@@ -180,5 +182,15 @@ class rsv extends Model
         $return_list['total_price'] = $total_price;
         $return_list['stay_total'] = $stay_total;
         return $return_list;
+    }
+
+    public function getToken()
+    {
+        //トークンの生成
+        $toke_byte = openssl_random_pseudo_bytes(16);
+        $csrf_token = bin2hex($toke_byte);
+        // 生成したトークンをセッションに保存します
+        $_SESSION['csrf_token'] = $csrf_token;
+        return $csrf_token;
     }
 }

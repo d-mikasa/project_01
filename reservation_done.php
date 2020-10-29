@@ -1,16 +1,17 @@
 <?php
 require_once('class/Library.php');
 
-// POSTでcsrf_tokenの項目名でパラメーターが送信されていること且つ、
-// セッションに保存された値と一致する場合は正常なリクエストとして処理を行います
-if (isset($_POST["csrf_token"])&& $_POST["csrf_token"] !== $_SESSION['csrf_token']) {
+// POSTでトークンが来ていないか、セッションに保存した値とPOSTがマッチしていなければ飛ばすぞ
+if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_token'])) {
     header('Location: login.php');
     exit();
  }
+//sessionに保存してあるトークンを削除
+    unset($_SESSION["csrf_token"]);
 
-$pdo = new rsv();
+$rsv = new Rsv();
 
-$insert_date = $pdo->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
+$insert_date = $rsv->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
 $total_price = $insert_date['total_price'];
 

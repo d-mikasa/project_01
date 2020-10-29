@@ -1,15 +1,9 @@
 <?php
 require_once('class/Library.php');
-$rsv = new rsv();
-
-//トークンの生成
-$toke_byte = openssl_random_pseudo_bytes(16);
-$csrf_token = bin2hex($toke_byte);
-// 生成したトークンをセッションに保存します
-$_SESSION['csrf_token'] = $csrf_token;
+$rsv = new Rsv();
 
 //プルダウンの内容を取得する
-$pull_down_list = $rsv->room();
+$pull_down_list = $rsv->getPullDownList();
 
 //予約状況を確認するための配列を取得する
 $reservation_check = $rsv->reservation_check($_POST['detail_id']);
@@ -117,7 +111,7 @@ console_log($_POST);
             <form action="reservation_done.php" method="post">
 
                 <!--トークンを送信-->
-                <input type="hidden" name="csrf_token" value="<?=$csrf_token?>">
+                <input type="hidden" name="csrf_token" value="<?=$rsv->getToken()?>">
                 <!--実際に送信する情報群-->
                 <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>"><!-- 部屋番号 -->
                 <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>"><!-- 部屋番号 -->

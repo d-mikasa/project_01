@@ -1,7 +1,7 @@
 <?php
 require_once('class/Library.php');
 $Room = new Room;
-$sortRoomList = $Room->sortRoomList();
+$sortRoomList = $Room->sortRoomList('asc','id');
 
 ?>
 <!doctype html>

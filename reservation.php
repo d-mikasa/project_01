@@ -1,8 +1,8 @@
 <?php
 require_once('class/Library.php');
-$rsv = new rsv();
+$rsv = new Rsv();
 
-$pull_down_list = $rsv->room();
+$pull_down_list = $rsv->getPullDownList();
 
 if ($_SESSION['user_auth'] == false) {
     header('Location: login.php');
