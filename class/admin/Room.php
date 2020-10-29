@@ -88,20 +88,20 @@ class Room extends Model
 		return $result;
 	}
 
-	public function getRoomEditMerge($id)
+	public function getEditRoom($id)
 	{
 		//connectメソッドにアクセス
 		parent::connect();
 		$sql = 'SELECT name FROM room WHERE id = ? AND delete_flg = FALSE';
 		$detail = $this->dbh->prepare($sql);
 		$detail->execute([$id]);
-		$result['set_data']['name'] = $detail->fetch(PDO::FETCH_COLUMN);
+		$result['name'] = $detail->fetch(PDO::FETCH_COLUMN);
 
 
 		$sql = 'SELECT capacity,price,remarks FROM room_detail WHERE room_id = ?';
 		$detail = $this->dbh->prepare($sql);
 		$detail->execute([$id]);
-		$result['set_data']['detail'] = $detail->fetchAll(PDO::FETCH_ASSOC);
+		$result['detail'] = $detail->fetchAll(PDO::FETCH_ASSOC);
 
 
 		return $result;
@@ -128,7 +128,7 @@ class Room extends Model
         room_detailの初期化処理
         */
 		//connectメソッドにアクセス
-		parent::connect();
+        parent::connect();
 
 		$name = $set_data['name'];
 		$detail = $set_data['detail'];

@@ -9,18 +9,25 @@ function getPage()
     $temp = substr($url, 0, $str);
 
     //URIを分割して格納。content['1']は、_が存在しなかった場合作成しない。
-    $hoge  = strrpos($temp, '_');
-    $content['0'] = strstr($temp, '_') ? substr($temp, 0, $hoge) : substr($temp, -$hoge);
-    strstr($temp, '_') ? $content['1'] = substr($temp, $hoge - strlen($temp) + 1) : '';
+    //_までの文字数を獲得
+    $str_cnt  = strrpos($temp, '_');
+
+    //genreの値を取得する
+    $genre = strstr($temp, '_') ? substr($temp, 0, $str_cnt) : substr($temp, -$str_cnt);
+
+    //tempに_があれば処理を行う
+    if(strstr($temp, '_') != FALSE){
+        $name = substr($temp, $str_cnt- strlen($temp) + 1);
+    }
 
     //ジャンルを格納
-    $genre = array(
+    $genre_list = array(
         'room' => '部屋',
         'top' => 'トップページ'
     );
 
     //内容を格納
-    $name = array(
+    $name_list = array(
         'list' => '一覧',
         'conf' => '確認画面',
         'done' => '完了画面',
@@ -28,12 +35,10 @@ function getPage()
     );
 
     //新規作成か編集かを判断する
-    $get_para = array(
+    $param_list = array(
         'edit' => '編集',
         'create' => '作成'
     );
 
-    $disp_page = $genre[$content['0']] . (isset($_GET['mode']) ? $get_para[$_GET['mode']] : '') . (isset($content['1']) ? $name[$content['1']] : '');
-
-    echo '<button class = "title_btn" disabled>' . $disp_page . '</button>';
+    echo '<button class = "title_btn" disabled>' . $genre_list[$genre] . (isset($_GET['mode']) ? $param_list[$_GET['mode']] : '') . (isset($name) ? $name_list[$name] : '') . '</button>';
 }

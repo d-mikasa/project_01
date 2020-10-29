@@ -8,18 +8,18 @@ if (empty($_SESSION['auth'])) {
 }
 
 //EDITからURL直打ちで来られた時の対処
-if (empty($_POST['set_data'])) {
+if (empty($_POST['name']) and empty($_POST['detail'])) {
     header('Location: room_edit.php');
     exit();
 }
 
 $Room = new Room;
-$updateRoom = $Room->updateRoom($_GET['id'], $_POST['set_data'], $_GET['mode']);
+$updateRoom = $Room->updateRoom($_GET['id'], $_POST, $_GET['mode']);
 
 ?>
 
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php');?>
-<div class="end"><?=$updateRoom?></div>
+<div class="end"><?= $updateRoom?></div>
 <!-- フッター部分読み込み -->
 <?php require_once('parts/footer.parts.php');?>
