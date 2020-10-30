@@ -1,19 +1,15 @@
 <?php
 require_once('class/Library.php');
-$rsv = new Rsv();
-
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
+$Rsv = new Rsv();
 
 //プルダウンの内容を取得する
-$pull_down_list = $rsv->getPullDownList();
+$pull_down_list = $Rsv->getPullDownList();
 
 //予約状況を確認するための配列を取得する
-$reservation_check = $rsv->reservation_check($_POST['detail_id']);
+$reservation_check = $Rsv->reservation_check($_POST['detail_id']);
 
 //選択した部屋の内容を取得する
-$room_detail = $rsv->room_detail($_POST['detail_id']);
+$room_detail = $Rsv->room_detail($_POST['detail_id']);
 
 //エラー内容変数の初期化
 $error = [];
@@ -37,7 +33,6 @@ if (empty($_POST['check_out'])) {
     }
 }
 
-
 //日付の整合性に関するバリデーション
 if (empty($error['check_in']) and empty($error['check_out'])) {
     //チェックイン・チェックアウトが入力されていた場合
@@ -55,30 +50,29 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
         $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
     }
 
+
+    //チェックインとチェックアウトの日付を獲得、その後にSQL側で範囲の指定を行う。
     if (empty($error['check_in']) and empty($error['check_out'])) {
         // 期間内の日付をすべて取得
         for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
             $year = substr($i, 0, 4);
             $month = substr($i, 4, 2);
             $day = substr($i, 6, 2);
-
             if (checkdate($month, $day, $year)) {
-                $days[] = date('Y-m-d', strtotime($i));
+                $days[] = date('Y-m-d H:i:s.u', strtotime($i));
             }
         }
 
         //予約情報がなければ「予約済みかチェックする」処理をしない
         if ($reservation_check != 'not reservation room') {
             foreach ($reservation_check as $value) {
-                $ch_days = explode(',', $value['date']);
-                console_log($ch_days);
-                //日付が予約済みかチェックする
-                for ($i = 0; $i < count($days); $i++) {
-                    for ($k = 0; $k < count($ch_days); $k++) {
-                        if (date('d-m-Y', strtotime($ch_days[$k])) == date('d-m-Y', strtotime($days[$i]))) {
-
-                            $error['ather'] = 'すでに予約済みの日程が含まれます';
-                        }
+                //内容が同じ配列がない場合、UserIDと比較してエラー文を格納
+                $result = array_intersect($days, explode(',', $value['date']));
+                if (!empty($result)) {
+                    if ($_SESSION['user_auth'] == $value['user_id']) {
+                        $error['ather'] = 'お客様はすでにご予約されています。';
+                    } else {
+                        $error['ather'] = '満室のためご案内できません。日付か部屋を変更してください';
                     }
                 }
             }
@@ -110,20 +104,18 @@ if (empty($_POST['capacity'])) {
         -->
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
-
-
                 <!--トークンを送信-->
-                <input type="hidden" name="csrf_token" value="<?= $rsv->getToken() ?>">
+                <input type="hidden" name="csrf_token" value="<?= $Rsv->getToken() ?>">
+
                 <!--実際に送信する情報群-->
                 <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>"><!-- 詳細番号 -->
                 <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>"><!-- チェックイン日 -->
                 <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>"><!-- チェックアウト日 -->
                 <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>"><!-- 宿泊人数 -->
                 <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>"><!-- 支払い方法 -->
-                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>"><!-- 値段 -->
-                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>"><!-- 詳細名 -->
-                <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>"><!-- 部屋名 -->
+                <input type="hidden" name="room_detail[room_id]" value="<?= $room_detail['id']?>">
+                <input type="hidden" name="room_detail[name]" value="<?= $room_detail['name']?>">
+                <input type="hidden" name="room_detail[price]" value="<?= $room_detail['price']?>">
 
                 <div class="titles">ご予約内容確認</div>
                 <table class="conf_check_table">

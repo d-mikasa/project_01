@@ -113,10 +113,21 @@ class Rsv extends Model
 
      *@return $return_list メールを送信するための情報群
      */
-    public function into_reservation($detail_id, $check_in, $check_out, $capacity, $peyment, $price, $name = NULL, $room_id)
+    // public function into_reservation($detail_id, $check_in, $check_out, $capacity, $peyment, $price, $name = NULL, $room_id)
+    public function into_reservation($set_data)
     {
         parent::connect();
         $pdo = $this->dbh;
+
+        //変数へ落とし込む
+        $detail_id = $set_data['detail_id'];
+        $check_in = $set_data['check_in'];
+        $check_out = $set_data['check_out'];
+        $capacity = $set_data['capacity'];
+        $peyment = $set_data['peyment'];
+        $room_id = $set_data['room_detail']['room_id'];
+        $name = $set_data['room_detail']['name'];
+        $price = $set_data['room_detail']['price'];
 
         //宿泊数をカウント
         for ($i = date('Ymd', strtotime($check_in)); $i < date('Ymd', strtotime($check_out)); $i++) {

@@ -6,12 +6,12 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
     header('Location: login.php');
     exit();
  }
-//sessionに保存してあるトークンを削除
+// sessionに保存してあるトークンを削除
     unset($_SESSION["csrf_token"]);
 
 $rsv = new Rsv();
-
-$insert_date = $rsv->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
+$insert_date = $rsv->into_reservation($_POST);
+// $insert_date = $rsv->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
 
 $total_price = $insert_date['total_price'];
 
@@ -35,7 +35,7 @@ $message = <<<EOD
 チェックイン日時：$_POST[check_in]
 チェックアウト日時：$_POST[check_out]
 
-部屋タイプ：$_POST[room_name]
+部屋タイプ：{$_POST['room_detail']['name']}
 
 チェックイン可能時間：16:00～23:00
 チェックアウト時間：10:00
@@ -48,7 +48,7 @@ $message = <<<EOD
 
 -----------------------------------------------------------------------
 【料金明細】
-料金            ：$_POST[price] 円× $_POST[capacity] 人
+料金            ：{$_POST['room_detail']['price']} 円× $_POST[capacity] 人
 宿泊日数    ：$insert_date[stay_total] 日
 合計            ：$insert_date[total_price] 円（税込・サービス料別）
 EOD;
@@ -60,8 +60,8 @@ $header .= 'Return-Path: d.mikasa@ebacorp.jp';
 mb_language("Japanese");
 mb_internal_encoding("UTF-8");
 
-//メール送信メソッド
-if (mb_send_mail($to, $title, $message, $header)) {
+// メール送信メソッド
+if(mb_send_mail($to, $title, $message, $header)) {
     $mail_info =  "ご登録頂いたメールアドレスに、確認メールを送信致しました";
 } else {
     $mail_info =  "メールの送信に失敗しました";
