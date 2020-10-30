@@ -11,13 +11,13 @@ if ($_GET['mode'] == 'edit') {
     編集の場合、DBから値を引っ張ってくる
     */
     $Room = new Room();
-    $edit_room = $Room->getEditRoom($_GET['id']);
+    $room_info = $Room->getEditRoom($_GET['id']);
 
 } else {
     /*
     新規作成の場合、空のカラムを指定する
     */
-    $edit_room = array(
+    $room_info = array(
         'name' => '',
         'detail' => array(
             '0' => array(
@@ -30,7 +30,7 @@ if ($_GET['mode'] == 'edit') {
 
 }
 
-$tmp = $_POST + $edit_room;
+$tmp = $_POST + $room_info;
 $name = $tmp['name'];
 $detail = $tmp['detail'];
 $view = count($detail);
@@ -69,7 +69,6 @@ if (!empty($_FILES)) {
                 <td>料金</td>
                 <td>コメント</td>
             </tr>
-
             <?php for ($i = 1; $i <= $view; $i++) :?>
                 <tr>
                     <td>部屋[<?=$i?>]</td>
@@ -159,9 +158,7 @@ if (!empty($_FILES)) {
             document.getElementById('del_plan').style.visibility = "visible";
             document.getElementById('add_plan').style.visibility = "hidden";
         }
-
     }
-
 
     ////////////////////////////////*行を削除する処理*//////////////////////////////////
     function del_plan(obj) {
