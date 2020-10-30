@@ -11,13 +11,13 @@ if ($_GET['mode'] == 'edit') {
     編集の場合、DBから値を引っ張ってくる
     */
     $Room = new Room();
-    $getEditRoom = $Room->getEditRoom($_GET['id']);
+    $edit_room = $Room->getEditRoom($_GET['id']);
 
 } else {
     /*
     新規作成の場合、空のカラムを指定する
     */
-    $getEditRoom = array(
+    $edit_room = array(
         'name' => '',
         'detail' => array(
             '0' => array(
@@ -30,7 +30,7 @@ if ($_GET['mode'] == 'edit') {
 
 }
 
-$tmp = $_POST + $getEditRoom;
+$tmp = $_POST + $edit_room;
 $name = $tmp['name'];
 $detail = $tmp['detail'];
 $view = count($detail);
@@ -50,12 +50,10 @@ if (!empty($_FILES)) {
 }
 
 ?>
-
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php');?>
 <main>
     <form action="room_conf.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post">
-
         <!-- 部屋名を取得・表示する -->
         <table class="newcreate">
             <tr>
@@ -63,7 +61,6 @@ if (!empty($_FILES)) {
                 <td><input type="text" name="name[0]" value="<?=$name?>"></td>
             </tr>
         </table>
-
         <!--テーブルの表示-->
         <table class="roomedit_table" id='table'>
             <tr class="roomedit_title">
@@ -81,25 +78,20 @@ if (!empty($_FILES)) {
                     <td><textarea name="detail[<?=$i - 1?>][remarks]" cols="30" rows="10"><?=$detail[$i - 1]['remarks']?></textarea></td>
                 </tr>
             <?php endfor;?>
-
         </table>
         <div class="changebutton_group">
             <div id="add_plan">
                 <button type="button" onclick="add_plan('table')">プランを追加する</button>
             </div>
-
             <div id="del_plan">
                 <button type="button" onclick="del_plan('table')">プランを削除する</button>
             </div>
         </div>
         <p class="doneButton"><input type="submit" value="更新する"></p>
     </form>
-
     <div class="borderLine"></div>
-
     <!--編集を押した時のみ画像編集を表示する-->
     <?php if ($_GET['mode'] === 'edit') :?>
-
         <form action="room_edit.php?mode=<?=$_GET['mode']?>&id=<?=$_GET['id']?>" method="post" enctype="multipart/form-data">
             <div class="img_up">
                 <h2>画像の編集</h2>
@@ -110,11 +102,9 @@ if (!empty($_FILES)) {
             </div>
         </form>
     <?php endif;?>
-
 </main>
 <!-- フッター部分読み込み -->
 <?php require_once('parts/footer.parts.php');?>
-
 <script>
     ////////////////////////////////*画像をアップロードするかの確認*//////////////////////////////////
     function btn_check(btn, value = null) {

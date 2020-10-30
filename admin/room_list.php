@@ -14,10 +14,10 @@ $Room = new Room;
 */
 if (!empty($_POST['delete'])) {
     $Room = new Room();
-    $deleteRoom = $Room->deleteRoom($_POST['delete']);
+    $error_message = $Room->deleteRoom($_POST['delete']);
     //重複削除が起きないようにリダイレクト
 } else {
-    $deleteRoom = '';
+    $error_message = '';
 }
 
 //ソート機能の値を設定する
@@ -41,7 +41,7 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
 <?php require_once('parts/top.parts.php');?>
 
 <main>
-    <?=$deleteRoom?>
+    <?=$error_message?>
     <!--
     並び替えのボタン群
     -->
@@ -53,7 +53,6 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
                     <button type="submit" value="asc-id" name="sort" id="up">▲</button>
                     <button type="submit" value="desc-id" name="sort" id="down">▼</button>
                 </td>
-
                 <td class="list_img">
                     画像
                 </td>
@@ -62,20 +61,17 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
                     <button type="submit" value="asc-name" name="sort" id="up">▲</button>
                     <button type="submit" value="desc-name" name="sort" id="down">▼</button>
                 </td>
-
                 <td class="list_created_at">
                     登録日時
                     <button type="submit" value="asc-created_at" name="sort" id="up">▲</button>
                     <button type="submit" value="desc-created_at" name="sort" id="down">▼</button>
                 </td>
-
                 <td class="list_updated_at">
                     更新
                     <button type="submit" value="asc-updated_at" name="sort" id="up">▲</button>
                     <button type="submit" value="desc-updated_at" name="sort" id="down">▼</button>
                 </td>
     </form>
-
     <!--
         リスト・新規作成ボタン・削除ボタン・編集ボタン
     -->
@@ -102,7 +98,6 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
         </table>
     </form>
 </main>
-
 <script>
     function btn_check() {
         var res = confirm("削除してもよろしいですか？");
@@ -115,6 +110,5 @@ $sortRoomList = $Room->sortRoomList($sort_order, $content);
         }
     }
 </script>
-
 <!-- フッター部分読み込み -->
 <?php require_once('parts/footer.parts.php');?>

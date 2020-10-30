@@ -21,7 +21,7 @@ class Room extends Model
 	 *roomとroom_detailの中からroom_id(id)が引数と一致するものを削除する
 	 *
 	 *@param $id roomテーブルのid
-	 *@return なし
+	 *@return $message 処理が成功したかどうかのメッセージ
 	 */
 
 	public function deleteRoom($id)

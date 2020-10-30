@@ -14,12 +14,12 @@ if (empty($_POST['name']) and empty($_POST['detail'])) {
 }
 
 $Room = new Room;
-$updateRoom = $Room->updateRoom($_GET['id'], $_POST, $_GET['mode']);
+$message = $Room->updateRoom($_GET['id'], $_POST, $_GET['mode']);
 
 ?>
 
 <!-- ヘッダー部分読み込み -->
 <?php require_once('parts/top.parts.php');?>
-<div class="end"><?= $updateRoom?></div>
+<div class="end"><?= $message?></div>
 <!-- フッター部分読み込み -->
 <?php require_once('parts/footer.parts.php');?>

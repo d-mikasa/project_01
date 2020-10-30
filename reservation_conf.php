@@ -2,6 +2,10 @@
 require_once('class/Library.php');
 $rsv = new Rsv();
 
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
 //プルダウンの内容を取得する
 $pull_down_list = $rsv->getPullDownList();
 
@@ -19,7 +23,7 @@ $error = [];
 if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日時が空欄です';
 } else {
-    if (strtotime($_POST['check_in']) < time()) {
+    if (strtotime($_POST['check_in']) < strtotime("-1 day")) {
         $error['check_in'] = 'チェックイン日時が過去を指定しています';
     }
 }
@@ -28,10 +32,11 @@ if (empty($_POST['check_in'])) {
 if (empty($_POST['check_out'])) {
     $error['check_out'] = 'チェックアウト日時が空欄です';
 } else {
-    if (strtotime($_POST['check_out']) < time()) {
+    if (strtotime($_POST['check_out']) < strtotime("-1 day")) {
         $error['check_out'] = 'チェックアウト日時が過去を指定しています';
     }
 }
+
 
 //日付の整合性に関するバリデーション
 if (empty($error['check_in']) and empty($error['check_out'])) {
@@ -81,50 +86,47 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     }
 }
 
-console_log($_POST);
-
-
-    //宿泊人数のバリデーション
-    if (empty($_POST['capacity'])) {
-        $error['capacity'] = '宿泊人数が空欄です';
-    } else {
-        //部屋詳細から該当の宿泊人数のプランがあるかを検索する
-        if ($_POST['capacity'] != $room_detail['capacity']) {
-            if ($_POST['capacity'] > $room_detail['capacity']) {
-                $error['capacity'] = '宿泊人数が多いです。';
-            }
+//宿泊人数のバリデーション
+if (empty($_POST['capacity'])) {
+    $error['capacity'] = '宿泊人数が空欄です';
+} else {
+    //部屋詳細から該当の宿泊人数のプランがあるかを検索する
+    if ($_POST['capacity'] != $room_detail['capacity']) {
+        if ($_POST['capacity'] > $room_detail['capacity']) {
+            $error['capacity'] = '宿泊人数が多いです。';
         }
     }
-    console_log($reservation_check);
+}
 ?>
 <!doctype html>
 <html lang="ja">
 
-<?php require_once('rsv_parts/head_info.php');?>
+<?php require_once('rsv_parts/head_info.php'); ?>
 
 <body class="background_conf"> <?php if (empty($error)) : ?>
-    <?= getNav('conf') ?>
+        <?= getNav('conf') ?>
         <!--
         エラーが無く、送信することが可能な画面
         -->
         <main class="reservation_main">
             <form action="reservation_done.php" method="post">
 
+
                 <!--トークンを送信-->
-                <input type="hidden" name="csrf_token" value="<?=$rsv->getToken()?>">
+                <input type="hidden" name="csrf_token" value="<?= $rsv->getToken() ?>">
                 <!--実際に送信する情報群-->
-                <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="detail_id" value="<?= $_POST['detail_id'] ?>"><!-- 詳細番号 -->
+                <input type="hidden" name="check_in" value="<?= $_POST['check_in'] ?>"><!-- チェックイン日 -->
+                <input type="hidden" name="check_out" value="<?= $_POST['check_out'] ?>"><!-- チェックアウト日 -->
+                <input type="hidden" name="capacity" value="<?= $_POST['capacity'] ?>"><!-- 宿泊人数 -->
+                <input type="hidden" name="peyment" value="<?= $_POST['peyment'] ?>"><!-- 支払い方法 -->
+                <input type="hidden" name="price" value="<?= $room_detail['price'] ?>"><!-- 値段 -->
+                <input type="hidden" name="detail_name" value="<?= $room_detail['detail_name'] ?>"><!-- 詳細名 -->
                 <input type="hidden" name="room_id" value="<?= $room_detail['id'] ?>"><!-- 部屋番号 -->
-                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>"><!-- 部屋番号 -->
+                <input type="hidden" name="room_name" value="<?= $room_detail['name'] ?>"><!-- 部屋名 -->
 
                 <div class="titles">ご予約内容確認</div>
-                <table class = "conf_check_table">
+                <table class="conf_check_table">
                     <tr>
                         <th>部屋名</th>
                         <td> <?= $room_detail['name'] ?> </td>
@@ -159,11 +161,14 @@ console_log($_POST);
                     </tr>
                 </table>
 
-                <div class = "final_check">以上の内容でお間違い無いでしょうか？</div>
+                <div class="final_check">以上の内容でお間違い無いでしょうか？</div>
                 <p class="submit_form">
 
-                    <button type="submit" value="確認">確認</button>
-                    <button type="button" value="キャンセル" onclick="location.href='reservation.php'" >キャンセル</button>
+                    <!-- <button type="submit" value="確認">確認</button>
+                    <button type="button" value="キャンセル" onclick="location.href='reservation_conf.php'" >キャンセル</button> -->
+
+                    <button type="button" onclick="multipleaction('reservation_done.php')">確認</button>
+                    <button type="button" onclick="multipleaction('reservation.php')">キャンセル</button>
                 </p>
             </form>
         </main>
@@ -189,18 +194,18 @@ console_log($_POST);
                         <td>
                             <select name="detail_id" id="target">
                                 <?php foreach ($pull_down_list as $value) : ?>
-                                <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>>
-                                <?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)
-                                </option>
+                                    <option value="<?= $value['id'] ?>" <?php if (($_POST['detail_id']) == $value['id']) echo 'selected' ?>>
+                                        <?= $value['name'] ?> (<?= $value['capacity'] ?>名様 ¥<?= number_format($value['price']) ?>)
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
                     </tr>
 
                     <!--dummy-->
-                        <tr class="room_name_error">
-                            <td colspan="2" class="error"></td>
-                        </tr>
+                    <tr class="room_name_error">
+                        <td colspan="2" class="error"></td>
+                    </tr>
 
                     <!--チェックインを入力する場所-->
                     <tr class="reservation_check_in">
@@ -211,10 +216,10 @@ console_log($_POST);
                     </tr>
 
                     <!--チェックインエラー表示-->
-                        <!-- dammy error message -->
-                        <tr class="room_name_error">
-                            <td colspan="2" class="error"><?php if (!empty($error['check_in'])) echo $error['check_in'] ?></td>
-                        </tr>
+                    <!-- dammy error message -->
+                    <tr class="room_name_error">
+                        <td colspan="2" class="error"><?php if (!empty($error['check_in'])) echo $error['check_in'] ?></td>
+                    </tr>
 
 
 
@@ -226,9 +231,9 @@ console_log($_POST);
                     </tr>
 
                     <!-- チェックアウトのエラー -->
-                        <tr class="room_name_error">
-                            <td colspan="2" class="error"><?php if (!empty($error['check_out'])) echo $error['check_out'] ?></td>
-                        </tr>
+                    <tr class="room_name_error">
+                        <td colspan="2" class="error"><?php if (!empty($error['check_out'])) echo $error['check_out'] ?></td>
+                    </tr>
 
 
                     <tr>
@@ -238,9 +243,9 @@ console_log($_POST);
                         </td>
                     </tr>
 
-                        <tr class="room_name_error">
-                            <td colspan="2" class="error"> <?php if (!empty($error['capacity'])) echo $error['capacity'] ?> </td>
-                        </tr>
+                    <tr class="room_name_error">
+                        <td colspan="2" class="error"> <?php if (!empty($error['capacity'])) echo $error['capacity'] ?> </td>
+                    </tr>
 
 
                     <tr>
@@ -253,9 +258,18 @@ console_log($_POST);
                     </tr>
                 </table>
                 <div class="date_error"><?php if (!empty($error['ather'])) echo $error['ather'] ?></div>
-                <p class="submit_form"><button type="submit" >予約</p>
+                <p class="submit_form"><button type="submit">予約</p>
             </form>
         </main>
     </body> <?php endif; ?>
+
+<script>
+    function multipleaction(u) {
+        var f = document.querySelector("form");
+        var a = f.setAttribute("action", u);
+        document.querySelector("form").submit();
+    }
+</script>
+
 
 </html>
