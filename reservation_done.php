@@ -10,15 +10,16 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
     unset($_SESSION["csrf_token"]);
 
 $rsv = new Rsv();
-$insert_date = $rsv->into_reservation($_POST);
-// $insert_date = $rsv->into_reservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out'], $_POST['capacity'], $_POST['peyment'], $_POST['price'], $_POST['detail_name'], $_POST['room_id']);
+$insert_date = $rsv->updateReservation($_POST);
 
-$total_price = $insert_date['total_price'];
+//PDOエラーが発生したらメールを送らない。
+if ($insert_date != 'Error') {
+    $total_price = $insert_date['total_price'];
 
-//メール送信内容
-$to = $insert_date['user_mail'];
-$title = '予約完了のお知らせ';
-$message = <<<EOD
+    //メール送信内容
+    $to = $insert_date['user_mail'];
+    $title = '予約完了のお知らせ';
+    $message = <<<EOD
 -----------------------------------------------------------------------
 ※本メールは、自動的に配信しています。
 こちらのメールは送信専用のため、直接ご返信いただいてもお問い合わせには
@@ -35,7 +36,7 @@ $message = <<<EOD
 チェックイン日時：$_POST[check_in]
 チェックアウト日時：$_POST[check_out]
 
-部屋タイプ：{$_POST['room_detail']['name']}
+部屋タイプ：$_POST[name]
 
 チェックイン可能時間：16:00～23:00
 チェックアウト時間：10:00
@@ -48,39 +49,40 @@ $message = <<<EOD
 
 -----------------------------------------------------------------------
 【料金明細】
-料金            ：{$_POST['room_detail']['price']} 円× $_POST[capacity] 人
-宿泊日数    ：$insert_date[stay_total] 日
+料金            ：$_POST[price] 円× $_POST[capacity] 人
+宿泊日数    ：$insert_date[total_stay] 日
 合計            ：$insert_date[total_price] 円（税込・サービス料別）
 EOD;
 
-$header = 'From: d.mikasa@ebacorp.jp' . "\r\n";
-$header .= 'Return-Path: d.mikasa@ebacorp.jp';
+    $header = 'From: d.mikasa@ebacorp.jp' . "\r\n";
+    $header .= 'Return-Path: d.mikasa@ebacorp.jp';
 
+    mb_language("Japanese");
+    mb_internal_encoding("UTF-8");
 
-mb_language("Japanese");
-mb_internal_encoding("UTF-8");
-
-// メール送信メソッド
-if(mb_send_mail($to, $title, $message, $header)) {
-    $mail_info =  "ご登録頂いたメールアドレスに、確認メールを送信致しました";
-} else {
-    $mail_info =  "メールの送信に失敗しました";
-};
-
+    // メール送信メソッド
+    if (mb_send_mail($to, $title, $message, $header)) {
+        $mail_info =  "ご登録頂いたメールアドレスに、確認メールを送信致しました";
+    } else {
+        $mail_info =  "メールの送信に失敗しました";
+    };
+}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
-
-
 <?php require_once('rsv_parts/head_info.php');?>
-
 <body>
-<?= getNav('done') ?>
+    <?=getNav('done')?>
+    <?php if($insert_date == 'Error'):?>
+    <div>
+        エラーが発生しました。再度ご登録ください。
+    </div>
+    <?php else:?>
     <div>
     予約致しました。<br>
-お客様のメールアドレスへ、確認のメールをお送りいたしました。
+    お客様のメールアドレスへ、確認のメールをお送りいたしました。
     </div>
+    <?php endif;?>
     <a href="reservation.php">トップページへ戻る</a>
 </body>
-
 </html>
