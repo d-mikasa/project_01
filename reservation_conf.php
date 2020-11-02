@@ -74,7 +74,8 @@ if (empty($_POST['capacity'])) {
 <!doctype html>
 <html lang="ja">
 <?php require_once('rsv_parts/head_info.php');?>
-<body class="background_conf"> <?php if (empty($error)) :?>
+<body class="background_conf">
+    <?php if (empty($error)) :?>
         <?=getNav('conf')?>
         <!--
         エラーが無く、送信することが可能な画面
@@ -135,7 +136,7 @@ if (empty($_POST['capacity'])) {
             </form>
         </main>
 </body>
-<?php else :?>
+    <?php else :?>
     <!--
     エラーがあって、もう一度フォームを送信する
     -->
@@ -208,8 +209,6 @@ if (empty($_POST['capacity'])) {
             </form>
         </main>
     </body> <?php endif;?>
-
-    //フォームの値を受け取って返してる
 <script>
     function multipleaction(u) {
         var f = document.querySelector("form");

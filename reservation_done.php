@@ -5,9 +5,9 @@ require_once('class/Library.php');
 if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_token'])) {
     header('Location: login.php');
     exit();
- }
+}
 // sessionに保存してあるトークンを削除
-    unset($_SESSION["csrf_token"]);
+    // unset($_SESSION["csrf_token"]);
 
 $rsv = new Rsv();
 $insert_date = $rsv->updateReservation($_POST);
@@ -17,7 +17,7 @@ if ($insert_date != 'Error') {
     $total_price = $insert_date['total_price'];
 
     //メール送信内容
-    $to = $insert_date['user_mail'];
+    $to = $insert_date['user_name'];
     $title = '予約完了のお知らせ';
     $message = <<<EOD
 -----------------------------------------------------------------------
@@ -29,7 +29,7 @@ if ($insert_date != 'Error') {
 このたびは、CICACUをご予約いただき誠にありがとうございます。
 ご予約いただいた内容をお知らせします。
 
-宿泊代表者氏名：$_SESSION[user_name] 様
+宿泊代表者氏名：$insert_date[user_name] 様
 宿名：CICACU
 電話番号：080-1411-4095
 所在地：〒322-0067 栃木県鹿沼市天神町1704
@@ -71,18 +71,19 @@ EOD;
 <!DOCTYPE html>
 <html lang="ja">
 <?php require_once('rsv_parts/head_info.php');?>
-<body>
+<body class="background_done">
     <?=getNav('done')?>
-    <?php if($insert_date == 'Error'):?>
-    <div>
-        エラーが発生しました。再度ご登録ください。
-    </div>
-    <?php else:?>
-    <div>
-    予約致しました。<br>
-    お客様のメールアドレスへ、確認のメールをお送りいたしました。
-    </div>
-    <?php endif;?>
+    <main class="done_message">
+        <?php if($insert_date == 'Error'):?>
+            <div>
+            エラーが発生しました。再度ご登録ください。
+            </div>
+        <?php else:?>
+            <div>
+            予約致しました。<br>お客様のメールアドレスへ、確認のメールをお送りいたしました。
+            </div>
+        <?php endif;?>
     <a href="reservation.php">トップページへ戻る</a>
+    </main>
 </body>
 </html>

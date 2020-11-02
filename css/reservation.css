@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 /*-------------------------
 	基本情報群の設定
 -------------------------*/
@@ -38,7 +37,6 @@ nav>img {
     flex-direction: column;
 }
 
-
 .status>div,
 .status>span {
     font-size: 20px;
@@ -62,7 +60,6 @@ nav>img {
     border-width: 15px 35px 0 35px;
     border-color: #999999 transparent transparent transparent;
 }
-
 
 /*-------------------------
 背景画像の設定箇所
@@ -91,6 +88,10 @@ nav>img {
     display: flex;
 }
 
+.background_done {
+    background: url("../img/kumiko.jpg") repeat center;
+}
+
 .login_main {
     background-color: rgba(255, 255, 255, 0.7);
     width: 400px;
@@ -112,7 +113,6 @@ nav>img {
     font-size: 65px;
     display: flex;
     justify-content: space-between;
-
 }
 
 .bottom_title {
@@ -176,7 +176,6 @@ form>div {
     height: 40px;
 }
 
-
 .reservation_table .error {
     font-size: 15px;
     font-weight: bold;
@@ -201,7 +200,6 @@ form>div {
 .reservation_room_name {
     text-align: left;
     margin: auto;
-
 }
 
 .reservation_capacity {
@@ -228,6 +226,7 @@ form>div {
 .submit_form{
     text-align: center;
 }
+
 .submit_form>button{
     margin-top: 25px;
     background-color: #6495ed;
@@ -242,6 +241,7 @@ form>div {
 /*-------------------------
 reservation_conf
 -------------------------*/
+
 
 .conf_check_table{
     margin: auto;
@@ -260,4 +260,15 @@ reservation_conf
     font-size: 20px;
     font-weight: bold;
     color:black;
+}
+
+/*-------------------------
+reservation_done
+-------------------------*/
+.done_message{
+    text-align: center;
+}
+
+.done_message>div{
+    padding-top: 120px;
 }

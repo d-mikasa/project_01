@@ -251,10 +251,10 @@ class Rsv extends Model
             'id = ? ';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$_SESSION['user_auth']]);
-        $user_date = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user_name = $stmt->fetch(PDO::FETCH_ASSOC);
 
         //返す変数をまとめる
-        $return_list['user_mail'] = $user_date['mail'];
+        $return_list['user_name'] = $user_name['mail'];
         $return_list['total_price'] = $total_price;
         $return_list['total_stay'] = $total_stay;
         return $return_list;
