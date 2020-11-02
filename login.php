@@ -49,10 +49,7 @@ if (!empty($_POST['login'])) {
                     <?= $error; ?>
                 </div>
                 <div>
-                    <input class="id_form" type="text" name="login_id" <?php if (!empty($_POST['login_id'])) {echo 'value = "' . h($_POST['login_id']) . '"';
-                                                                        } else {
-                                                                            echo 'placeholder="Login_ID"';
-                                                                        } ?>>
+                    <input class="id_form" type="text" name="login_id" <?= !empty($_POST['login_id']) ? 'value=' . h($_POST['login_id']) : 'placeholder="Login_ID" '?>>
                 </div>
                 <div>
                     <input class="pass_form" type="password" name="pass" placeholder="Password">
