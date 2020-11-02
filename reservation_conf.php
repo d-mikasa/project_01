@@ -74,6 +74,15 @@ if (empty($_POST['capacity'])) {
         }
     }
 }
+
+for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
+    $year = substr($i, 0, 4);
+    $month = substr($i, 4, 2);
+    $day = substr($i, 6, 2);
+    if (checkdate($month, $day, $year)) {
+        $cnt_stay[] = date('Y-m-d H:i:s', strtotime($i));
+    }
+}
 ?>
 <!doctype html>
 <html lang="ja">
@@ -130,6 +139,10 @@ if (empty($_POST['capacity'])) {
                                             break;
                                     }
                             ?> </td>
+                    </tr>
+                    <tr>
+                        <th>合計金額</th>
+                        <td>¥<?=number_format($room_info['price']*count($cnt_stay))?></td>
                     </tr>
                 </table>
                 <div class="final_check">以上の内容でお間違い無いでしょうか？</div>
