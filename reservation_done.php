@@ -1,13 +1,15 @@
 <?php
 require_once('class/Library.php');
 
+checkLogin();
+
 // POSTでトークンが来ていないか、セッションに保存した値とPOSTがマッチしていなければ飛ばすぞ
 if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_token'])) {
     header('Location: login.php');
     exit();
 }
 // sessionに保存してあるトークンを削除
-    // unset($_SESSION["csrf_token"]);
+    unset($_SESSION["csrf_token"]);
 
 $rsv = new Rsv();
 $insert_date = $rsv->updateReservation($_POST);

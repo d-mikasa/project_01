@@ -1,7 +1,15 @@
 <?php
 require_once('class/Library.php');
 $error = '';
-unset($_SESSION['user_auth']);
+
+if(!empty(($_GET['logout']))){
+    unset($_SESSION['user_auth']);
+}
+
+if(!empty(($_SESSION['user_auth']))){
+    header('Location: reservation.php');
+    exit();
+}
 
 if (!empty($_POST['login'])) {
     if (empty($_POST['login_id']) or empty($_POST['pass'])) {
@@ -45,7 +53,7 @@ if (!empty($_POST['login'])) {
             <div class="bottom_title">ログインページ</div>
 
             <form action="" method="post">
-                <div class="error">
+                <div class="top_error">
                     <?= $error; ?>
                 </div>
                 <div>

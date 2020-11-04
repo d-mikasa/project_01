@@ -4,10 +4,7 @@ $Rsv = new Rsv();
 
 $pull_down_list = $Rsv->getPullDownList();
 
-if ($_SESSION['user_auth'] == false) {
-    header('Location: login.php');
-    exit();
-}
+checkLogin();
 
 if (!empty($_SESSION["csrf_token"])) {
     unset($_SESSION["csrf_token"]);
@@ -83,7 +80,7 @@ if (!empty($_SESSION["csrf_token"])) {
             </table>
             <!-- dammy error message -->
             <div class="date_error"></div>
-            <p class="submit_form"><button type="submit" value="予約">予約</button></p>
+            <p class="submit_form"><button type="submit" value="予約">確認</button></p>
         </form>
     </main>
 </body>

@@ -1,7 +1,7 @@
 <?php
 class UserLogin extends Model
 {
-    public function Login($id,$pass)
+    public function Login($id, $pass)
     {
         parent::connect();
         $sql = 'SELECT * FROM user WHERE login_id = ? AND status = 1';
@@ -22,5 +22,15 @@ class UserLogin extends Model
         }
 
         return 'パスワードが間違っています';
+    }
+
+    public function getUserName($id)
+    {
+        parent::connect();
+        $sql = 'SELECT * FROM user WHERE id = ? AND status = 1';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch();
+        return $result['name'];
     }
 }

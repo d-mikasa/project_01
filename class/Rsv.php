@@ -200,7 +200,7 @@ class Rsv extends Model
                 'created_at, '.
                 'updated_at, '.
                 'delete_flg) '.
-        'VALUES(?,?,?,?,?,?,?,?,?,?) ';
+        'VALUES(?,?,?,?,?,?,?,?,?,?); ';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$_SESSION['user_auth'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
@@ -226,7 +226,7 @@ class Rsv extends Model
                 'reservation_id, '.
                 'date, '.
                 'price) '.
-            'VALUES(?,?,?) ';
+            'VALUES(?,?,?); ';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $days[$i], $price]);
         }
@@ -237,7 +237,7 @@ class Rsv extends Model
             'reservation_payment( '.
             'reservation_id, '.
             'payment_id) '.
-        'VALUES(?,?) ';
+        'VALUES(?,?); ';
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $peyment]);
 
@@ -257,12 +257,13 @@ class Rsv extends Model
         $return_list['user_name'] = $user_name['mail'];
         $return_list['total_price'] = $total_price;
         $return_list['total_stay'] = $total_stay;
+        $this->dbh->commit();
         return $return_list;
 
         } catch (PDOException $e) {
 		//ロールバック処理
         $this->dbh->rollback();
-        return 'Error';
+        return $e;
       }
 
     }

@@ -1,33 +1,37 @@
 <?php
 function getNav($state)
 {
+    require_once('class/Library.php');
 
-	$login = 'status_none';
-	$reservation = 'status_none';
-	$conf = 'status_none';
-	$done = 'status_none';
+    $login = 'status_none';
+    $reservation = 'status_none';
+    $conf = 'status_none';
+    $done = 'status_none';
+
+    $user_login = new UserLogin();
+    $name = $user_login ->getUserName($_SESSION['user_auth']);
 
     // $str = strrpos($_SERVER['REQUEST_URI'], '/');
-		// $url = substr($_SERVER['REQUEST_URI'], $str, strlen($_SERVER['REQUEST_URI']) - $str);
-		// echo $url;
+    // $url = substr($_SERVER['REQUEST_URI'], $str, strlen($_SERVER['REQUEST_URI']) - $str);
+    // echo $url;
     switch ($state) {
-				case 'login':
-						$login = 'status_now';
+        case 'login':
+            $login = 'status_now';
             break;
-				case 'reservation':
-						$reservation = 'status_now';
+        case 'reservation':
+            $reservation = 'status_now';
             break;
-				case 'conf':
-						$conf = 'status_now';
+        case 'conf':
+            $conf = 'status_now';
             break;
-				case 'done':
-						$done = 'status_now';
+        case 'done':
+            $done = 'status_now';
             break;
         default:
             break;
-		}
+    }
 
-		$parts = <<<EOD
+    $parts = <<<EOD
 		<nav>
 		<img src="img/logo.png" class="header_logo">
 		<div class="status">
@@ -38,9 +42,16 @@ function getNav($state)
 			<div class=" $conf">内容確認</div>
 			<span class="triangle"></span>
 			<div class=" $done ">予約完了</div>
-		</div>
+        </div>
+        <div class="user_info" >
+            <div class= "user_name">
+            <div>ログイン中</div>
+                <div>$name 様 </div>
+                <div class="logout_link"><a href="login.php?logout=true">ログアウト</a></div>
+            </div>
+        </div>
 	</nav>
-	EOD;
+EOD;
 
-	echo $parts;
+    echo $parts;
 }

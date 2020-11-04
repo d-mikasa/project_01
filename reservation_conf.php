@@ -2,6 +2,8 @@
 require_once('class/Library.php');
 $Rsv = new Rsv();
 
+checkLogin();
+
 //プルダウンの内容を取得する
 $pull_down_list = $Rsv->getPullDownList();
 
@@ -20,16 +22,16 @@ if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日時が空欄です';
 } else {
     if (strtotime($_POST['check_in']) < strtotime("-1 day")) {
-        $error['check_in'] = 'チェックイン日時が過去を指定しています';
+        $error['check_in'] = 'チェックイン日が過去を指定しています';
     }
 }
 
 //チェックアウトのバリデーション
 if (empty($_POST['check_out'])) {
-    $error['check_out'] = 'チェックアウト日時が空欄です';
+    $error['check_out'] = 'チェックアウト日が空欄です';
 } else {
     if (strtotime($_POST['check_out']) < strtotime("-1 day")) {
-        $error['check_out'] = 'チェックアウト日時が過去を指定しています';
+        $error['check_out'] = 'チェックアウト日が過去を指定しています';
     }
 }
 
@@ -38,11 +40,11 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     //チェックイン・チェックアウトが入力されていた場合
 
     if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
-        $error['check_in'] = 'チェックイン日時がチェックアウト日時より後に指定されています';
+        $error['check_in'] = 'チェックイン日がチェックアウト日時より後に指定されています';
     }
 
     if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
-        $error['check_out'] = 'チェックイン日時とチェックアウト日時が同日に指定されています';
+        $error['check_out'] = 'チェックイン日とチェックアウト日時が同日に指定されています';
     }
 
     //予約が日付以内の物であるかどうかの確認
@@ -70,7 +72,7 @@ if (empty($_POST['capacity'])) {
     //部屋詳細から該当の宿泊人数のプランがあるかを検索する
     if ($_POST['capacity'] != $room_info['capacity']) {
         if ($_POST['capacity'] > $room_info['capacity']) {
-            $error['capacity'] = '宿泊人数が多いです。';
+            $error['capacity'] = '宿泊人数が上限を超えています';
         }
     }
 }
@@ -147,7 +149,7 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
                 </table>
                 <div class="final_check">以上の内容でお間違い無いでしょうか？</div>
                 <p class="submit_form">
-                    <button type="button" onclick="multipleaction('reservation_done.php')">確認</button>
+                    <button type="button" onclick="multipleaction('reservation_done.php')">予約する</button>
                     <button type="button" onclick="multipleaction('reservation.php')">キャンセル</button>
                 </p>
             </form>
