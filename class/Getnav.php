@@ -10,10 +10,6 @@ function getNav($state)
 
     $user_login = new UserLogin();
     $name = $user_login ->getUserName($_SESSION['user_auth']);
-
-    // $str = strrpos($_SERVER['REQUEST_URI'], '/');
-    // $url = substr($_SERVER['REQUEST_URI'], $str, strlen($_SERVER['REQUEST_URI']) - $str);
-    // echo $url;
     switch ($state) {
         case 'login':
             $login = 'status_now';

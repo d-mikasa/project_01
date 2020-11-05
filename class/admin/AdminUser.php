@@ -1,7 +1,7 @@
 <?php
 class AdminUser extends Model
 {
-    public function adminLogin($id, $pass)
+    public function adminUserLogin($id, $pass)
     {
         parent::connect();
         $sql = 'SELECT * FROM admin_user WHERE login_id = ? AND delete_flg = FALSE';

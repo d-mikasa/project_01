@@ -9,10 +9,14 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
     exit();
 }
 // sessionに保存してあるトークンを削除
-    unset($_SESSION["csrf_token"]);
+    // unset($_SESSION["csrf_token"]);
 
-$rsv = new Rsv();
-$insert_date = $rsv->updateReservation($_POST);
+$Reservation= new Reservation();
+$insert_date = $Reservation->updateReservation($_POST);
+
+echo '<pre>';
+print_r($insert_date);
+echo '</pre>';
 
 //PDOエラーが発生したらメールを送らない。
 if ($insert_date != 'Error') {
@@ -70,11 +74,9 @@ EOD;
     };
 }
 ?>
-<!DOCTYPE html>
-<html lang="ja">
 <?php require_once('rsv_parts/head_info.php');?>
 <body class="background_done">
-    <?=getNav('done')?>
+<?php require_once('rsv_parts/status_nav.php')?>
     <main class="done_message">
         <?php if($insert_date == 'Error'):?>
             <div>

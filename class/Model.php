@@ -22,5 +22,5 @@ require_once('admin/GetPage.php');
 
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('UserLogin.php');
-require_once('Rsv.php');
+require_once('/Applications/XAMPP/xamppfiles/htdocs/cicacu-mikasa/class/Reservation.php');
 require_once('Getnav.php');

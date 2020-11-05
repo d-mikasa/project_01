@@ -11,7 +11,7 @@ if (!empty($_POST['attestation'])) {
     } else {
         $admin_user = new AdminUser();
         // PDOクラスのメソッドを使う
-        $error = $admin_user->adminLogin($_POST['id'], $_POST['pass']);
+        $error = $admin_user->adminUserLogin($_POST['id'], $_POST['pass']);
     }
 }
 

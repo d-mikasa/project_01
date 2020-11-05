@@ -1,5 +1,5 @@
 <?php
-class Rsv extends Model
+class Reservation extends Model
 {
     public function getPullDownList() //プルダウンリストに表示する部屋を検索する
     {
@@ -263,12 +263,9 @@ class Rsv extends Model
         } catch (PDOException $e) {
 		//ロールバック処理
         $this->dbh->rollback();
-        return $e;
+        return 'Error';
       }
-
     }
-
-
 
     public function getToken()
     {

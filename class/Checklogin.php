@@ -5,6 +5,7 @@ function checkLogin()
         header('Location: login.php');
         exit();
     }
+}
 
     function logout()
     {
@@ -12,4 +13,4 @@ function checkLogin()
         header('Location: login.php');
         exit();
     }
-}
+

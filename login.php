@@ -15,18 +15,14 @@ if (!empty($_POST['login'])) {
     if (empty($_POST['login_id']) or empty($_POST['pass'])) {
         $error = 'IDかパスワードが入力されていません';
     } else {
-        $user = new UserLogin();
+        $user = new User();
         // PDOクラスのメソッドを使う
-        $error = $user->Login($_POST['login_id'], $_POST['pass']);
+        $error = $user->userLogin($_POST['login_id'], $_POST['pass']);
     }
 }
 
 ?>
-<!doctype html>
-<html lang="ja">
-
 <?php require_once('rsv_parts/head_info.php');?>
-
 <body class="background_login">
     <nav>
         <img src="img/logo.png" class="header_logo">

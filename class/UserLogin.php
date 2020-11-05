@@ -1,7 +1,7 @@
 <?php
-class UserLogin extends Model
+class User extends Model
 {
-    public function Login($id, $pass)
+    public function userLogin($id, $pass)
     {
         parent::connect();
         $sql = 'SELECT * FROM user WHERE login_id = ? AND status = 1';
@@ -17,6 +17,7 @@ class UserLogin extends Model
 
             //ログイン状態にユーザーIDを入れて、T/Fを判断させる
             $_SESSION['user_auth'] = $result['id'];
+            $_SESSION['user_name'] = $result['name'];
             header('Location: reservation.php');
             exit;
         }
