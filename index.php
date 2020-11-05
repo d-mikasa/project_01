@@ -8,7 +8,6 @@ $sortRoomList = $Room->sortRoomList('asc','id');
 <html lang="ja">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
@@ -108,7 +107,6 @@ $(function() {
         });
     </script>
 </head>
-
 <body class="drawer drawer--left">
     <!--サイドメニュー-->
     <aside>
@@ -147,7 +145,6 @@ $(function() {
             </div>
         </div>
     </aside>
-
     <!--ヘッダー-->
     <header>
         <div id="header-textbox">
@@ -165,7 +162,6 @@ $(function() {
             </div>
         </div>
     </header>
-
     <!--メイン-->
     <main>
         <!--栃木県鹿沼市-->
@@ -184,7 +180,6 @@ $(function() {
                     伝統工芸品が根付く歴史ある宿場町です。</p>
             </div>
         </div>
-
         <!--成り立ち-->
         <div id="history">
             <div id="history-title">
@@ -204,7 +199,6 @@ $(function() {
                     新たな歴史を刻み始めました。</p>
             </div>
         </div>
-
         <!--由来-->
         <div id="name">
             <div id="name-text">
@@ -218,7 +212,6 @@ $(function() {
                     交流する場所として其処にあります。</p>
             </div>
         </div>
-
         <!--宿泊-->
         <div id="lodging">
             <div id="lodging-title">
@@ -232,8 +225,6 @@ $(function() {
                     深夜の外出、入室は近隣の方々のご迷惑にならないようお願いします。</p>
                 　
             </div>
-
-
             <?php foreach($sortRoomList as $room_value):?>
                 <div class="roomA">
                     <?php if(empty($room_value['img'])):?>
@@ -255,10 +246,6 @@ $(function() {
                     </div>
                 </div>
             <?php endforeach; ?>
-
-
-
-
             <div id="lodging-text02">
                 <p>全室和室となっております。<br>
                     １部屋につき最大４名様まで宿泊が可能です。<br>
@@ -268,7 +255,6 @@ $(function() {
                     あらかじめご了承ください。</p>
             </div>
         </div>
-
         <!--ご予約-->
         <div id="reservation">
             <div id="reservation-title">
@@ -281,16 +267,13 @@ $(function() {
                     ２日前、前日のキャンセル：50％<br>
                     当日のキャンセルまたは、不泊の場合：100％　頂戴いたします。</p>
             </div>
-
             <div id="reservation-link">
                 <a href="login.php">会員の方は こちら から予約</a>
             </div>
-
             <div id="reservation-mail">
                 <a href=""><img src="./img/mail.png"></a>
             </div>
         </div>
-
         <!--ギャラリー-->
         <div id="gallery">
             <div id="gallery-title">
@@ -303,7 +286,6 @@ $(function() {
                     日光東照宮造営の時にここ鹿沼に移り住んだ名工たちが生みだし、<br>
                     その子孫や弟子たちが伝えてきた鹿沼の文化と魂が、この「CICACU」には宿っています。</p>
             </div>
-
             <!--スライドショー-->
             <div class="flexslider">
                 <ul class="slides">
@@ -322,7 +304,6 @@ $(function() {
                 </ul>
             </div>
         </div>
-
         <!--アクセス-->
         <div id="access">
             <div id="access-title">
@@ -334,11 +315,9 @@ $(function() {
                     　　　　JR日光線「鹿沼駅」より徒歩20分<br>
                     【駐車場】「cafe饗茶庵」専用駐車場をご利用ください。</p>
             </div>
-
             <!--google map-->
             <div id="g_map"></div>
             <!--google map-->
-
             <div id="access-text02">
                 <p>その他、お問い合わせはこちらまで<br>
                     &#9742;　080-1411-4095（辻井）　／　
@@ -347,24 +326,19 @@ $(function() {
             </div>
         </div>
     </main>
-
     <!--フッター-->
     <footer>
         <div id="logo">
             <img src="./img/logo.png">
         </div>
-
         <small>
             <p>Copyright &copy; CICACU All rights reserved.</p>
         </small>
     </footer>
-
     <!--TOPに戻るボタン-->
     <div id="pageTop">
         <a href="#">&#9650;<br>TOP</a>
     </div>
     <!--TOPに戻るボタン-->
-
 </body>
-
 </html>

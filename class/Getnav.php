@@ -33,7 +33,7 @@ function getNav($state)
 
     $parts = <<<EOD
 		<nav>
-		<img src="img/logo.png" class="header_logo">
+		<a href="index.php"><img src="img/logo.png" class="header_logo"></a>
 		<div class="status">
 			<div class= " $login " >ログイン</div>
 			<span class="triangle"></span>

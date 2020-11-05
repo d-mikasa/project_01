@@ -20,6 +20,13 @@ body {
 /*-------------------------
 	左側のナビゲーションのCSS群
 -------------------------*/
+
+.header_logo{
+    margin-top: 10px;
+    margin-bottom: -20px;
+    width: 80px;
+}
+
 nav {
     float: left;
     width: 15%;

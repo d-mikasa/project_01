@@ -51,13 +51,12 @@ if (!empty($_POST['login'])) {
                 <span>U</span>
             </div>
             <div class="bottom_title">ログインページ</div>
-
             <form action="" method="post">
                 <div class="top_error">
-                    <?= $error; ?>
+                    <?=$error;?>
                 </div>
                 <div>
-                    <input class="id_form" type="text" name="login_id" <?= !empty($_POST['login_id']) ? 'value=' . h($_POST['login_id']) : 'placeholder="Login_ID" '?>>
+                    <input class="id_form" type="text" name="login_id" <?=!empty($_POST['login_id']) ? 'value=' . h($_POST['login_id']) : 'placeholder="Login_ID" '?>>
                 </div>
                 <div>
                     <input class="pass_form" type="password" name="pass" placeholder="Password">
@@ -67,5 +66,4 @@ if (!empty($_POST['login'])) {
         </div>
     </main>
 </body>
-
 </html>

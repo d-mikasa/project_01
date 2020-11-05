@@ -84,5 +84,4 @@ if (!empty($_SESSION["csrf_token"])) {
         </form>
     </main>
 </body>
-
 </html>

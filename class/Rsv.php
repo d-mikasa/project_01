@@ -22,7 +22,7 @@ class Rsv extends Model
         $result = $stmt->fetchAll();
 
         if (empty($result)) {
-            return '部屋が存在しません。';
+            return '部屋が存在しません';
         }
         return $result;
     }
@@ -87,7 +87,7 @@ class Rsv extends Model
 
                 //レコードが無いならリターンで返す
                 if (!empty($result)){
-                    return '満室のため、他の日付か部屋を選択してください。';
+                    return '満室のため、他の日付か部屋を選択してください';
                 }
 
             //ここまで引っ掛からなかったら、予約が無いと返す

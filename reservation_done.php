@@ -85,7 +85,7 @@ EOD;
             予約致しました。<br>お客様のメールアドレスへ、確認のメールをお送りいたしました。
             </div>
         <?php endif;?>
-    <a href="reservation.php">トップページへ戻る</a>
+    <a href="index.php">トップページへ戻る</a>
     </main>
 </body>
 </html>
