@@ -23,7 +23,8 @@ function getPage()
     //ジャンルを格納
     $genre_list = array(
         'room' => '部屋',
-        'top' => 'トップページ'
+        'top' => 'トップページ',
+        'reservation' => '客室情報'
     );
 
     //内容を格納

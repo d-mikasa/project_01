@@ -224,7 +224,7 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
                     </tr>
                 </table>
                 <div class="date_error"><?=!empty($error['ather'])?$error['ather']:''?></div>
-                <p class="submit_form"><button type="submit">確認</p>
+                <p class="submit_form"><button type="submit">予約</p>
             </form>
         </main>
     </body> <?php endif;?>

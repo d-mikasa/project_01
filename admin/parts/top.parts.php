@@ -18,6 +18,7 @@
     <nav class="topNav">
         <a href="top.php">TOP</a>
         <a href="room_list.php">客室一覧</a>
+        <a href="reservation_list.php">客室情報</a>
     </nav>
 
     <?php getPage(); ?>

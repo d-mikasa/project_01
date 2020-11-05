@@ -326,7 +326,62 @@ class Room extends Model
 		$this->dbh->commit();
 
 		return  'ファイルのアップロードに成功しました';
-	}
+    }
+
+    function getDays()
+    {
+        //connectメソッドにアクセス
+		parent::connect();
+        $sql = 'SELECT year, GROUP_CONCAT(DISTINCT(month)) AS \'Month\' FROM  calendar GROUP BY Month';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getDaysList($date)
+    {
+        parent::connect();
+        $sql = '
+        SELECT
+            *
+        FROM
+        calendar
+        WHERE
+            date Like \'' . $date . '%\' ';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    function getRsvInfo($detail_id,$date)
+    {
+        //connectメソッドにアクセス
+        parent::connect();
+        $sql =
+        'SELECT ' .
+            'reservation.id, ' .
+            'reservation.room_detail_id, ' .
+            'reservation_detail.reservation_id, ' .
+            'reservation.user_id, ' .
+            'reservation_detail.date ' .
+        'FROM ' .
+            'reservation ' .
+                'INNER JOIN reservation_detail '.
+                    'ON reservation.id = reservation_detail.reservation_id ' .
+        'WHERE ' .
+                ' reservation_detail.date Like \'' . $date . '%\' '.
+                ' AND reservation.room_detail_id = :detail_id ' ;
+
+                $stmt = $this->dbh->prepare($sql);
+                $stmt->bindValue(':detail_id', $detail_id, PDO::PARAM_INT);
+                $stmt->execute();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
+
+
+
+    }
+
 
 	//デバッグコンソールに情報を表示するためのもの。デバッグ用
 	function console_log($data)
