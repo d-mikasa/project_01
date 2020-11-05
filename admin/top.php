@@ -1,7 +1,7 @@
 <?php
 require_once('../class/Library.php');
 
-if (empty($_SESSION['auth'])) {
+if (empty($_SESSION['admin_auth'])) {
     header('Location: login.php');
     exit();
 }

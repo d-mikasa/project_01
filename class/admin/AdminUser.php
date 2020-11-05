@@ -1,7 +1,7 @@
 <?php
 class AdminUser extends Model
 {
-    public function userLogin($id, $pass)
+    public function adminLogin($id, $pass)
     {
         parent::connect();
         $sql = 'SELECT * FROM admin_user WHERE login_id = ? AND delete_flg = FALSE';
@@ -15,7 +15,7 @@ class AdminUser extends Model
 
         if ($result['login_pass'] === $pass) {
             $_SESSION['admin_name'] = $result['name'];
-            $_SESSION['auth'] = 1;
+            $_SESSION['admin_auth'] = 1;
             header('Location: top.php');
             exit;
         }

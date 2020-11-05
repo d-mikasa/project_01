@@ -2,7 +2,7 @@
 require_once('../class/Library.php');
 
 $error = '';
-unset($_SESSION['auth']);
+unset($_SESSION['admin_auth']);
 
 if (!empty($_POST['attestation'])) {
     //バリデーション処理
@@ -11,7 +11,7 @@ if (!empty($_POST['attestation'])) {
     } else {
         $admin_user = new AdminUser();
         // PDOクラスのメソッドを使う
-        $error = $admin_user->userLogin($_POST['id'], $_POST['pass']);
+        $error = $admin_user->adminLogin($_POST['id'], $_POST['pass']);
     }
 }
 

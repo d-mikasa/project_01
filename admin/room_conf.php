@@ -2,7 +2,7 @@
 require_once('../class/Library.php');
 
 //リダイレクト処理
-if (empty($_SESSION['auth'])) {
+if (empty($_SESSION['admin_auth'])) {
     header('Location: login.php');
     exit();
 }
