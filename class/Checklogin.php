@@ -10,7 +10,7 @@ function checkLogin()
     function logout()
     {
         unset($_SESSION['user_auth']);
+        unset($_SESSION['user_name']);
         header('Location: login.php');
         exit();
     }
-
