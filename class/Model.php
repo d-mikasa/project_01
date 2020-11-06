@@ -19,6 +19,11 @@ class Model
 require_once('admin/AdminUser.php');
 require_once('admin/Room.php');
 require_once('admin/GetPage.php');
+// require_once('/var/www/html/training/cicacu-mikasa/class/admin/AdminUser.php');
+// require_once('/var/www/html/training/cicacu-mikasa/class/admin/Room.php');
+// require_once('/var/www/html/training/cicacu-mikasa/class/admin/GetPage.php');
+
+
 
 //////////////////////User側の処理を読み込んでいる/////////////////////
 require_once('User.php');
