@@ -1,13 +1,21 @@
 <?php
 require_once('class/Library.php');
+checkLogin();
+
 $Reservation = new Reservation();
 
-$pull_down_list = $Reservation->getPullDownList();
-
-checkLogin();
+$pull_down = $Reservation->getPullDownList();
+$room_pull_down = $pull_down['room'];
+$payment_pull_down = $pull_down['payment'];
 
 if (!empty($_SESSION["csrf_token"])) {
     unset($_SESSION["csrf_token"]);
+}
+
+if(!empty($_POST['payment'])){
+    $payment_state = $_POST['payment'];
+}else{
+    $payment_state = 1;
 }
 
 ?>
@@ -24,7 +32,7 @@ if (!empty($_SESSION["csrf_token"])) {
                         <th>部屋名</th>
                         <td>
                             <select name="detail_id" id="target">
-                                <?php foreach ($pull_down_list as $value) :?>
+                                <?php foreach ($room_pull_down as $value) :?>
                                     <option value="<?=$value['id']?>" <?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? 'selected' : '';?>>
                                         <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
                                     </option>
@@ -68,11 +76,11 @@ if (!empty($_SESSION["csrf_token"])) {
                         <td colspan="2" class="error"> <?=!empty($error['capacity']) ? $error['capacity'] : ''?> </td>
                     </tr>
                     <tr>
-                        <th>支払い方法 <br><span class="error"><?=!empty($error['payment']) ? $error['peyment'] : ''?></span></th>
+                        <th>支払い方法 <br><span class="error"><?=!empty($error['payment']) ? $error['payment'] : ''?></span></th>
                         <td>
-                            <div> <input type="radio" name="peyment" value="1" <?=(empty($_POST['peyment']) OR $_POST['peyment'] == '1') ? 'checked' : '';?>>現金（現地支払い）</div>
-                            <div><input type="radio" name="peyment" value="2" <?=(!empty($_POST['peyment']) AND $_POST['peyment'] == '2') ? 'checked' : '';?>>クレジットカード（オンライン決算）</div>
-                            <div><input type="radio" name="peyment" value="3" <?=(!empty($_POST['peyment']) AND $_POST['peyment'] == '3') ? 'checked' : '';?>>クレジットカード（現地支払い）</div>
+                            <?php foreach($payment_pull_down as $key => $value):?>
+                                <div><input type="radio" name="payment" value="<?=$key+1?>" <?=($payment_state == $key+1) ? 'checked' : '';?>><?=$value['name']?></div>
+                            <?php endforeach;?>
                         </td>
                     </tr>
                 </table>

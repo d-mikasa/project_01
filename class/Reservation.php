@@ -1,7 +1,15 @@
 <?php
 class Reservation extends Model
 {
-    public function getPullDownList() //プルダウンリストに表示する部屋を検索する
+    /**
+    *プルダウンの内容を取得する
+    *
+    *プルダウンの表示に必要な情報と、Paymentの情報を取得している
+    *
+    *@param null
+    *@return $resule roomに部屋情報、paymentに支払い情報を格納している
+    */
+    public function getPullDownList()
     {
         parent::connect();
         $sql =
@@ -19,16 +27,55 @@ class Reservation extends Model
 
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
-        $result = $stmt->fetchAll();
+        $result['room'] = $stmt->fetchAll();
 
-        if (empty($result)) {
-            return '部屋が存在しません';
-        }
+        $sql =
+        'SELECT '.
+            '* '.
+        'FROM '.
+            'm_payment';
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute();
+        $result['payment'] = $stmt->fetchAll();
+
         return $result;
     }
 
+    /**
+    *支払い情報がデータベース上にあれば取得する
+    *
+    *peymentをWhereで引っ張ってくる
+    *
+    *@param $id m_paymentのidカラム
+    *@return $idと一致するカラムを返す
+    */
+    public function getPayment($id)
+    {
+        parent::connect();
+        $sql =
+        'SELECT '.
+            '* '.
+        'FROM '.
+            'm_payment '.
+        'WHERE '.
+            'id = ?';
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetchAll();
+    }
 
-
+    /**
+    *予約状況を確認するための情報を取得する
+    *
+    *ユーザーが予約しているかどうかをチェックした後、
+    *該当期間内に部屋が空いているかチェック。空いてたら
+    *
+    *@param $id 部屋情報(room_detail)のID
+    *@param $check_in チェックイン日
+    *@param $check_out チェックアウト日
+    *@return 予約状況、またはエラー文
+    */
     public function checkReservation($id, $check_in, $check_out) //選択した部屋の予約状況をチェックする
     {
         try {
@@ -99,8 +146,15 @@ class Reservation extends Model
         }
     }
 
-
-    public function rsvGetRoom($id) //選択した部屋の情報を取得
+    /**
+    *予約しようとしている部屋の情報を取得する
+    *
+    *指定したdetail_idと一致する情報をまとめて取得する
+    *
+    *@param $id 部屋詳細のID(room_detail_id)
+    *@return $result 部屋が見つからなかった場合はエラー文を返す
+    */
+    public function getReservationRoom($id) //選択した部屋の情報を取得
     {
         try {
             parent::connect();
@@ -133,21 +187,19 @@ class Reservation extends Model
         }
     }
 
-
-
     /**
      *予約情報のアップデート
      *
      *チェックインとチェックアウトから宿泊日数を取得、それぞれreservationテーブルに追加、メールのためにユーザー情報を取得。
      *
-     *@param $detail_id reservaion_detailのID
-     *@param $check_in チェックインの日付
-     *@param $check_out チェックアウトの日付
-     *@param $capacity 宿泊人数
-     *@param $peyment 支払い方法
-     *@param $price 請求額
-     *@param $name 部屋名
-     *@param $room_id 部屋番号、room_id
+     *@param $set_data[detail_id] reservaion_detailのID
+     *@param $set_data[check_in] チェックインの日付
+     *@param $set_data[check_out] チェックアウトの日付
+     *@param $set_data[capacity] 宿泊人数
+     *@param $set_data[payment] 支払い方法
+     *@param $set_data[price] 請求額
+     *@param $set_data[name] 部屋名
+     *@param $set_data[room_id] 部屋番号、room_id
 
      *@return $return_list メールを送信するための情報群
      */
@@ -166,7 +218,7 @@ class Reservation extends Model
         $check_in = $set_data['check_in'];
         $check_out = $set_data['check_out'];
         $capacity = $set_data['capacity'];
-        $peyment = $set_data['peyment'];
+        $payment = $set_data['payment'];
         $room_id = $set_data['room_id'];
         $name = $set_data['name'];
         $price = $set_data['price'];
@@ -239,7 +291,7 @@ class Reservation extends Model
             'payment_id) '.
         'VALUES(?,?); ';
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $peyment]);
+        $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $payment]);
 
         //追加したユーザーを返す
         $sql =

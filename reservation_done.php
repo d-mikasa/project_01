@@ -8,8 +8,9 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
     header('Location: login.php');
     exit();
 }
+
 // sessionに保存してあるトークンを削除
-    // unset($_SESSION["csrf_token"]);
+    unset($_SESSION["csrf_token"]);
 
 $Reservation= new Reservation();
 $insert_date = $Reservation->updateReservation($_POST);
