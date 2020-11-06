@@ -141,7 +141,7 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
                 <tr>
                     <th>支払い方法</th>
                     <td>
-                        <?=$payment_conf?>
+                        <?=$payment_conf['name']?>
                     </td>
                 </tr>
                 <tr>

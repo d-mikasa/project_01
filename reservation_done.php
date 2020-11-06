@@ -15,10 +15,6 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
 $Reservation= new Reservation();
 $insert_date = $Reservation->updateReservation($_POST);
 
-echo '<pre>';
-print_r($insert_date);
-echo '</pre>';
-
 //PDOエラーが発生したらメールを送らない。
 if ($insert_date != 'Error') {
     $total_price = $insert_date['total_price'];

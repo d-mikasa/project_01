@@ -14,7 +14,9 @@ body {
 }
 
 .top_error {
-    color: blue;
+    background-color: red;
+    color: white;
+    margin: 10px 0 10px 0;
 }
 
 /*-------------------------

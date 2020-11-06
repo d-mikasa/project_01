@@ -62,7 +62,7 @@ class Reservation extends Model
             'id = ?';
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
-        return $stmt->fetchAll();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
