@@ -214,7 +214,7 @@ class Reservation extends Model
             //トランザクション開始
 			$this->dbh->beginTransaction();
 
-        //変数へ落とし込む
+            //変数へ落とし込む
             $detail_id = $set_data['detail_id'];
             $check_in = $set_data['check_in'];
             $check_out = $set_data['check_out'];
