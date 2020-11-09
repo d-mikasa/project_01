@@ -262,3 +262,27 @@ th {
 .end{
     text-align: center;
 }
+
+/*-------------------------
+    課題４関係はここから下
+-------------------------*/
+.reservation_list_table{
+    width: 900px;
+    border: 1px solid black;
+}
+
+.reservation_list_date{
+width: 10%;
+}
+.reservation_list_name{
+    width: 20%;
+}
+.reservation_list_room{
+    width: 20%;
+}
+.reservation_list_price{
+    width: 20%;
+}
+.reservation_list_number{
+    width: 10%;
+}

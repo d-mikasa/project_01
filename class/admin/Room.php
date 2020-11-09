@@ -328,26 +328,19 @@ class Room extends Model
 		return  'ファイルのアップロードに成功しました';
     }
 
-    function getDays()
-    {
-        //connectメソッドにアクセス
-		parent::connect();
-        $sql = 'SELECT year, GROUP_CONCAT(DISTINCT(month)) AS \'Month\' FROM  calendar GROUP BY Month';
-        $stmt = $this->dbh->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    function getDaysList($date)
+////////////////////////////////課題４対応//////////////////////////////////////////////////////
+    function getDaysList()
     {
         parent::connect();
-        $sql = '
-        SELECT
-            *
-        FROM
-        calendar
-        WHERE
-            date Like \'' . $date . '%\' ';
+        $sql =
+        'SELECT '.
+        'DISTINCT '.
+        'LEFT(date,7) AS date '.
+        'FROM '.
+        'calendar '.
+        'WHERE '.
+        'date <= date_format(now() + INTERVAL 3 MONTH, \'%y-%m-%d\') ';
+
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -377,10 +370,99 @@ class Room extends Model
                 $stmt->execute();
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
+    }
 
 
+
+    function getReservationState($id,$date)
+    {
+        parent::connect();
+        $sql =
+        'SELECT '.
+            'calendar.date, '.
+            'rsv.room_detail_name, '.
+            'rsv.name, '.
+            'rsv.number, '.
+            'rsv.total_price '.
+            'FROM '.
+            'calendar '.
+        'LEFT JOIN( '.
+            'SELECT '.
+                'reservation.room_detail_id, '.
+                'reservation.room_detail_name, '.
+                'reservation.total_price, '.
+                'reservation.number, '.
+                'user.name, '.
+                'reservation_detail.date '.
+                'FROM '.
+                'reservation '.
+        'INNER JOIN '.
+            'reservation_detail '.
+                'ON reservation.id = reservation_detail.reservation_id '.
+        'INNER JOIN '.
+            'user '.
+                'ON reservation.user_id = user.id '.
+        'WHERE '.
+            'reservation.room_detail_id = ? '.
+        ') AS rsv '.
+            'ON rsv.date = calendar.date '.
+        'WHERE '.
+            'calendar.date >= ? '.
+            'AND calendar.date < ? + INTERVAL 1 MONTH ORDER BY calendar.date ';
+
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id,$date,$date]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    function export($data)
+{
+    try {
+        //CSV形式で情報をファイルに出力のための準備
+        $csvFileName = '/tmp/' . time() . rand() . '.csv';
+        $fileName = '予約状況' . '.csv';
+        $res = fopen($csvFileName, 'w');
+        if ($res === FALSE) {
+            throw new Exception('ファイルの書き込みに失敗しました。');
+        }
+
+        // 項目名先に出力
+        $header = ["id", "date", "name", "total_price", "number", "room_name"];
+        fputcsv($res, $header);
+
+        // ループしながら出力
+        foreach($data as $dataInfo) {
+            // 文字コード変換。エクセルで開けるようにする
+            mb_convert_variables('SJIS', 'UTF-8', $dataInfo);
+
+            // ファイルに書き出しをする
+            fputcsv($res, $dataInfo);
+        }
+
+        // ファイルを閉じる
+        fclose($res);
+
+        // ダウンロード開始
+
+        // ファイルタイプ（csv）
+        header('Content-Type: application/octet-stream');
+
+        // ファイル名
+        header('Content-Disposition: attachment; filename=' . $fileName);
+        // ファイルのサイズ　ダウンロードの進捗状況が表示
+        header('Content-Length: ' . filesize($csvFileName));
+        header('Content-Transfer-Encoding: binary');
+        // ファイルを出力する
+        readfile($csvFileName);
+
+    } catch(Exception $e) {
+
+        // 例外処理をここに書きます
+        echo $e->getMessage();
 
     }
+}
 
 
 	//デバッグコンソールに情報を表示するためのもの。デバッグ用
