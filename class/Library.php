@@ -15,4 +15,4 @@ require_once('Hsc.php');
 require_once('Console_log.php');
 
 //////////////////////ログイン状態をチェック//////////////////////
-require_once('Checklogin.php');
+require_once('Check_login.php');

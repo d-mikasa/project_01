@@ -100,7 +100,7 @@ class Reservation extends Model
             'GROUP BY  reservation.user_id; ';
 
             $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$_SESSION['user_auth'] , $check_in, $check_out]);
+            $stmt->execute([$_SESSION['user_id'] , $check_in, $check_out]);
             $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
             //レコードが無いならリターンで返す
@@ -256,7 +256,7 @@ class Reservation extends Model
             'VALUES(?,?,?,?,?,?,?,?,?,?); ';
 
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$_SESSION['user_auth'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
+            $stmt->execute([$_SESSION['user_id'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
 
             //reservation_detailに追加する
             //AutoIncrementから番号を取得
@@ -303,7 +303,7 @@ class Reservation extends Model
             'WHERE '.
                 'id = ? ';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$_SESSION['user_auth']]);
+            $stmt->execute([$_SESSION['user_id']]);
             $user_name = $stmt->fetch(PDO::FETCH_ASSOC);
 
             //返す変数をまとめる

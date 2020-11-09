@@ -10,7 +10,7 @@ if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_tok
 }
 
 // sessionに保存してあるトークンを削除
-    unset($_SESSION["csrf_token"]);
+unset($_SESSION["csrf_token"]);
 
 $Reservation= new Reservation();
 $insert_date = $Reservation->updateReservation($_POST);
@@ -77,14 +77,14 @@ EOD;
     <main class="done_message">
         <?php if($insert_date == 'Error'):?>
             <div>
-            エラーが発生しました。再度ご登録ください。
+                エラーが発生しました。再度ご登録ください。
             </div>
         <?php else:?>
             <div>
-            予約致しました。<br>お客様のメールアドレスへ、確認のメールをお送りいたしました。
+                予約致しました。<br>お客様のメールアドレスへ、確認のメールをお送りいたしました。
             </div>
         <?php endif;?>
-    <a href="index.php">トップページへ戻る</a>
+        <a href="index.php">トップページへ戻る</a>
     </main>
 </body>
 </html>

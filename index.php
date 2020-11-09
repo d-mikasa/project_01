@@ -228,7 +228,7 @@ $(function() {
             <?php foreach($sortRoomList as $room_value):?>
                 <div class="roomA">
                     <?php if(empty($room_value['img'])):?>
-                    <img src="<?='./img/noimage.jpg'?>">
+                        <img src="<?='./img/noimage.jpg'?>">
                     <?php else:?>
                         <img src="<?='./img/' . $room_value['img']?>">
                     <?php endif;?>

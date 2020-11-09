@@ -2,9 +2,8 @@
 require_once('class/Library.php');
 checkLogin();
 
-//peymentが無いということは、URL直打ちか他の方法で来た
-if(empty($_POST['payment'])){
-    header('Location: reservation.php');
+if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_token'])) {
+    header('Location: login.php');
     exit();
 }
 
@@ -109,8 +108,7 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
         -->
     <main class="reservation_main">
         <form action="reservation_done.php" method="post">
-            <!--トークンを送信-->
-            <input type="hidden" name="csrf_token" value="<?=$Reservation->getToken()?>">
+            <input type="hidden" name="csrf_token" value="<?=$_POST['csrf_token']?>"><!-- token -->
             <!--実際に送信する情報群-->
             <input type="hidden" name="detail_id" value="<?=$_POST['detail_id']?>"><!-- 詳細番号 -->
             <input type="hidden" name="check_in" value="<?=$_POST['check_in']?>"><!-- チェックイン日 -->
