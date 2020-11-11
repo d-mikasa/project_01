@@ -2,7 +2,7 @@
 require_once('class/Library.php');
 checkLogin();
 
-if (!isset($_POST["csrf_token"]) OR ($_POST["csrf_token"] != $_SESSION['csrf_token'])) {
+if (!isset($_POST['csrf_token']) OR ($_POST['csrf_token'] != $_SESSION['csrf_token'])) {
     header('Location: login.php');
     exit();
 }
@@ -15,7 +15,7 @@ $rsv_info = $Reservation->checkReservation($_POST['detail_id'], $_POST['check_in
 //選択した部屋の内容を取得する
 $room_info = $Reservation->getReservationRoom($_POST['detail_id']);
 
-$payment_conf = $Reservation ->getPayment($_POST['payment']);
+$payment = $Reservation ->getPayment($_POST['payment']);
 
 //エラー内容変数の初期化
 $error = [];
@@ -24,19 +24,25 @@ $error = [];
 //チェックインのバリデーション
 if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日時が空欄です';
-} else {
-    if (strtotime($_POST['check_in']) < strtotime('-1 day')) {
+} elseif (strtotime($_POST['check_in']) < strtotime('-1 day')) {
         $error['check_in'] = 'チェックイン日が過去を指定しています';
     }
-}
+
 
 //チェックアウトのバリデーション
 if (empty($_POST['check_out'])) {
     $error['check_out'] = 'チェックアウト日が空欄です';
-} else {
-    if (strtotime($_POST['check_out']) < strtotime('-1 day')) {
+} elseif (strtotime($_POST['check_out']) < strtotime('-1 day')) {
         $error['check_out'] = 'チェックアウト日が過去を指定しています';
     }
+
+//予約が日付以内の物であるかどうかの確認
+if (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
+    $error['check_in'] = '３ヶ月以内のご予約のみ承っております';
+}
+
+if (strtotime($_POST['check_out']) >= (strtotime('+90 day'))) {
+    $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
 }
 
 //日付の整合性に関するバリデーション
@@ -45,53 +51,32 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 
     if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
         $error['check_in'] = 'チェックイン日がチェックアウト日時より後に指定されています';
-    }
-
-    if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
+    }elseif (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
         $error['check_out'] = 'チェックイン日とチェックアウト日時が同日に指定されています';
     }
 
-    //予約が日付以内の物であるかどうかの確認
-    if (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
-        $error['check_in'] = '３ヶ月以内のご予約のみ承っております';
-    }
-
-    if (strtotime($_POST['check_out']) >= (strtotime('+90 day'))) {
-        $error['check_out'] = '３ヶ月以内のご予約のみ承っております';
-    }
-
-    //チェックインとチェックアウトの日付を獲得、その後にSQL側で範囲の指定を行う。
-    if (empty($error['check_in']) and empty($error['check_out'])) {
+    //チェックインとチェックアウトの日付を獲得、その後にSQL側で範囲の指定を行う。empty($error['check_in']) && empty($error['check_out']) &&
+    if ($rsv_info != 'TRUE') {
         // 期間内の日付をすべて取得
-        if ($rsv_info != 'Not reservation room') {
-            $error['ather'] = $rsv_info;
-        }
+            $error['other'] = $rsv_info;
     }
 }
 
 //宿泊人数のバリデーション
 if (empty($_POST['capacity'])) {
     $error['capacity'] = '宿泊人数が空欄です';
-} else {
+} elseif ($_POST['capacity'] != $room_info['capacity'] && $_POST['capacity'] > $room_info['capacity']) {
     //部屋詳細から該当の宿泊人数のプランがあるかを検索する
-    if ($_POST['capacity'] != $room_info['capacity']) {
-        if ($_POST['capacity'] > $room_info['capacity']) {
-            $error['capacity'] = '宿泊人数が上限を超えています';
-        }
-    }
+    $error['capacity'] = '宿泊人数が上限を超えています';
 }
 
-for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime($_POST['check_out'])); $i++) {
-    $year = substr($i, 0, 4);
-    $month = substr($i, 4, 2);
-    $day = substr($i, 6, 2);
-    if (checkdate($month, $day, $year)) {
-        $cnt_stay[] = date('Y-m-d H:i:s', strtotime($i));
-    }
-}
+$datetime = new DateTime($_POST['check_out']);
+$current  = new DateTime($_POST['check_in']);
+$diff     = $current->diff($datetime);
+$cnt_stay = $diff->days;
+
+
 ?>
-<?php require_once('rsv_parts/head_info.php');?>
-<body class="background_conf">
     <?php if (!empty($error)) :?>
         <!--
         エラーがあって、もう一度フォームを送信する
@@ -99,6 +84,9 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
         <?php require_once('reservation.php');?>
         <?php exit();?>
     <?php endif;?>
+
+<?php require_once('rsv_parts/head_info.php');?>
+<body class="background_conf">
     <!--
     フォーム確認画面
     -->
@@ -110,56 +98,45 @@ for ($i = date('Ymd', strtotime($_POST['check_in'])); $i < date('Ymd', strtotime
         <form action="reservation_done.php" method="post">
             <input type="hidden" name="csrf_token" value="<?=$_POST['csrf_token']?>"><!-- token -->
             <!--実際に送信する情報群-->
-            <input type="hidden" name="detail_id" value="<?=$_POST['detail_id']?>"><!-- 詳細番号 -->
-            <input type="hidden" name="check_in" value="<?=$_POST['check_in']?>"><!-- チェックイン日 -->
-            <input type="hidden" name="check_out" value="<?=$_POST['check_out']?>"><!-- チェックアウト日 -->
-            <input type="hidden" name="capacity" value="<?=$_POST['capacity']?>"><!-- 宿泊人数 -->
-            <input type="hidden" name="payment" value="<?=$_POST['payment']?>"><!-- 支払い方法 -->
-            <input type="hidden" name="room_id" value="<?=$room_info['id']?>">
-            <input type="hidden" name="name" value="<?=$room_info['name']?>">
-            <input type="hidden" name="price" value="<?=$room_info['price']?>">
+            <input type="hidden" name="detail_id" value="<?=$_POST['detail_id']?>">
+            <input type="hidden" name="check_in" value="<?=$_POST['check_in']?>">
+            <input type="hidden" name="check_out" value="<?=$_POST['check_out']?>">
+            <input type="hidden" name="capacity" value="<?=$_POST['capacity']?>">
+            <input type="hidden" name="payment" value="<?=$_POST['payment']?>">
+
             <div class="titles">ご予約内容確認</div>
             <table class="conf_check_table">
                 <tr>
                     <th>部屋名</th>
-                    <td> <?=$room_info['name']?> </td>
+                    <td> <?=h($room_info['name'])?></td>
                 </tr>
                 <tr>
                     <th>チェックイン</th>
-                    <td> <?=$_POST['check_in']?> </td>
+                    <td> <?=h($_POST['check_in'])?></td>
                 </tr>
                 <tr>
                     <th>チェックアウト</th>
-                    <td> <?=$_POST['check_out']?> </td>
+                    <td> <?=h($_POST['check_out'])?></td>
                 </tr>
                 <tr>
                     <th>宿泊人数</th>
-                    <td> <?=$_POST['capacity']?> </td>
+                    <td> <?=h($_POST['capacity'])?></td>
                 </tr>
                 <tr>
                     <th>支払い方法</th>
-                    <td>
-                        <?=$payment_conf['name']?>
-                    </td>
+                    <td><?=h($payment['name'])?></td>
                 </tr>
                 <tr>
                     <th>合計金額</th>
-                    <td>¥<?=number_format($room_info['price'] * count($cnt_stay))?></td>
+                    <td>¥<?=h(number_format($room_info['price'] * $cnt_stay))?></td>
                 </tr>
             </table>
             <div class="final_check">以上の内容でお間違い無いでしょうか？</div>
             <p class="submit_form">
-                <button type="button" onclick="multipleaction('reservation_done.php')">予約する</button>
-                <button type="button" onclick="multipleaction('reservation.php')">キャンセル</button>
+                <button type="submit">予約する</button>
+                <button type="submit" formaction="reservation.php">キャンセル</button>
             </p>
         </form>
     </main>
 </body>
-<script>
-    function multipleaction(u) {
-        var f = document.querySelector('form');
-        var a = f.setAttribute('action', u);
-        document.querySelector('form').submit();
-    }
-</script>
 </html>

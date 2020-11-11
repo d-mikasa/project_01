@@ -267,8 +267,9 @@ th {
     課題４関係はここから下
 -------------------------*/
 .reservation_list_table{
-    width: 900px;
-    border: 1px solid black;
+        width: 70%;
+        height: 100%;
+        border-collapse: collapse;
 }
 
 .reservation_list_date{

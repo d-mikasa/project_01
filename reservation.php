@@ -4,12 +4,12 @@ checkLogin();
 
 $Reservation = new Reservation();
 
-$pull_down = $Reservation->getPullDownList();
-$room_pull_down = $pull_down['room'];
-$payment_pull_down = $pull_down['payment'];
+$pull_down_list = $Reservation->getPullDownList();
+$room_list = $pull_down_list['room'];
+$payment_list = $pull_down_list['payment'];
 
-if (!empty($_SESSION["csrf_token"])) {
-    unset($_SESSION["csrf_token"]);
+if (!empty($_SESSION['csrf_token'])) {
+    unset($_SESSION['csrf_token']);
 }
 
 if(!empty($_POST['payment'])){
@@ -34,7 +34,7 @@ if(!empty($_POST['payment'])){
                     <th>部屋名</th>
                     <td>
                         <select name="detail_id" id="target">
-                            <?php foreach ($room_pull_down as $value) :?>
+                            <?php foreach ($room_list as $value) :?>
                                 <option value="<?=$value['id']?>"<?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? ' selected' : '';?>>
                                     <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
                                 </option>
@@ -72,15 +72,15 @@ if(!empty($_POST['payment'])){
                     <td colspan="2" class="error"> <?=!empty($error['capacity']) ? $error['capacity'] : ''?> </td>
                 </tr>
                 <tr>
-                    <th>支払い方法 <br><span class="error"><?=!empty($error['payment']) ? $error['payment'] : ''?></span></th>
+                    <th>支払い方法 <br></th>
                     <td>
-                        <?php foreach($payment_pull_down as $key => $value):?>
-                            <div><input type="radio" name="payment" value="<?=$key+1?>"<?=($payment_state == $key+1) ? ' checked' : '';?>><?=$value['name']?></div>
+                        <?php foreach($payment_list as $key => $value):?>
+                            <div><input type="radio" name="payment" value="<?=$key?>"<?=($payment_state == $key) ? ' checked' : '';?>><?=$value?></div>
                         <?php endforeach;?>
                     </td>
                 </tr>
             </table>
-            <div class="date_error"><?=!empty($error['ather']) ? $error['ather'] : ''?></div>
+            <div class="date_error"><?=!empty($error['other']) ? $error['other'] : ''?></div>
             <p class="submit_form"><button type="submit">予約</p>
         </form>
     </main>

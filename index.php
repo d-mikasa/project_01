@@ -128,7 +128,7 @@ $(function() {
                     <li><a href="#access">アクセス</a></li>
                 </ul>
                 <div class="auth_index_sp">
-                <?php if($_SESSION['user_auth'] == '1'):?>
+                <?php if(!empty($_SESSION['user_auth']) && $_SESSION['user_auth'] == '1'):?>
                     <div class="user_info" >
                         <div class= "user_name">
                             <div>ログイン中</div>
@@ -155,7 +155,7 @@ $(function() {
                 </ul>
             </div>
             <div class="auth_index_pc">
-                <?php if($_SESSION['user_auth'] == '1'):?>
+                <?php if(!empty($_SESSION['user_auth']) && $_SESSION['user_auth'] == '1'):?>
                     <div class="user_info" >
                         <div class= "user_name">
                             <div>ログイン中</div>

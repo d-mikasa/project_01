@@ -31,13 +31,17 @@ class Reservation extends Model
 
         $sql =
         'SELECT '.
-            '* '.
+            'id, '.
+            'name '.
         'FROM '.
             'm_payment';
 
+            // $stmt = $this->dbh->query($sql);
+            // $result['payment'] = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
-        $result['payment'] = $stmt->fetchAll();
+        $result['payment'] = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
         return $result;
     }
@@ -139,7 +143,7 @@ class Reservation extends Model
             }
 
             //ここまで引っ掛からなかったら、予約が無いと返す
-            return 'Not reservation room';
+            return 'TRUE';
 
         } catch (PDOException $e) {
             header('Content-Type: text/plain; charset=UTF-8', true, 500);
@@ -210,6 +214,7 @@ class Reservation extends Model
     {
         parent::connect();
         $pdo = $this->dbh;
+        $room_info = $this -> getReservationRoom($set_data['detail_id']);
         try {
             //トランザクション開始
 			$this->dbh->beginTransaction();
@@ -220,24 +225,20 @@ class Reservation extends Model
             $check_out = $set_data['check_out'];
             $capacity = $set_data['capacity'];
             $payment = $set_data['payment'];
-            $room_id = $set_data['room_id'];
-            $name = $set_data['name'];
-            $price = $set_data['price'];
+
+            $return_list['room_id'] = $room_info['id'];
+            $return_list['name']= $room_info['name'];
+            $return_list['price']= $room_info['price'];
 
             //宿泊数をカウント
-            for ($i = date('Ymd', strtotime($check_in)); $i < date('Ymd', strtotime($check_out)); $i++) {
-                $year = substr($i, 0, 4);
-                $month = substr($i, 4, 2);
-                $day = substr($i, 6, 2);
-                if (checkdate($month, $day, $year)) {
-                    $days[] = date('Y-m-d H:i:s', strtotime($i));
-                }
-            }
-            //宿泊日数を定義
-            $total_stay = count($days);
+            //宿泊日数を定義 $total_stay
+            $datetime = new DateTime($_POST['check_out']);
+            $current  = new DateTime($_POST['check_in']);
+            $diff     = $current->diff($datetime);
+            $return_list['total_stay'] = $diff->days;
 
             //合計金額=宿泊人数＊料金＊宿泊日数
-            $total_price = intval($capacity) * intval($price) * $total_stay;
+            $return_list['total_price'] = intval($capacity) * intval($return_list['price']) * $return_list['total_stay'];
 
             //reservationに追加する
             $sql =
@@ -256,7 +257,7 @@ class Reservation extends Model
             'VALUES(?,?,?,?,?,?,?,?,?,?); ';
 
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$_SESSION['user_id'], $room_id, $detail_id, $name, $capacity, $total_price, 1, NULL, NULL, 1]);
+            $stmt->execute([$_SESSION['user_id'], $return_list['room_id'], $detail_id, $return_list['name'], $capacity, $return_list['total_price'], 1, NULL, NULL, 1]);
 
             //reservation_detailに追加する
             //AutoIncrementから番号を取得
@@ -272,7 +273,7 @@ class Reservation extends Model
             $id = $stmt;
 
             //宿泊日数の数だけINSERTする
-            for ($i = 0; $i < count($days); $i++) {
+            for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))) {
                 $sql =
                 'INSERT INTO '.
                     'reservation_detail( '.
@@ -281,7 +282,7 @@ class Reservation extends Model
                     'price) '.
                 'VALUES(?,?,?); ';
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $days[$i], $price]);
+                $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $i, $return_list['price']]);
             }
 
             //支払い情報をテーブルに追加する
@@ -304,12 +305,11 @@ class Reservation extends Model
                 'id = ? ';
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$_SESSION['user_id']]);
-            $user_name = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
             //返す変数をまとめる
-            $return_list['user_name'] = $user_name['mail'];
-            $return_list['total_price'] = $total_price;
-            $return_list['total_stay'] = $total_stay;
+            $return_list['user_mail'] = $user_info['mail'];
+            $return_list['user_name'] = $user_info['name'];
             $this->dbh->commit();
             return $return_list;
 
