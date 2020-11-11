@@ -127,6 +127,17 @@ $(function() {
                     <li><a href="#gallery">ギャラリー</a></li>
                     <li><a href="#access">アクセス</a></li>
                 </ul>
+                <div class="auth_index_sp">
+                <?php if($_SESSION['user_auth'] == '1'):?>
+                    <div class="user_info" >
+                        <div class= "user_name">
+                            <div>ログイン中</div>
+                            <div><?=$_SESSION['user_name']?> 様 </div>
+                            <div class="logout_link"><a href="logout.php">ログアウト</a></div>
+                        </div>
+                    </div>
+                <?php endif;?>
+                </div>
             </div>
         </div>
         <div class="menu_pc">
@@ -143,6 +154,17 @@ $(function() {
                     <li><a href="#access">アクセス</a></li>
                 </ul>
             </div>
+            <div class="auth_index_pc">
+                <?php if($_SESSION['user_auth'] == '1'):?>
+                    <div class="user_info" >
+                        <div class= "user_name">
+                            <div>ログイン中</div>
+                            <div><?=$_SESSION['user_name']?> 様 </div>
+                            <div class="logout_link"><a href="logout.php">ログアウト</a></div>
+                        </div>
+                    </div>
+                <?php endif;?>
+                </div>
         </div>
     </aside>
     <!--ヘッダー-->

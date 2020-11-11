@@ -35,7 +35,7 @@ if(!empty($_POST['payment'])){
                     <td>
                         <select name="detail_id" id="target">
                             <?php foreach ($room_pull_down as $value) :?>
-                                <option value="<?=$value['id']?>" <?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? 'selected' : '';?>>
+                                <option value="<?=$value['id']?>"<?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? ' selected' : '';?>>
                                     <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
                                 </option>
                             <?php endforeach;?>
@@ -75,7 +75,7 @@ if(!empty($_POST['payment'])){
                     <th>支払い方法 <br><span class="error"><?=!empty($error['payment']) ? $error['payment'] : ''?></span></th>
                     <td>
                         <?php foreach($payment_pull_down as $key => $value):?>
-                            <div><input type="radio" name="payment" value="<?=$key+1?>" <?=($payment_state == $key+1) ? 'checked' : '';?>><?=$value['name']?></div>
+                            <div><input type="radio" name="payment" value="<?=$key+1?>"<?=($payment_state == $key+1) ? ' checked' : '';?>><?=$value['name']?></div>
                         <?php endforeach;?>
                     </td>
                 </tr>
