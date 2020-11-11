@@ -36,9 +36,6 @@ class Reservation extends Model
         'FROM '.
             'm_payment';
 
-            // $stmt = $this->dbh->query($sql);
-            // $result['payment'] = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
         $result['payment'] = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);

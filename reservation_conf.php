@@ -25,16 +25,16 @@ $error = [];
 if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日時が空欄です';
 } elseif (strtotime($_POST['check_in']) < strtotime('-1 day')) {
-        $error['check_in'] = 'チェックイン日が過去を指定しています';
-    }
+    $error['check_in'] = 'チェックイン日が過去を指定しています';
+}
 
 
 //チェックアウトのバリデーション
 if (empty($_POST['check_out'])) {
     $error['check_out'] = 'チェックアウト日が空欄です';
 } elseif (strtotime($_POST['check_out']) < strtotime('-1 day')) {
-        $error['check_out'] = 'チェックアウト日が過去を指定しています';
-    }
+    $error['check_out'] = 'チェックアウト日が過去を指定しています';
+}
 
 //予約が日付以内の物であるかどうかの確認
 if (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
@@ -58,7 +58,7 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
     //チェックインとチェックアウトの日付を獲得、その後にSQL側で範囲の指定を行う。empty($error['check_in']) && empty($error['check_out']) &&
     if ($rsv_info != 'TRUE') {
         // 期間内の日付をすべて取得
-            $error['other'] = $rsv_info;
+        $error['other'] = $rsv_info;
     }
 }
 
@@ -77,23 +77,22 @@ $cnt_stay = $diff->days;
 
 
 ?>
-    <?php if (!empty($error)) :?>
-        <!--
-        エラーがあって、もう一度フォームを送信する
-        -->
-        <?php require_once('reservation.php');?>
-        <?php exit();?>
-    <?php endif;?>
-
+<?php if (!empty($error)) :?>
+    <!--
+    エラーがあって、もう一度フォームを送信する
+    -->
+    <?php require_once('reservation.php');?>
+    <?php exit();?>
+<?php endif;?>
 <?php require_once('rsv_parts/head_info.php');?>
 <body class="background_conf">
     <!--
     フォーム確認画面
     -->
     <?php require_once('rsv_parts/status_nav.php')?>
-        <!--
-        エラーが無く、送信することが可能な画面
-        -->
+    <!--
+    エラーが無く、送信することが可能な画面
+    -->
     <main class="reservation_main">
         <form action="reservation_done.php" method="post">
             <input type="hidden" name="csrf_token" value="<?=$_POST['csrf_token']?>"><!-- token -->

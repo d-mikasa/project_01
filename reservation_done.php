@@ -13,10 +13,10 @@ if (!isset($_POST['csrf_token']) OR ($_POST['csrf_token'] != $_SESSION['csrf_tok
 // unset($_SESSION["csrf_token"]);
 
 try {
-$Reservation= new Reservation();
-$insert_data = $Reservation->updateReservation($_POST);
+    $Reservation= new Reservation();
+    $insert_data = $Reservation->updateReservation($_POST);
 
-//PDOエラーが発生したらメールを送らない。
+    //PDOエラーが発生したらメールを送らない。
     $total_price = $insert_data['total_price'];
 
     //メール送信内容
@@ -64,14 +64,15 @@ $insert_data = $Reservation->updateReservation($_POST);
     // メール送信メソッド
     mb_send_mail($insert_data['user_mail'], $title, $message, $header);
     $error_message = '予約致しました<br>お客様のメールアドレスへ、確認のメールをお送りいたしました。';
+
 } catch (PDOException $e) {
-$error_message = 'エラーが発生しました。再度ご登録ください。';
+    $error_message = 'エラーが発生しました。再度ご登録ください。';
 }
 
 ?>
 <?php require_once('rsv_parts/head_info.php');?>
 <body class="background_done">
-<?php require_once('rsv_parts/status_nav.php')?>
+    <?php require_once('rsv_parts/status_nav.php')?>
     <main class="done_message">
             <div>
                 <?=$error_message?>
