@@ -201,9 +201,6 @@ class Reservation extends Model
      *@param $set_data[check_out] チェックアウトの日付
      *@param $set_data[capacity] 宿泊人数
      *@param $set_data[payment] 支払い方法
-     *@param $set_data[price] 請求額
-     *@param $set_data[name] 部屋名
-     *@param $set_data[room_id] 部屋番号、room_id
 
      *@return $return_list メールを送信するための情報群
      */
