@@ -267,26 +267,35 @@ th {
     課題４関係はここから下
 -------------------------*/
 .reservation_list_table{
-        width: 70%;
+        width: 100%;
         height: 100%;
         border-collapse: collapse;
 }
 
 .reservation_list_date{
-width: 10%;
+width: 20%;
 }
 .reservation_list_name{
-    width: 20%;
-}
-.reservation_list_room{
-    width: 20%;
+    width: 30%;
 }
 .reservation_list_price{
-    width: 20%;
+    width: 30%;
 }
 .reservation_list_number{
-    width: 10%;
+    width: 30%;
 }
 .csv_download{
     margin-bottom: 10px;
+}
+.reservation_list_form{
+    display: flex;
+}
+.reservation_list_form>div{
+    margin: 0 10px 0 10px;
+}
+.reservation_list_button{
+    display: flex;
+}
+.reservation_list_button>div{
+    margin: 15px 10px 0 10px;
 }

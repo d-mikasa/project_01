@@ -31,29 +31,32 @@ $Room->export($list);
 <?php require_once('parts/top.parts.php'); ?>
 <main>
     <form action="" method="post">
-        <div>
-            日付選択
-            <select name="date" id="target">
-                <?php foreach ($year_month as $value) : ?>
-                    <option value="<?=$value['date']?>"  <?=(!empty($_POST['date']) && ($_POST['date']) == $value['date']) ? 'selected' : '';?>>
-                        <?= $value['date'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+        <div class="reservation_list_form">
+            <div>
+                日付選択
+                <select name="date" id="target">
+                    <?php foreach ($year_month as $value) : ?>
+                        <option value="<?=$value['date']?>"  <?=(!empty($_POST['date']) && ($_POST['date']) == $value['date']) ? 'selected' : '';?>>
+                            <?= $value['date'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                客室選択
+                <select name="detail_id" id="target">
+                                    <?php foreach ($room_pull_down  as $value) :?>
+                                        <option value="<?=$value['id']?>" <?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? 'selected' : '';?>>
+                                            <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
+                                        </option>
+                                    <?php endforeach;?>
+                                </select>
+            </div>
         </div>
-
-        <div>
-            客室選択
-            <select name="detail_id" id="target">
-                                <?php foreach ($room_pull_down  as $value) :?>
-                                    <option value="<?=$value['id']?>" <?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? 'selected' : '';?>>
-                                        <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
-                                    </option>
-                                <?php endforeach;?>
-                            </select>
+        <div class="reservation_list_button">
+            <div><input type="submit" value="表示する"></div>
+            <div><button type="submit" value="export" name="export" class="csv_download">表示内容のCSVダウンロード</button></div>
         </div>
-        <p><input type="submit" value="表示する"></p>
-        <button type="submit" value="export" name="export" class="csv_download">表示内容のCSVダウンロード</button>
     </form>
 
 <?php if(!empty($list)):?>

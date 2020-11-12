@@ -231,8 +231,8 @@ class Reservation extends Model
             $diff     = $current->diff($datetime);
             $return_list['total_stay'] = $diff->days;
 
-            //合計金額=宿泊人数＊料金＊宿泊日数
-            $return_list['total_price'] = intval($capacity) * intval($return_list['price']) * $return_list['total_stay'];
+            //合計金額=料金＊宿泊日数
+            $return_list['total_price'] = intval($return_list['price']) * $return_list['total_stay'];
 
             //reservationに追加する
             $sql =
