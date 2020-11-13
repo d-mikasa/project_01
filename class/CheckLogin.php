@@ -1,7 +1,7 @@
 <?php
 function checkLogin()
 {
-    if ($_SESSION['user_auth'] == false) {
+    if (empty($_SESSION['user_auth'])) {
         header('Location: login.php');
         exit();
     }

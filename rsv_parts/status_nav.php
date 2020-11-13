@@ -1,10 +1,10 @@
 <?php
-    //URIを取得する（hoge_hoge.php)
-    $url = basename($_SERVER['PHP_SELF']);
+//URIを取得する（hoge_hoge.php)
+$url = basename($_SERVER['PHP_SELF']);
 
-    // ' 拡張子' から前の文字列を取得
-    $str = strrpos($url, '.php');
-    $state = substr($url, 0, $str);
+// ' 拡張子' から前の文字列を取得
+$str = strrpos($url, '.php');
+$state = substr($url, 0, $str);
 
 ?>
 <nav>

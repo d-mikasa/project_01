@@ -12,11 +12,7 @@ if (!empty($_SESSION['csrf_token'])) {
     unset($_SESSION['csrf_token']);
 }
 
-if(!empty($_POST['payment'])){
-    $payment_state = $_POST['payment'];
-}else{
-    $payment_state = 1;
-}
+$payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
 
 ?>
 <?php require_once('rsv_parts/head_info.php');?>

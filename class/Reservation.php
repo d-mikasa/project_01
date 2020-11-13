@@ -140,11 +140,11 @@ class Reservation extends Model
             }
 
             //ここまで引っ掛からなかったら、予約が無いと返す
-            return 'TRUE';
+            return TRUE;
 
         } catch (PDOException $e) {
-            header('Content-Type: text/plain; charset=UTF-8', true, 500);
-            exit($e->getMessage());
+            header('Location: reservation_error.php');
+            exit();
         }
     }
 
@@ -265,6 +265,7 @@ class Reservation extends Model
                     'AND TABLE_NAME   = \'reservation\' ';
             $stmt = $pdo->query($sql)->fetchAll();
             $id = $stmt;
+            $return_list['reservation_id'] = $id[0]['AUTO_INCREMENT'] - 1;
 
             //宿泊日数の数だけINSERTする
             for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))) {
@@ -276,7 +277,7 @@ class Reservation extends Model
                     'price) '.
                 'VALUES(?,?,?); ';
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $i, $return_list['price']]);
+                $stmt->execute([$return_list['reservation_id'], $i, $return_list['price']]);
             }
 
             //支払い情報をテーブルに追加する
@@ -287,7 +288,7 @@ class Reservation extends Model
                 'payment_id) '.
             'VALUES(?,?); ';
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$id[0]['AUTO_INCREMENT'] - 1, $payment]);
+            $stmt->execute([$return_list['reservation_id'], $payment]);
 
             //追加したユーザーを返す
             $sql =
@@ -323,4 +324,72 @@ class Reservation extends Model
         $_SESSION['csrf_token'] = $csrf_token;
         return $csrf_token;
     }
+
+    //dateの型をチェックする
+    function validateDateFormat($value)
+    {
+        if(preg_match('/\A\d{4}-\d{1,2}-\d{1,2}\z/', $value) == false)
+        {
+            header('Location: reservation_error.php');
+            exit();
+        }
+
+        list($year, $month, $day) = explode('-', $value);
+
+        if(checkdate($month, $day, $year) == false)
+        {
+            header('Location: reservation_error.php');
+            exit();
+        }
+        return TRUE;
+    }
+
+    //数値が正しいかどうかをチェックする（整数、１以上）
+    function numericFormat($value) {
+        $options = ['options' => ['min_range' => 1]];
+        if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) == FALSE){
+            header('Location: reservation_error.php');
+            exit();
+        }
+        return TRUE;
+    }
+
+      //ルームIDが存在してるか、変なIDが入っていないかをチェックする
+    function roomidFormat($id)
+    {
+        parent::connect();
+        $this -> numericFormat($id);
+        $sql =
+        'SELECT '.
+            '* '.
+        'FROM '.
+            'room_detail '.
+        'WHERE '.
+            'id = ? ';
+        $stmt =$this->dbh->prepare($sql);
+        $stmt->execute([$id]);
+        $check = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(empty($check)){
+            header('Location: reservation_error.php');
+            exit();
+        }
+    }
+
+    function paymentFormat($payment)
+    {
+        parent::connect();
+        $this->numericFormat($payment);
+        $temp = $this->getPullDownList();
+
+        $list = array_keys($temp['payment']);
+
+        $result = in_array($payment,$list);
+        if($result == FALSE){
+            header('Location: reservation_error.php');
+            exit();
+        }
+    return;
+    }
+
 }
