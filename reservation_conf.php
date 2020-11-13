@@ -34,6 +34,10 @@ if (empty($_POST['check_in'])) {
 }else{
     //Is the check_in value correct?
     $Reservation -> validateDateFormat($_POST['check_in']);
+    
+    if (strtotime($_POST['check_in']) < strtotime('-1 day')) {
+        $error['check_in'] = 'チェックイン日が過去を指定しています';
+    }
 }
 
 //チェックアウトのバリデーション
@@ -42,14 +46,12 @@ if (empty($_POST['check_out'])) {
 } else{
     //Is the check_out value correct?
     $Reservation -> validateDateFormat($_POST['check_out']);
+
+    if (strtotime($_POST['check_out']) < strtotime('-1 day')) {
+        $error['check_out'] = 'チェックアウト日が過去を指定しています';
+    }
 }
 
-if (strtotime($_POST['check_in']) < strtotime('-1 day')) {
-    $error['check_in'] = 'チェックイン日が過去を指定しています';
-}
-if (strtotime($_POST['check_out']) < strtotime('-1 day')) {
-    $error['check_out'] = 'チェックアウト日が過去を指定しています';
-}
 //日付の整合性に関するバリデーション
 if (empty($error['check_in']) and empty($error['check_out'])) {
     //チェックイン・チェックアウトが入力されていた場合
