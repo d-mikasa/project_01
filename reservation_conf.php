@@ -7,25 +7,27 @@ if (!isset($_POST['csrf_token']) OR $_POST['csrf_token'] != $_SESSION['csrf_toke
     exit();
 }
 
-
 $Reservation = new Reservation();
 
 //Is the capacity value correct?
-$Reservation -> numericFormat($_POST['capacity']);
-
-//Is the payment value correct?
-$Reservation -> paymentFormat($_POST['payment']);
+$Reservation->checkNumeric($_POST['capacity']);
 
 //Is the detail_id value correct?
-$Reservation -> roomidFormat($_POST['detail_id']);
+// $Reservation->roomIdFormat($_POST['detail_id']);
+
 $rsv_info = $Reservation->checkReservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out']);
-if($rsv_info !== TRUE){
+if($rsv_info !== true){
     $error['other'] = $rsv_info;
 }
 
 $room_info = $Reservation->getReservationRoom($_POST['detail_id']);
+if($room_info == false ){
+    //値がないことは想定していないが、一応ログインに戻す処理を入れる
+    header('Location: login.php');
+    exit();
+}
 
-$payment = $Reservation ->getPayment($_POST['payment']);
+$payment = $Reservation->getPayment($_POST['payment']);
 
 ////////////////////////////////////////////日付系のバリデーションまとめ////////////////////////////////////////////
 //チェックインのバリデーション
@@ -33,8 +35,8 @@ if (empty($_POST['check_in'])) {
     $error['check_in'] = 'チェックイン日が空欄です';
 }else{
     //Is the check_in value correct?
-    $Reservation -> validateDateFormat($_POST['check_in']);
-    
+    $Reservation->validateDateFormat($_POST['check_in']);
+
     if (strtotime($_POST['check_in']) < strtotime('-1 day')) {
         $error['check_in'] = 'チェックイン日が過去を指定しています';
     }
@@ -45,7 +47,7 @@ if (empty($_POST['check_out'])) {
     $error['check_out'] = 'チェックアウト日が空欄です';
 } else{
     //Is the check_out value correct?
-    $Reservation -> validateDateFormat($_POST['check_out']);
+    $Reservation->validateDateFormat($_POST['check_out']);
 
     if (strtotime($_POST['check_out']) < strtotime('-1 day')) {
         $error['check_out'] = 'チェックアウト日が過去を指定しています';
@@ -58,12 +60,10 @@ if (empty($error['check_in']) and empty($error['check_out'])) {
 
     if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
         $error['other'] = 'チェックインがチェックアウトより後に指定されています';
-    }else{
-        if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
-            $error['other'] = 'チェックインとチェックアウトが同日に指定されています';
-        } elseif (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
-            $error['other'] = '３ヶ月以内のご予約のみ承っております';
-        }
+    }else if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
+        $error['other'] = 'チェックインとチェックアウトが同日に指定されています';
+    } elseif (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
+        $error['other'] = '３ヶ月以内のご予約のみ承っております';
     }
 }
 
@@ -75,15 +75,15 @@ if (empty($_POST['capacity'])) {
     $error['capacity'] = '宿泊人数が上限を超えています';
 }
 
-$datetime = new DateTime($_POST['check_out']);
-$current  = new DateTime($_POST['check_in']);
-$diff     = $current->diff($datetime);
-$cnt_stay = $diff->days;
-
 if (!empty($error)){
     require_once('reservation.php');
     exit();
 }
+
+$check_out = new DateTime($_POST['check_out']);
+$check_in  = new DateTime($_POST['check_in']);
+$diff     = $check_in->diff($check_out);
+$cnt_stay = $diff->days;
 ?>
 
 <?php require_once('rsv_parts/head_info.php');?>

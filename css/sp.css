@@ -298,11 +298,16 @@ footer p{
 /*TOPに戻るボタン*/
 
 .auth_index_sp{
-    margin-top: 60px;
+  margin-top: 60px;
 }
 
 .auth_index_sp a{
-    color:blue;
+  color:blue;
+}
+
+.user_name{
+  display: flex;
+  flex-direction: column;
 }
 
 }

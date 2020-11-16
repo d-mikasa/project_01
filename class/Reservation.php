@@ -13,28 +13,30 @@ class Reservation extends Model
     {
         parent::connect();
         $sql =
-        'SELECT '.
-            'room_detail.id, '.
-            'room.name, '.
-            'room_detail.capacity, '.
-            'room_detail.price, '.
-            'room_detail.remarks '.
-        'FROM '.
-            'room_detail '.
-        'JOIN '.
-            'room '.
-                'ON room_detail.room_id = room.id ';
+            'SELECT '.
+                'room_detail.id, '.
+                'room.name, '.
+                'room_detail.capacity, '.
+                'room_detail.price, '.
+                'room_detail.remarks '.
+            'FROM '.
+                'room_detail '.
+            'JOIN '.
+                'room '.
+                    'ON room_detail.room_id = room.id '
+        ;
 
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
         $result['room'] = $stmt->fetchAll();
 
         $sql =
-        'SELECT '.
-            'id, '.
-            'name '.
-        'FROM '.
-            'm_payment';
+            'SELECT '.
+                'id, '.
+                'name '.
+            'FROM '.
+                'm_payment'
+        ;
 
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute();
@@ -55,16 +57,25 @@ class Reservation extends Model
     {
         parent::connect();
         $sql =
-        'SELECT '.
-            '* '.
-        'FROM '.
-            'm_payment '.
-        'WHERE '.
-            'id = ?';
+            'SELECT '.
+                '* '.
+            'FROM '.
+                'm_payment '.
+            'WHERE '.
+                'id = ?'
+        ;
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $return = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $this->checkNumeric($id);
+        if($id != $return['id']){
+            header('Location: reservation_error.php');
+            exit();
+        }
+        return $return;
     }
+
 
     /**
     *予約状況を確認するための情報を取得する
@@ -79,73 +90,68 @@ class Reservation extends Model
     */
     public function checkReservation($id, $check_in, $check_out) //選択した部屋の予約状況をチェックする
     {
-        try {
-            parent::connect();
-            /*
-            Userが予約している日があるかどうか
-            */
-            $sql =
+        parent::connect();
+        /*
+        Userが予約している日があるかどうか
+        */
+        $sql =
             'SELECT ' .
                 'reservation.id, ' .
                 'reservation_detail.reservation_id, ' .
-                'GROUP_CONCAT(distinct(reservation.user_id)) as \'user_id\', ' .
-                'GROUP_CONCAT(reservation_detail.date) AS \'date\' ' .
+                'GROUP_CONCAT(distinct(reservation.user_id)) AS user_id, ' .
+                'GROUP_CONCAT(reservation_detail.date) AS date ' .
             'FROM ' .
                 'reservation ' .
                     'INNER JOIN reservation_detail '.
                         'ON reservation.id = reservation_detail.reservation_id ' .
             'WHERE ' .
-                    ' reservation.user_id = ? '.
-                    'AND reservation_detail.date >=? ' .
-                    'AND reservation_detail.date <=? ' .
-            'GROUP BY  reservation.user_id; ';
+                ' reservation.user_id = ? '.
+                    'AND reservation_detail.date >= ? ' .
+                    'AND reservation_detail.date <= ? ' .
+            'GROUP BY  reservation.user_id; '
+        ;
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$_SESSION['user_id'] , $check_in, $check_out]);
+        $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$_SESSION['user_id'] , $check_in, $check_out]);
-            $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        //レコードが無いならリターンで返す
+        if(!empty($result)){
+            return 'お客様はすでに該当日に予約されています';
+        }
 
-            //レコードが無いならリターンで返す
-            if(!empty($result)){
-                return 'お客様はすでに該当日に予約されています';
-            }
-
-            /*
-            該当の部屋が予約されているかどうか
-            */
-            $sql =
+        /*
+        該当の部屋が予約されているかどうか
+        */
+        $sql =
             'SELECT ' .
                 'reservation.id, ' .
-                'GROUP_CONCAT(distinct(reservation.user_id)) as \'user_id\', ' .
+                'GROUP_CONCAT(distinct(reservation.user_id)) AS user_id, ' .
                 'reservation.room_id, ' .
                 'reservation.room_detail_id, ' .
                 'reservation.room_detail_name, ' .
-                'GROUP_CONCAT(reservation_detail.date) AS \'date\' ' .
+                'GROUP_CONCAT(reservation_detail.date) AS date ' .
             'FROM ' .
                 'reservation ' .
                     'INNER JOIN reservation_detail '.
                         'ON reservation.id = reservation_detail.reservation_id ' .
             'WHERE ' .
                 'reservation.room_detail_id = ? ' .
-                    'AND reservation_detail.date >=? ' .
-                    'AND reservation_detail.date <=? ' .
-            'GROUP BY  reservation.user_id; ';
+                    'AND reservation_detail.date >= ? ' .
+                    'AND reservation_detail.date <= ? ' .
+            'GROUP BY  reservation.user_id; '
+        ;
 
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$id, $check_in, $check_out]);
-            $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id, $check_in, $check_out]);
+        $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
-            //レコードが無いならリターンで返す
-            if (!empty($result)){
-                return '満室のため、他の日付か部屋を選択してください';
-            }
-
-            //ここまで引っ掛からなかったら、予約が無いと返す
-            return TRUE;
-
-        } catch (PDOException $e) {
-            header('Location: reservation_error.php');
-            exit();
+        //レコードが無いならリターンで返す
+        if (!empty($result)){
+            return '満室のため、他の日付か部屋を選択してください';
         }
+
+        //ここまで引っ掛からなかったら、予約が無いと返す
+        return true;
     }
 
     /**
@@ -156,39 +162,52 @@ class Reservation extends Model
     *@param $id 部屋詳細のID(room_detail_id)
     *@return $result 部屋が見つからなかった場合はエラー文を返す
     */
-
     public function getReservationRoom($id) //選択した部屋の情報を取得
     {
-        try {
-            parent::connect();
-            $sql =
+        parent::connect();
+        $this -> checkNumeric($id);
+        $sql =
+            'SELECT '.
+                '* '.
+            'FROM '.
+                'room_detail '.
+            'WHERE '.
+                'id = ? '
+        ;
+        $stmt =$this->dbh->prepare($sql);
+        $stmt->execute([$id]);
+        $check = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if(empty($check)){
+            header('Location: reservation_error.php');
+            exit();
+        }
+
+        $sql =
             'SELECT '.
                 'room.id, '.
                 'room.name, '.
-                'room_detail.id AS "detail_id", '.
+                'room_detail.id AS detail_id, '.
                 'room_detail.capacity, '.
                 'room_detail.remarks, '.
                 'room_detail.price, '.
-                'room_detail.name AS "detail_name" '.
+                'room_detail.name AS detail_name '.
             ' FROM '.
                 'room '.
             'INNER JOIN '.
                 'room_detail '.
                     'ON room.id = room_detail.room_id '.
-            'WHERE room_detail.id = ? ';
+            'WHERE room_detail.id = ?'
+        ;
 
-            $stmt = $this->dbh->prepare($sql);
-            $stmt->execute([$id]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->dbh->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (empty($result)) {
-                return 'not found room';
-            }
-            return $result;
-        } catch (PDOException $e) {
-            header('Content-Type: text/plain; charset=UTF-8', true, 500);
-            exit($e->getMessage());
+        if (empty($result)) {
+            return false;
         }
+        return $result;
     }
 
     /**
@@ -226,9 +245,9 @@ class Reservation extends Model
 
             //宿泊数をカウント
             //宿泊日数を定義 $total_stay
-            $datetime = new DateTime($_POST['check_out']);
-            $current  = new DateTime($_POST['check_in']);
-            $diff     = $current->diff($datetime);
+            $check_out_temp = new DateTime($_POST['check_out']);
+            $check_in_temp  = new DateTime($_POST['check_in']);
+            $diff     = $check_in_temp->diff($check_out_temp);
             $return_list['total_stay'] = $diff->days;
 
             //合計金額=料金＊宿泊日数
@@ -236,33 +255,47 @@ class Reservation extends Model
 
             //reservationに追加する
             $sql =
-            'INSERT INTO '.
-                'reservation( '.
-                    'user_id, '.
-                    'room_id, '.
-                    'room_detail_id, '.
-                    'room_detail_name, '.
-                    'number, '.
-                    'total_price, '.
-                    'status, '.
-                    'created_at, '.
-                    'updated_at, '.
-                    'delete_flg) '.
-            'VALUES(?,?,?,?,?,?,?,?,?,?); ';
-
+                'INSERT INTO '.
+                    'reservation( '.
+                        'user_id, '.
+                        'room_id, '.
+                        'room_detail_id, '.
+                        'room_detail_name, '.
+                        'number, '.
+                        'total_price, '.
+                        'status, '.
+                        'created_at, '.
+                        'updated_at, '.
+                        'delete_flg) '.
+                'VALUES(?,?,?,?,?,?,?,?,?,?); '
+            ;
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$_SESSION['user_id'], $return_list['room_id'], $detail_id, $return_list['name'], $capacity, $return_list['total_price'], 1, NULL, NULL, 1]);
+
+            $temp = array(
+                $_SESSION['user_id'],
+                $return_list['room_id'],
+                $detail_id,
+                $return_list['name'],
+                $capacity,
+                $return_list['total_price'],
+                1,
+                NULL,
+                NULL,
+                1
+            );
+            $stmt->execute($temp);
 
             //reservation_detailに追加する
             //AutoIncrementから番号を取得
             $sql =
-            'SELECT '.
-                'AUTO_INCREMENT '.
-            'FROM '.
-                'INFORMATION_SCHEMA.TABLES '.
-            'WHERE '.
-                'TABLE_SCHEMA = \'d_mikasa\' '.
-                    'AND TABLE_NAME   = \'reservation\' ';
+                'SELECT '.
+                    'AUTO_INCREMENT '.
+                'FROM '.
+                    'INFORMATION_SCHEMA.TABLES '.
+                'WHERE '.
+                    'TABLE_SCHEMA = \'d_mikasa\' '.
+                        'AND TABLE_NAME = \'reservation\' '
+            ;
             $stmt = $pdo->query($sql)->fetchAll();
             $id = $stmt;
             $return_list['reservation_id'] = $id[0]['AUTO_INCREMENT'] - 1;
@@ -270,34 +303,37 @@ class Reservation extends Model
             //宿泊日数の数だけINSERTする
             for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))) {
                 $sql =
-                'INSERT INTO '.
-                    'reservation_detail( '.
-                    'reservation_id, '.
-                    'date, '.
-                    'price) '.
-                'VALUES(?,?,?); ';
+                    'INSERT INTO '.
+                        'reservation_detail( '.
+                        'reservation_id, '.
+                        'date, '.
+                        'price) '.
+                    'VALUES(?,?,?); '
+                ;
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$return_list['reservation_id'], $i, $return_list['price']]);
             }
 
             //支払い情報をテーブルに追加する
             $sql =
-            'INSERT INTO '.
-                'reservation_payment( '.
-                'reservation_id, '.
-                'payment_id) '.
-            'VALUES(?,?); ';
+                'INSERT INTO '.
+                    'reservation_payment( '.
+                    'reservation_id, '.
+                    'payment_id) '.
+                'VALUES(?,?); '
+            ;
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$return_list['reservation_id'], $payment]);
 
             //追加したユーザーを返す
             $sql =
-            'SELECT '.
-                '* '.
-            'FROM '.
-                'user '.
-            'WHERE '.
-                'id = ? ';
+                'SELECT '.
+                    '* '.
+                'FROM '.
+                    'user '.
+                'WHERE '.
+                    'id = ? '
+            ;
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$_SESSION['user_id']]);
             $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -306,12 +342,13 @@ class Reservation extends Model
             $return_list['user_mail'] = $user_info['mail'];
             $return_list['user_name'] = $user_info['name'];
             $this->dbh->commit();
+
             return $return_list;
 
         } catch (PDOException $e) {
 		//ロールバック処理
         $this->dbh->rollback();
-        return 'Error';
+        return $e;
         }
     }
 
@@ -341,55 +378,15 @@ class Reservation extends Model
             header('Location: reservation_error.php');
             exit();
         }
-        return TRUE;
     }
 
     //数値が正しいかどうかをチェックする（整数、１以上）
-    function numericFormat($value) {
+    function checkNumeric($value) {
         $options = ['options' => ['min_range' => 1]];
-        if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) == FALSE){
+        if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) == false){
             header('Location: reservation_error.php');
             exit();
         }
-        return TRUE;
-    }
-
-      //ルームIDが存在してるか、変なIDが入っていないかをチェックする
-    function roomidFormat($id)
-    {
-        parent::connect();
-        $this -> numericFormat($id);
-        $sql =
-        'SELECT '.
-            '* '.
-        'FROM '.
-            'room_detail '.
-        'WHERE '.
-            'id = ? ';
-        $stmt =$this->dbh->prepare($sql);
-        $stmt->execute([$id]);
-        $check = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if(empty($check)){
-            header('Location: reservation_error.php');
-            exit();
-        }
-    }
-
-    function paymentFormat($payment)
-    {
-        parent::connect();
-        $this->numericFormat($payment);
-        $temp = $this->getPullDownList();
-
-        $list = array_keys($temp['payment']);
-
-        $result = in_array($payment,$list);
-        if($result == FALSE){
-            header('Location: reservation_error.php');
-            exit();
-        }
-    return;
     }
 
 }

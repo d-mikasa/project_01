@@ -13,7 +13,6 @@ if (!empty($_SESSION['csrf_token'])) {
 }
 
 $payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
-
 ?>
 <?php require_once('rsv_parts/head_info.php');?>
 <body class="background_reservation">
@@ -31,7 +30,7 @@ $payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
                     <td>
                         <select name="detail_id" id="target">
                             <?php foreach ($room_list as $value) :?>
-                                <option value="<?=$value['id']?>"<?=(!empty($_POST['detail_id']) && ($_POST['detail_id']) == $value['id']) ? ' selected' : '';?>>
+                                <option value="<?=$value['id']?>"<?=!empty($_POST['detail_id']) && $_POST['detail_id'] == $value['id'] ? ' selected' : '';?>>
                                     <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
                                 </option>
                             <?php endforeach;?>

@@ -328,11 +328,17 @@ footer p{
 }
 /*TOPに戻るボタン*/
 
-
 .auth_index_pc{
+
 text-align: left;
 margin-left: 20px;
 margin-top: 200px;
 }
+
+.user_name{
+    display: flex;
+  flex-direction: column;
+}
+
 
 }

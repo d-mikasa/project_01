@@ -129,12 +129,10 @@ $(function() {
                 </ul>
                 <?php if(!empty($_SESSION['user_auth'])):?>
                     <div class="auth_index_sp">
-                        <div class="user_info" >
-                            <div class= "user_name">
-                                <div>ログイン中</div>
-                                <div><?=$_SESSION['user_name']?> 様 </div>
-                                <div class="logout_link"><a href="logout.php">ログアウト</a></div>
-                            </div>
+                        <div class= "user_name">
+                            <span>ログイン中</span>
+                            <span><?=$_SESSION['user_name']?> 様 </span>
+                            <span class="logout_link"><a href="logout.php">ログアウト</a></span>
                         </div>
                     </div>
                 <?php endif;?>
@@ -156,12 +154,10 @@ $(function() {
             </div>
             <?php if(!empty($_SESSION['user_auth'])):?>
                 <div class="auth_index_pc">
-                    <div class="user_info" >
-                        <div class= "user_name">
-                            <div>ログイン中</div>
-                            <div><?=$_SESSION['user_name']?> 様 </div>
-                            <div class="logout_link"><a href="logout.php">ログアウト</a></div>
-                        </div>
+                    <div class= "user_name">
+                        <span>ログイン中</span>
+                        <span><?=$_SESSION['user_name']?> 様 </span>
+                        <span class="logout_link"><a href="logout.php">ログアウト</a></span>
                     </div>
                 </div>
             <?php endif;?>
