@@ -2,7 +2,7 @@
 require_once('class/Library.php');
 checkLogin();
 
-if (!isset($_POST['csrf_token']) OR $_POST['csrf_token'] != $_SESSION['csrf_token']) {
+if(!isset($_POST['csrf_token']) OR $_POST['csrf_token'] != $_SESSION['csrf_token']){
     header('Location: login.php');
     exit();
 }
@@ -12,16 +12,13 @@ $Reservation = new Reservation();
 //Is the capacity value correct?
 $Reservation->checkNumeric($_POST['capacity']);
 
-//Is the detail_id value correct?
-// $Reservation->roomIdFormat($_POST['detail_id']);
-
 $rsv_info = $Reservation->checkReservation($_POST['detail_id'], $_POST['check_in'], $_POST['check_out']);
 if($rsv_info !== true){
     $error['other'] = $rsv_info;
 }
 
 $room_info = $Reservation->getReservationRoom($_POST['detail_id']);
-if($room_info == false ){
+if($room_info === false ){
     //値がないことは想定していないが、一応ログインに戻す処理を入れる
     header('Location: login.php');
     exit();
@@ -31,51 +28,51 @@ $payment = $Reservation->getPayment($_POST['payment']);
 
 ////////////////////////////////////////////日付系のバリデーションまとめ////////////////////////////////////////////
 //チェックインのバリデーション
-if (empty($_POST['check_in'])) {
+if(empty($_POST['check_in'])){
     $error['check_in'] = 'チェックイン日が空欄です';
 }else{
     //Is the check_in value correct?
     $Reservation->validateDateFormat($_POST['check_in']);
 
-    if (strtotime($_POST['check_in']) < strtotime('-1 day')) {
+    if(strtotime($_POST['check_in']) < strtotime('-1 day')){
         $error['check_in'] = 'チェックイン日が過去を指定しています';
     }
 }
 
 //チェックアウトのバリデーション
-if (empty($_POST['check_out'])) {
+if(empty($_POST['check_out'])){
     $error['check_out'] = 'チェックアウト日が空欄です';
-} else{
+}else{
     //Is the check_out value correct?
     $Reservation->validateDateFormat($_POST['check_out']);
 
-    if (strtotime($_POST['check_out']) < strtotime('-1 day')) {
+    if(strtotime($_POST['check_out']) < strtotime('-1 day')){
         $error['check_out'] = 'チェックアウト日が過去を指定しています';
     }
 }
 
 //日付の整合性に関するバリデーション
-if (empty($error['check_in']) and empty($error['check_out'])) {
+if(empty($error['check_in']) and empty($error['check_out'])){
     //チェックイン・チェックアウトが入力されていた場合
 
-    if (strtotime($_POST['check_in']) > strtotime($_POST['check_out'])) {
+    if(strtotime($_POST['check_in']) > strtotime($_POST['check_out'])){
         $error['other'] = 'チェックインがチェックアウトより後に指定されています';
-    }else if (strtotime($_POST['check_in']) == strtotime($_POST['check_out'])) {
+    }else if(strtotime($_POST['check_in']) == strtotime($_POST['check_out'])){
         $error['other'] = 'チェックインとチェックアウトが同日に指定されています';
-    } elseif (strtotime($_POST['check_in']) >= (strtotime('+90 day'))) {
+    }else if(strtotime($_POST['check_in']) >= (strtotime('+90 day'))){
         $error['other'] = '３ヶ月以内のご予約のみ承っております';
     }
 }
 
 //宿泊人数のバリデーション
-if (empty($_POST['capacity'])) {
+if(empty($_POST['capacity'])){
     $error['capacity'] = '宿泊人数が空欄です';
-} elseif ($_POST['capacity'] != $room_info['capacity'] && $_POST['capacity'] > $room_info['capacity']) {
+}else if($_POST['capacity'] != $room_info['capacity'] && $_POST['capacity'] > $room_info['capacity']){
     //部屋詳細から該当の宿泊人数のプランがあるかを検索する
     $error['capacity'] = '宿泊人数が上限を超えています';
 }
 
-if (!empty($error)){
+if(!empty($error)){
     require_once('reservation.php');
     exit();
 }
@@ -98,19 +95,19 @@ $cnt_stay = $diff->days;
             <table class="conf_check_table">
                 <tr>
                     <th>部屋名</th>
-                    <td> <?=h($room_info['name'])?></td>
+                    <td><?=h($room_info['name'])?></td>
                 </tr>
                 <tr>
                     <th>チェックイン</th>
-                    <td> <?=h($_POST['check_in'])?></td>
+                    <td><?=h($_POST['check_in'])?></td>
                 </tr>
                 <tr>
                     <th>チェックアウト</th>
-                    <td> <?=h($_POST['check_out'])?></td>
+                    <td><?=h($_POST['check_out'])?></td>
                 </tr>
                 <tr>
                     <th>宿泊人数</th>
-                    <td> <?=h($_POST['capacity'])?></td>
+                    <td><?=h($_POST['capacity'])?></td>
                 </tr>
                 <tr>
                     <th>支払い方法</th>

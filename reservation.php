@@ -8,7 +8,7 @@ $pull_down_list = $Reservation->getPullDownList();
 $room_list = $pull_down_list['room'];
 $payment_list = $pull_down_list['payment'];
 
-if (!empty($_SESSION['csrf_token'])) {
+if(!empty($_SESSION['csrf_token'])){
     unset($_SESSION['csrf_token']);
 }
 
@@ -31,7 +31,7 @@ $payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
                         <select name="detail_id" id="target">
                             <?php foreach ($room_list as $value) :?>
                                 <option value="<?=$value['id']?>"<?=!empty($_POST['detail_id']) && $_POST['detail_id'] == $value['id'] ? ' selected' : '';?>>
-                                    <?=$value['name']?> (<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
+                                    <?=$value['name']?>(<?=$value['capacity']?>名様 ¥<?=number_format($value['price'])?>)
                                 </option>
                             <?php endforeach;?>
                         </select>
@@ -52,7 +52,7 @@ $payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
                     <td colspan="2" class="error"><?=!empty($error['check_in']) ? $error['check_in'] : ''?></td>
                 </tr>
                 <tr>
-                    <th>チェックアウト </th>
+                    <th>チェックアウト</th>
                     <td><input type="date" name="check_out" value="<?=!empty($_POST['check_out']) ? $_POST['check_out'] : ''?>"></td>
                 </tr>
                 <!-- チェックアウトのエラー -->
@@ -60,14 +60,14 @@ $payment_state = !empty($_POST['payment']) ? $_POST['payment'] : 1;
                     <td colspan="2" class="error"><?=!empty($error['check_out']) ? $error['check_out'] : ''?></td>
                 </tr>
                 <tr>
-                    <th>宿泊人数 </th>
+                    <th>宿泊人数</th>
                     <td><input type="number" name="capacity" min="1" value="<?=!empty($_POST['capacity']) ? $_POST['capacity'] : '1'?>"></td>
                 </tr>
                 <tr class="room_name_error">
                     <td colspan="2" class="error"> <?=!empty($error['capacity']) ? $error['capacity'] : ''?> </td>
                 </tr>
                 <tr>
-                    <th>支払い方法 <br></th>
+                    <th>支払い方法<br></th>
                     <td>
                         <?php foreach($payment_list as $key => $value):?>
                             <div><input type="radio" name="payment" value="<?=$key?>"<?=($payment_state == $key) ? ' checked' : '';?>><?=$value?></div>

@@ -64,6 +64,7 @@ class Reservation extends Model
             'WHERE '.
                 'id = ?'
         ;
+
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$id]);
         $return = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -110,6 +111,7 @@ class Reservation extends Model
                     'AND reservation_detail.date <= ? ' .
             'GROUP BY  reservation.user_id; '
         ;
+
         $stmt = $this->dbh->prepare($sql);
         $stmt->execute([$_SESSION['user_id'] , $check_in, $check_out]);
         $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
@@ -146,7 +148,7 @@ class Reservation extends Model
         $result = $stmt->fetchALL(PDO::FETCH_ASSOC);
 
         //レコードが無いならリターンで返す
-        if (!empty($result)){
+        if(!empty($result)){
             return '満室のため、他の日付か部屋を選択してください';
         }
 
@@ -165,7 +167,7 @@ class Reservation extends Model
     public function getReservationRoom($id) //選択した部屋の情報を取得
     {
         parent::connect();
-        $this -> checkNumeric($id);
+        $this->checkNumeric($id);
         $sql =
             'SELECT '.
                 '* '.
@@ -174,6 +176,7 @@ class Reservation extends Model
             'WHERE '.
                 'id = ? '
         ;
+
         $stmt =$this->dbh->prepare($sql);
         $stmt->execute([$id]);
         $check = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -204,7 +207,7 @@ class Reservation extends Model
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (empty($result)) {
+        if(empty($result)){
             return false;
         }
         return $result;
@@ -227,7 +230,7 @@ class Reservation extends Model
     {
         parent::connect();
         $pdo = $this->dbh;
-        $room_info = $this -> getReservationRoom($set_data['detail_id']);
+        $room_info = $this->getReservationRoom($set_data['detail_id']);
         try {
             //トランザクション開始
 			$this->dbh->beginTransaction();
@@ -247,7 +250,7 @@ class Reservation extends Model
             //宿泊日数を定義 $total_stay
             $check_out_temp = new DateTime($_POST['check_out']);
             $check_in_temp  = new DateTime($_POST['check_in']);
-            $diff     = $check_in_temp->diff($check_out_temp);
+            $diff = $check_in_temp->diff($check_out_temp);
             $return_list['total_stay'] = $diff->days;
 
             //合計金額=料金＊宿泊日数
@@ -269,8 +272,8 @@ class Reservation extends Model
                         'delete_flg) '.
                 'VALUES(?,?,?,?,?,?,?,?,?,?); '
             ;
-            $stmt = $pdo->prepare($sql);
 
+            $stmt = $pdo->prepare($sql);
             $temp = array(
                 $_SESSION['user_id'],
                 $return_list['room_id'],
@@ -296,20 +299,21 @@ class Reservation extends Model
                     'TABLE_SCHEMA = \'d_mikasa\' '.
                         'AND TABLE_NAME = \'reservation\' '
             ;
-            $stmt = $pdo->query($sql)->fetchAll();
-            $id = $stmt;
-            $return_list['reservation_id'] = $id[0]['AUTO_INCREMENT'] - 1;
+
+            $temp = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $return_list['reservation_id'] = $temp['AUTO_INCREMENT'] - 1;
 
             //宿泊日数の数だけINSERTする
-            for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))) {
+            for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))){
                 $sql =
                     'INSERT INTO '.
                         'reservation_detail( '.
-                        'reservation_id, '.
-                        'date, '.
-                        'price) '.
+                            'reservation_id, '.
+                            'date, '.
+                            'price) '.
                     'VALUES(?,?,?); '
                 ;
+
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$return_list['reservation_id'], $i, $return_list['price']]);
             }
@@ -318,10 +322,11 @@ class Reservation extends Model
             $sql =
                 'INSERT INTO '.
                     'reservation_payment( '.
-                    'reservation_id, '.
-                    'payment_id) '.
+                        'reservation_id, '.
+                        'payment_id) '.
                 'VALUES(?,?); '
             ;
+
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$return_list['reservation_id'], $payment]);
 
@@ -334,6 +339,7 @@ class Reservation extends Model
                 'WHERE '.
                     'id = ? '
             ;
+
             $stmt = $pdo->prepare($sql);
             $stmt->execute([$_SESSION['user_id']]);
             $user_info = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -345,10 +351,10 @@ class Reservation extends Model
 
             return $return_list;
 
-        } catch (PDOException $e) {
-		//ロールバック処理
-        $this->dbh->rollback();
-        return $e;
+        } catch (PDOException $e){
+	    	//ロールバック処理
+            $this->dbh->rollback();
+            return $e;
         }
     }
 
@@ -365,28 +371,25 @@ class Reservation extends Model
     //dateの型をチェックする
     function validateDateFormat($value)
     {
-        if(preg_match('/\A\d{4}-\d{1,2}-\d{1,2}\z/', $value) == false)
-        {
+        if(preg_match('/\A\d{4}-\d{1,2}-\d{1,2}\z/', $value) == false){
             header('Location: reservation_error.php');
             exit();
         }
 
         list($year, $month, $day) = explode('-', $value);
 
-        if(checkdate($month, $day, $year) == false)
-        {
+        if(checkdate($month, $day, $year) == false){
             header('Location: reservation_error.php');
             exit();
         }
     }
 
     //数値が正しいかどうかをチェックする（整数、１以上）
-    function checkNumeric($value) {
+    function checkNumeric($value){
         $options = ['options' => ['min_range' => 1]];
         if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) == false){
             header('Location: reservation_error.php');
             exit();
         }
     }
-
 }
