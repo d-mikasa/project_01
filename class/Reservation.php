@@ -271,9 +271,7 @@ class Reservation extends Model
                     'created_at, '.
                     'updated_at, '.
                     'delete_flg'.
-                ') '.
-                'VALUES'.
-                '('.
+                ') VALUES ('.
                     '?, '.
                     '?, '.
                     '?, '.
@@ -326,13 +324,11 @@ class Reservation extends Model
                         'reservation_id, '.
                         'date, '.
                         'price'.
-                    ') '.
-                    'VALUES'.
-                    '('.
+                    ') VALUES ('.
                         '?, '.
                         '?, '.
                         '? '.
-                '); '
+                    '); '
                 ;
 
                 $stmt = $pdo->prepare($sql);
@@ -346,9 +342,7 @@ class Reservation extends Model
                 '( '.
                     'reservation_id, '.
                     'payment_id
-                ) '.
-                'VALUES'.
-                '('.
+                ) VALUES ('.
                     '?, '.
                     '? '.
                 '); '
