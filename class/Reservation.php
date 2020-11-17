@@ -107,8 +107,8 @@ class Reservation extends Model
                         'ON reservation.id = reservation_detail.reservation_id ' .
             'WHERE ' .
                 ' reservation.user_id = ? '.
-                    'AND reservation_detail.date >= ? ' .
-                    'AND reservation_detail.date <= ? ' .
+                'AND reservation_detail.date >= ? ' .
+                'AND reservation_detail.date <= ? ' .
             'GROUP BY  reservation.user_id; '
         ;
 
@@ -138,8 +138,8 @@ class Reservation extends Model
                         'ON reservation.id = reservation_detail.reservation_id ' .
             'WHERE ' .
                 'reservation.room_detail_id = ? ' .
-                    'AND reservation_detail.date >= ? ' .
-                    'AND reservation_detail.date <= ? ' .
+                'AND reservation_detail.date >= ? ' .
+                'AND reservation_detail.date <= ? ' .
             'GROUP BY  reservation.user_id; '
         ;
 
@@ -259,18 +259,32 @@ class Reservation extends Model
             //reservationに追加する
             $sql =
                 'INSERT INTO '.
-                    'reservation( '.
-                        'user_id, '.
-                        'room_id, '.
-                        'room_detail_id, '.
-                        'room_detail_name, '.
-                        'number, '.
-                        'total_price, '.
-                        'status, '.
-                        'created_at, '.
-                        'updated_at, '.
-                        'delete_flg) '.
-                'VALUES(?,?,?,?,?,?,?,?,?,?); '
+                'reservation'.
+                '( '.
+                    'user_id, '.
+                    'room_id, '.
+                    'room_detail_id, '.
+                    'room_detail_name, '.
+                    'number, '.
+                    'total_price, '.
+                    'status, '.
+                    'created_at, '.
+                    'updated_at, '.
+                    'delete_flg'.
+                ') '.
+                'VALUES'.
+                '('.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '?, '.
+                    '? '.
+                '); '
             ;
 
             $stmt = $pdo->prepare($sql);
@@ -297,7 +311,7 @@ class Reservation extends Model
                     'INFORMATION_SCHEMA.TABLES '.
                 'WHERE '.
                     'TABLE_SCHEMA = \'d_mikasa\' '.
-                        'AND TABLE_NAME = \'reservation\' '
+                    'AND TABLE_NAME = \'reservation\' '
             ;
 
             $temp = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
@@ -307,11 +321,18 @@ class Reservation extends Model
             for ($i = $check_in; $i < $check_out; $i = date('Y-m-d', strtotime($i . '+1 day'))){
                 $sql =
                     'INSERT INTO '.
-                        'reservation_detail( '.
-                            'reservation_id, '.
-                            'date, '.
-                            'price) '.
-                    'VALUES(?,?,?); '
+                    'reservation_detail'.
+                    '( '.
+                        'reservation_id, '.
+                        'date, '.
+                        'price'.
+                    ') '.
+                    'VALUES'.
+                    '('.
+                        '?, '.
+                        '?, '.
+                        '? '.
+                '); '
                 ;
 
                 $stmt = $pdo->prepare($sql);
@@ -321,10 +342,16 @@ class Reservation extends Model
             //支払い情報をテーブルに追加する
             $sql =
                 'INSERT INTO '.
-                    'reservation_payment( '.
-                        'reservation_id, '.
-                        'payment_id) '.
-                'VALUES(?,?); '
+                'reservation_payment'.
+                '( '.
+                    'reservation_id, '.
+                    'payment_id
+                ) '.
+                'VALUES'.
+                '('.
+                    '?, '.
+                    '? '.
+                '); '
             ;
 
             $stmt = $pdo->prepare($sql);
@@ -371,14 +398,14 @@ class Reservation extends Model
     //dateの型をチェックする
     function validateDateFormat($value)
     {
-        if(preg_match('/\A\d{4}-\d{1,2}-\d{1,2}\z/', $value) == false){
+        if(preg_match('/\A\d{4}-\d{1,2}-\d{1,2}\z/', $value) === false){
             header('Location: reservation_error.php');
             exit();
         }
 
         list($year, $month, $day) = explode('-', $value);
 
-        if(checkdate($month, $day, $year) == false){
+        if(checkdate($month, $day, $year) === false){
             header('Location: reservation_error.php');
             exit();
         }
@@ -387,7 +414,7 @@ class Reservation extends Model
     //数値が正しいかどうかをチェックする（整数、１以上）
     function checkNumeric($value){
         $options = ['options' => ['min_range' => 1]];
-        if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) == false){
+        if(is_int(filter_var($value, \FILTER_VALIDATE_INT, $options)) === false){
             header('Location: reservation_error.php');
             exit();
         }

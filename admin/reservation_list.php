@@ -7,7 +7,6 @@ if (empty($_SESSION['admin_auth'])) {
     exit();
 }
 
-
 $Room = new Room();
 $Reservation = new Reservation();
 
@@ -22,9 +21,8 @@ if (!empty($_POST['detail_id'])) {
 }
 
 if (!empty($_POST['export'])) {
-$Room->export($list);
+    $Room->export($list);
 }
-
 
 ?>
 <!-- ヘッダー部分読み込み -->

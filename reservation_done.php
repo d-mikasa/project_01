@@ -60,7 +60,7 @@ mb_internal_encoding('UTF-8');
 // メール送信メソッド
 mb_send_mail($insert_data['user_mail'], $title, $message, $header);
 
-if($insert_data == false){
+if($insert_data === false){
     $message = '予約に失敗しました。再度ご予約ください。';
 }else{
     $message = '予約が完了しました。<br>予約完了メールを送信しました。<br><br>※届かない場合は予約番号をお控えの上ご連絡ください。';

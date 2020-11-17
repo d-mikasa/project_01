@@ -57,9 +57,9 @@ if(empty($error['check_in']) and empty($error['check_out'])){
 
     if(strtotime($_POST['check_in']) > strtotime($_POST['check_out'])){
         $error['other'] = 'チェックインがチェックアウトより後に指定されています';
-    }else if(strtotime($_POST['check_in']) == strtotime($_POST['check_out'])){
+    }elseif(strtotime($_POST['check_in']) == strtotime($_POST['check_out'])){
         $error['other'] = 'チェックインとチェックアウトが同日に指定されています';
-    }else if(strtotime($_POST['check_in']) >= (strtotime('+90 day'))){
+    }elseif(strtotime($_POST['check_in']) >= (strtotime('+90 day'))){
         $error['other'] = '３ヶ月以内のご予約のみ承っております';
     }
 }
@@ -67,7 +67,7 @@ if(empty($error['check_in']) and empty($error['check_out'])){
 //宿泊人数のバリデーション
 if(empty($_POST['capacity'])){
     $error['capacity'] = '宿泊人数が空欄です';
-}else if($_POST['capacity'] != $room_info['capacity'] && $_POST['capacity'] > $room_info['capacity']){
+}elseif($_POST['capacity'] != $room_info['capacity'] && $_POST['capacity'] > $room_info['capacity']){
     //部屋詳細から該当の宿泊人数のプランがあるかを検索する
     $error['capacity'] = '宿泊人数が上限を超えています';
 }
