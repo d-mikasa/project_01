@@ -373,7 +373,9 @@ class Room extends Model
     }
 
 
-
+    /*
+    課題４はここから下
+    */
     function getReservationState($id,$date)
     {
         parent::connect();
@@ -386,26 +388,27 @@ class Room extends Model
             'rsv.total_price '.
             'FROM '.
             'calendar '.
-        'LEFT JOIN( '.
-            'SELECT '.
-                'reservation.room_detail_id, '.
-                'reservation.room_detail_name, '.
-                'reservation.total_price, '.
-                'reservation.number, '.
-                'user.name, '.
-                'reservation_detail.date '.
-                'FROM '.
-                'reservation '.
-        'INNER JOIN '.
-            'reservation_detail '.
-                'ON reservation.id = reservation_detail.reservation_id '.
-        'INNER JOIN '.
-            'user '.
-                'ON reservation.user_id = user.id '.
-        'WHERE '.
-            'reservation.room_detail_id = ? '.
-        ') AS rsv '.
-            'ON rsv.date = calendar.date '.
+        'LEFT JOIN'.
+            '( '.
+                'SELECT '.
+                    'reservation.room_detail_id, '.
+                    'reservation.room_detail_name, '.
+                    'reservation.total_price, '.
+                    'reservation.number, '.
+                    'user.name, '.
+                    'reservation_detail.date '.
+                    'FROM '.
+                    'reservation '.
+                'INNER JOIN '.
+                    'reservation_detail '.
+                        'ON reservation.id = reservation_detail.reservation_id '.
+                'INNER JOIN '.
+                    'user '.
+                        'ON reservation.user_id = user.id '.
+                'WHERE '.
+                    'reservation.room_detail_id = ? '.
+            ') AS rsv '.
+                'ON rsv.date = calendar.date '.
         'WHERE '.
             'calendar.date >= ? '.
             'AND calendar.date < ? + INTERVAL 1 MONTH ORDER BY calendar.date ';
@@ -417,59 +420,46 @@ class Room extends Model
 
 
     function export($data)
-{
-    try {
-        //CSV形式で情報をファイルに出力のための準備
-        $csvFileName = '/tmp/' . time() . rand() . '.csv';
-        $fileName = '予約状況' . '.csv';
-        $res = fopen($csvFileName, 'w');
-        if ($res === FALSE) {
-            throw new Exception('ファイルの書き込みに失敗しました。');
+    {
+        try {
+            //CSV形式で情報をファイルに出力のための準備
+            $csvFileName = '/tmp/' . time() . rand() . '.csv';
+            $fileName = '予約状況' . '.csv';
+            $res = fopen($csvFileName, 'w');
+            if ($res === FALSE) {
+                throw new Exception('ファイルの書き込みに失敗しました。');
+            }
+
+            // 項目名先に出力
+            $header = ['date', 'room_name', 'name', 'number', 'price'];
+            fputcsv($res, $header);
+
+            // ループしながら出力
+            foreach($data as $dataInfo) {
+                // 文字コード変換。エクセルで開けるようにする
+                mb_convert_variables('SJIS', 'UTF-8', $dataInfo);
+
+                // ファイルに書き出しをする
+                fputcsv($res, $dataInfo);
+            }
+
+            // ファイルを閉じる
+            fclose($res);
+
+            // ファイルタイプ（csv）
+            header('Content-Type: application/octet-stream');
+
+            // ファイル名
+            header('Content-Disposition: attachment; filename=' . $fileName);
+            // ファイルのサイズ　ダウンロードの進捗状況が表示
+            header('Content-Length: ' . filesize($csvFileName));
+            header('Content-Transfer-Encoding: binary');
+            // ファイルを出力する
+            readfile($csvFileName);
+        } catch(Exception $e) {
+            // 例外処理をここに書きます
+            echo $e->getMessage();
+            exit();
         }
-
-        // 項目名先に出力
-        $header = ["id", "date", "name", "total_price", "number", "room_name"];
-        fputcsv($res, $header);
-
-        // ループしながら出力
-        foreach($data as $dataInfo) {
-            // 文字コード変換。エクセルで開けるようにする
-            mb_convert_variables('SJIS', 'UTF-8', $dataInfo);
-
-            // ファイルに書き出しをする
-            fputcsv($res, $dataInfo);
-        }
-
-        // ファイルを閉じる
-        fclose($res);
-
-        // ダウンロード開始
-
-        // ファイルタイプ（csv）
-        header('Content-Type: application/octet-stream');
-
-        // ファイル名
-        header('Content-Disposition: attachment; filename=' . $fileName);
-        // ファイルのサイズ　ダウンロードの進捗状況が表示
-        header('Content-Length: ' . filesize($csvFileName));
-        header('Content-Transfer-Encoding: binary');
-        // ファイルを出力する
-        readfile($csvFileName);
-
-    } catch(Exception $e) {
-
-        // 例外処理をここに書きます
-        echo $e->getMessage();
-
     }
-}
-
-
-	//デバッグコンソールに情報を表示するためのもの。デバッグ用
-	function console_log($data)
-	{
-		echo '<script>';
-		echo 'console.log(' . json_encode($data) . ')';
-		echo '</script>';
-	}
 }
