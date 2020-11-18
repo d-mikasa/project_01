@@ -2,7 +2,6 @@
 require_once('class/Library.php');
 checkLogin();
 ?>
-
 <?php require_once('rsv_parts/head_info.php');?>
 <body class="background_reservation">
     <?php require_once('rsv_parts/status_nav.php')?>
