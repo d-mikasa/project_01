@@ -7,6 +7,7 @@ if(!isset($_POST['csrf_token']) OR $_POST['csrf_token'] != $_SESSION['csrf_token
     exit();
 }
 
+
 $Reservation = new Reservation();
 
 //Is the capacity value correct?

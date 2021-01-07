@@ -9,6 +9,8 @@ if(!isset($_POST['csrf_token']) OR $_POST['csrf_token'] != $_SESSION['csrf_token
     exit();
 }
 
+
+
 // sessionに保存してあるトークンを削除
 unset($_SESSION['csrf_token']);
 
